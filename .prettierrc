@@ -8,9 +8,9 @@
   "importOrder": [
     "^(react|next)(.*)$",
     "<THIRD_PARTY_MODULES>",
+    "^@/hooks/(.*)$",
     "^@/components/(.*)$",
     "^[./](?!.*\\.css$)",
-    "^@/hooks/(.*)$",
     "^@/store/(.*)$",
     "^@/common/(.*)$",
     "^@/lib/(.*)$",
