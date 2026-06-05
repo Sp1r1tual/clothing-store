@@ -11,9 +11,13 @@
     "^@/components/(.*)$",
     "^@/hooks/(.*)$",
     "^@/store/(.*)$",
+    "^@/common/(.*)$",
+    "^[./](?!.*\\.css$)",
     "^@/lib/(.*)$",
+    "^@/utils/(.*)$",
+    "^@/constants/(.*)$",
     "^@/types/(.*)$",
-    "^[./]"
+    "^.+\\.css$"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
