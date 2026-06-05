@@ -6,7 +6,6 @@ export interface ILinkItem {
 export const CATALOG_LINKS: ILinkItem[] = [
   { href: "/men", label: "Чоловіки" },
   { href: "/women", label: "Жінки" },
-  { href: "/kids", label: "Діти" },
   { href: "/new-arrivals", label: "Новинки" },
   { href: "/brands", label: "Бренди" },
 ];
