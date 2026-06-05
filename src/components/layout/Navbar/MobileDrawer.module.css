@@ -1,0 +1,83 @@
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: var(--navbar-bg);
+  box-shadow: -6px 0 30px rgba(0, 0, 0, 0.08);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px 40px 32px;
+  gap: 0;
+  overflow-y: auto;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.drawerClose {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.drawerClose:hover {
+  background-color: #f0f0f0;
+  transform: rotate(90deg);
+}
+
+.drawerLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.link {
+  font-size: 17px;
+  width: 100%;
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 550;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    padding 0.2s ease;
+}
+
+.link:hover {
+  color: var(--accent-color);
+  padding-left: 6px;
+}
+
+.linkActive {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.linkSale {
+  color: #dc2626;
+}
+
+.linkSale:hover {
+  color: #b91c1c;
+}
+
+.linkSale.linkActive {
+  color: #b91c1c;
+}

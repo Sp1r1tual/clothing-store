@@ -1,0 +1,155 @@
+.navbar {
+  --nav-height: 70px;
+
+  width: 100%;
+  height: var(--nav-height);
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.navContainer {
+  max-width: 1400px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.link {
+  font-size: 15px;
+  font-weight: 550;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 0;
+  transition: color 0.25s ease;
+  position: relative;
+  letter-spacing: 0.2px;
+}
+
+.link:hover {
+  color: var(--text-primary);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--text-primary);
+  transition: width 0.3s ease;
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+.linkSale {
+  color: #dc2626;
+}
+.linkSale:hover {
+  color: #b91c1c;
+}
+.linkSale::after {
+  background-color: #dc2626;
+}
+
+.linkActive {
+  color: var(--text-primary);
+}
+
+.linkActive::after {
+  width: 100%;
+}
+
+.linkSale.linkActive {
+  color: #b91c1c;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.actionButton,
+.actionLink {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.actionButton:hover,
+.actionLink:hover {
+  background-color: #f5f5f7;
+  color: var(--accent-color);
+  transform: scale(1.05);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 22px;
+  height: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bar {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+}
+
+@media (max-width: 1024px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .navActions {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .searchHide {
+    display: none;
+  }
+}

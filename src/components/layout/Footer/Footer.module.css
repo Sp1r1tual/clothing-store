@@ -1,0 +1,145 @@
+.footer {
+  width: 100%;
+  background-color: #fafafa;
+  border-top: 1px solid var(--border-color);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  margin-top: auto;
+}
+
+.footerContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.brandSection {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.logoSpacing {
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.linksGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px 40px;
+  flex: 2 1 600px;
+  justify-content: flex-end;
+}
+
+.linksColumn {
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+.columnTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  letter-spacing: 0.3px;
+}
+
+.linksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--accent-color);
+}
+
+.linkSale {
+  color: #dc2626;
+}
+
+.linkSale:hover {
+  color: #b91c1c;
+}
+
+.contactItem {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.contactLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contactLink:hover {
+  color: var(--accent-color);
+}
+
+.bottomBar {
+  border-top: 1px solid var(--border-color);
+  background-color: #f5f5f7;
+}
+
+.bottomBarContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copyright {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.developerLink {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.developerLink:hover {
+  color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+  .footerContainer {
+    padding: 40px 24px;
+  }
+
+  .linksGrid {
+    justify-content: flex-start;
+    flex: 1 1 100%;
+  }
+
+  .bottomBarContainer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 20px 24px;
+  }
+}

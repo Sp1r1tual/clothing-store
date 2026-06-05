@@ -1,0 +1,18 @@
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  user-select: none;
+  font-family: inherit;
+}
+
+.logoBlack {
+  color: var(--text-primary);
+}
+
+.logoOrange {
+  color: var(--accent-color);
+}
