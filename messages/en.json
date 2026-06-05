@@ -1,4 +1,11 @@
 {
+  "Common": {
+    "back": "Back"
+  },
+  "Layout": {
+    "title": "X-Weevo | Clothing Store",
+    "description": "Trendy, premium clothes online store"
+  },
   "HomePage": {
     "title": "Welcome to our store!",
     "description": "Trendy, premium clothes online store"
@@ -6,9 +13,9 @@
   "Navbar": {
     "men": "Men",
     "women": "Women",
-    "kids": "Kids",
     "new-arrivals": "New Arrivals",
     "brands": "Brands",
+    "other": "Other",
     "sale": "Sale",
     "searchPlaceholder": "Search",
     "favorites": "Favorites",
@@ -16,7 +23,9 @@
     "profile": "Profile",
     "shipping-delivery": "Shipping & Delivery",
     "returns": "Returns",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
   },
   "Footer": {
     "description": "Stylish and premium clothing for your unique look. Only the best brands and latest arrivals.",
@@ -32,5 +41,81 @@
       "empty": "Search query cannot be empty",
       "tooLong": "Search query is too long"
     }
+  },
+  "Features": {
+    "freeDeliveryTitle": "Free delivery",
+    "freeDeliveryDesc": "On orders over 2500 UAH",
+    "qualityWarrantyTitle": "Quality assurance",
+    "qualityWarrantyDesc": "Original products",
+    "easyReturnTitle": "Easy returns",
+    "easyReturnDesc": "Within 14 days"
+  },
+  "Hero": {
+    "subtitle": "NEW COLLECTION SPRING / SUMMER 2026",
+    "title": "STYLE THAT DEFINES YOU",
+    "description": "Modern clothing for those who value quality, comfort and attention to detail.",
+    "ctaCatalog": "View collection",
+    "ctaVideo": "View lookbook"
+  },
+  "DeliveryPartners": {
+    "title": "Our Delivery Partners",
+    "description": "Fast and reliable delivery of your order all over Ukraine",
+    "novaPoshta": "Nova Poshta",
+    "ukrposhta": "Ukrposhta",
+    "meest": "Meest Express",
+    "novaPoshtaInfo": "Delivery to a branch or parcel locker of Nova Poshta across Ukraine. Usually takes 1-3 days.",
+    "ukrposhtaInfo": "Delivery to the nearest Ukrposhta branch. Affordable and convenient shipping nationwide.",
+    "meestInfo": "Delivery by Meest Post to branches, mini-branches, or partner parcel lockers."
+  },
+  "CatalogCTA": {
+    "title": "Ready to upgrade your wardrobe?",
+    "description": "Explore our limited collections of premium quality and find your perfect look today.",
+    "button": "Go to Catalog"
+  },
+  "AboutBrand": {
+    "title": "Who We Are & Our Values",
+    "subtitle": "Our Brand Philosophy",
+    "whoWeAreTitle": "Who we are",
+    "whoWeAreDesc": "We are a modern clothing brand creating stylish and practical items for your daily wardrobe. Our goal is to combine aesthetics, comfort, and current trends.",
+    "differencesTitle": "What makes us different",
+    "differencesDesc": "We don't believe in fast fashion. Our focus is thoughtful cuts, versatility, and durability of every detail. We design items that easily complement each other.",
+    "productionTitle": "Quality & Production",
+    "productionDesc": "We use only certified premium fabrics and accessories. Each product undergoes strict quality control at our own production facilities."
+  },
+  "SectionDots": {
+    "hero": "Home",
+    "about": "About Us",
+    "categories": "Categories",
+    "delivery": "Delivery",
+    "catalog-cta": "Catalog"
+  },
+  "PopularCategories": {
+    "title": "Popular Categories",
+    "viewAll": "All Categories",
+    "viewCategory": "View",
+    "hoodies": "Hoodies & Sweatshirts",
+    "tshirts": "T-Shirts & Polo",
+    "pants": "Pants & Jeans",
+    "jackets": "Jackets & Outerwear"
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "section1Title": "1. Collection of Information",
+    "section1Content": "We collect information you provide directly to us when registering, placing an order, or subscribing to our newsletter.",
+    "section2Title": "2. Use of Data",
+    "section2Content": "All collected data is used to process your orders, provide customer support, and improve the quality of our store services.",
+    "section3Title": "3. Data Protection",
+    "section3Content": "We implement various security measures to protect your personal data from unauthorized access or modification."
+  },
+  "Terms": {
+    "title": "Terms of Use",
+    "section1Title": "1. Acceptance of Terms",
+    "section1Content": "By using our website, you agree to these terms of use. If you do not agree to any part of these terms, please stop using our website.",
+    "section2Title": "2. Limitation of Liability",
+    "section2Content": "The store is not liable for any indirect damages resulting from improper use of the website or violation of these terms.",
+    "section3Title": "3. Intellectual Property",
+    "section3Content": "All materials on the website are the intellectual property of X-Weevo. Any reproduction or distribution of materials without written consent is prohibited.",
+    "section4Title": "4. Changes to Terms",
+    "section4Content": "We reserve the right to modify these terms at any time by posting the updated version on this page. By continuing to use the website after changes, you automatically accept the new terms."
   }
 }

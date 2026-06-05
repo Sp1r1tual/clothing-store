@@ -1,11 +1,24 @@
-import { useTranslations } from "next-intl";
+import { ScrollTo } from "@/components/ui/ScrollTo/ScrollTo";
+import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
+import { SectionDots } from "@/components/ui/SectionDots/SectionDots";
+
+import { AboutBrand } from "./_components/AboutBrand/AboutBrand";
+import { CatalogCTA } from "./_components/CatalogCTA/CatalogCTA";
+import { DeliveryPartners } from "./_components/DeliveryPartners/DeliveryPartners";
+import { Hero } from "./_components/Hero/Hero";
+import { PopularCategories } from "./_components/PopularCategories/PopularCategories";
 
 export const Landing = () => {
-  const t = useTranslations("HomePage");
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>{t("title")}</h1>
-      <p>{t("description")}</p>
-    </div>
+    <>
+      <SectionDots />
+      <ScrollTo />
+      <ScrollToTop />
+      <Hero />
+      <AboutBrand />
+      <PopularCategories />
+      <DeliveryPartners />
+      <CatalogCTA />
+    </>
   );
 };

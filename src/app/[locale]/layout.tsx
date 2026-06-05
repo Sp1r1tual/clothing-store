@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+
+import { Modal } from "@/components/ui/Modal/Modal";
 
 import { geistMono, geistSans } from "@/common/fonts/fonts";
 
 import "@/app/globals.css";
 
-export const metadata: Metadata = {
-  title: "X-Weevo | Магазин одягу",
-  description: "Trendy, premium clothes online store",
-};
-
 interface RootLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Layout" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 }
 
 export default async function RootLayout({ children, params }: RootLayoutProps) {
@@ -34,7 +45,10 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       suppressHydrationWarning
     >
       <body>
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+          <Modal />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

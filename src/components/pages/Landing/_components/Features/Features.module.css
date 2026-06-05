@@ -1,0 +1,96 @@
+.featuresContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 3rem 1.5rem;
+  background-color: var(--background-secondary, #fafafa);
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .featuresContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
+.featuresContainer.compact {
+  background-color: transparent;
+  border-radius: 0;
+  max-width: 100%;
+  margin: 2rem 0 0 0;
+  padding: 0;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  flex-direction: row;
+}
+
+.featuresContainer.compact .featureItem {
+  min-width: 140px;
+  gap: 0.75rem;
+}
+
+.featuresContainer.compact .title {
+  font-size: 0.875rem;
+}
+
+.featuresContainer.compact .description {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .featuresContainer.compact {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .featuresContainer.compact .title {
+    font-size: 1.1rem;
+  }
+
+  .featuresContainer.compact .description {
+    font-size: 1rem;
+  }
+}

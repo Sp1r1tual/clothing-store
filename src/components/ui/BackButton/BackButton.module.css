@@ -1,0 +1,21 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 2rem;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.button:hover {
+  color: var(--text-primary);
+  transform: translateX(-3px);
+}

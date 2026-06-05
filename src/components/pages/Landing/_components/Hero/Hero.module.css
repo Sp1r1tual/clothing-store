@@ -1,0 +1,159 @@
+.hero {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  height: calc(100vh - 70px - 48px);
+  min-height: 550px;
+  max-width: 1400px;
+  width: calc(100% - 48px);
+  margin: 24px auto;
+  border-radius: 24px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 4rem 3rem 4rem 4rem;
+  max-width: 640px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f59e0b;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.title {
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #111111;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555555;
+  margin: 0;
+  max-width: 380px;
+}
+
+.btnGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.btnGroup button {
+  min-width: 220px;
+}
+
+.btnPrimary {
+  background-color: #f59e0b;
+  color: #ffffff;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+  white-space: nowrap;
+}
+
+.btnPrimary:hover {
+  background-color: #d97706;
+  transform: translateY(-2px);
+}
+
+.btnSecondary {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  background-color: transparent;
+  color: #111111;
+  border: 1.5px solid #cccccc;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+  white-space: nowrap;
+}
+
+.btnSecondary:hover {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+}
+
+.playIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #f59e0b;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .content {
+    padding: 1.75rem 2rem 2rem;
+    max-width: 100%;
+    min-height: calc(100vh - 70px - 24px);
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    width: calc(100% - 24px);
+    margin: 12px auto;
+    border-radius: 16px;
+    height: auto;
+  }
+
+  .content {
+    padding: 1.25rem 1.5rem 2rem;
+    min-height: calc(100vh - 70px - 12px);
+    box-sizing: border-box;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .btnGroup {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .btnGroup button {
+    width: 100%;
+    min-width: 0;
+  }
+}

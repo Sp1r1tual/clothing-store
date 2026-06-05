@@ -9,9 +9,9 @@ import { Heart, ShoppingBag, User } from "lucide-react";
 import { Logo } from "@/components/ui/Logo/Logo";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
 
-import { CATALOG_LINKS } from "@/common/constants/navigation";
-
 import { MobileDrawer } from "./MobileDrawer";
+
+import { CATALOG_LINKS } from "@/common/constants/navigation";
 
 import styles from "./Navbar.module.css";
 

@@ -63,13 +63,13 @@ export const Footer = () => {
             <h4 className={styles.columnTitle}>{tFooter("contacts")}</h4>
             <ul className={styles.linksList}>
               <li className={styles.contactItem}>
-                Email:
+                Email:{" "}
                 <a href="mailto:x.weevo@gmail.com" className={styles.contactLink}>
                   x.weevo@gmail.com
                 </a>
               </li>
               <li className={styles.contactItem}>
-                Тел:
+                Тел:{" "}
                 <a href="tel:+380931878784" className={styles.contactLink}>
                   +38 (093) 187-87-84
                 </a>
