@@ -1,0 +1,36 @@
+{
+  "HomePage": {
+    "title": "Welcome to our store!",
+    "description": "Trendy, premium clothes online store"
+  },
+  "Navbar": {
+    "men": "Men",
+    "women": "Women",
+    "kids": "Kids",
+    "new-arrivals": "New Arrivals",
+    "brands": "Brands",
+    "sale": "Sale",
+    "searchPlaceholder": "Search",
+    "favorites": "Favorites",
+    "cart": "Cart",
+    "profile": "Profile",
+    "shipping-delivery": "Shipping & Delivery",
+    "returns": "Returns",
+    "faq": "FAQ"
+  },
+  "Footer": {
+    "description": "Stylish and premium clothing for your unique look. Only the best brands and latest arrivals.",
+    "catalog": "Catalog",
+    "customers": "Customers",
+    "contacts": "Contacts",
+    "workTime": "Mon-Sun: 09:00 - 20:00",
+    "copyright": "All rights reserved.",
+    "devLink": "Order website development"
+  },
+  "Search": {
+    "validation": {
+      "empty": "Search query cannot be empty",
+      "tooLong": "Search query is too long"
+    }
+  }
+}

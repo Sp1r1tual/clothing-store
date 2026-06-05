@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
+import { Link, usePathname } from "@/i18n/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -23,6 +23,7 @@ interface MobileDrawerProps {
 
 export const MobileDrawer = ({ isOpen, onClose, links }: MobileDrawerProps) => {
   const pathname = usePathname();
+  const t = useTranslations("Navbar");
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -43,24 +44,27 @@ export const MobileDrawer = ({ isOpen, onClose, links }: MobileDrawerProps) => {
             </button>
 
             <ul className={styles.drawerLinks}>
-              {links.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className={`${styles.link} ${isActive(href) ? styles.linkActive : ""}`}
-                    onClick={onClose}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+              {links.map(({ href }) => {
+                const key = href.replace("/", "");
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className={`${styles.link} ${isActive(href) ? styles.linkActive : ""}`}
+                      onClick={onClose}
+                    >
+                      {t(key)}
+                    </Link>
+                  </li>
+                );
+              })}
               <li>
                 <Link
                   href="/sale"
                   className={`${styles.link} ${styles.linkSale} ${isActive("/sale") ? styles.linkActive : ""}`}
                   onClick={onClose}
                 >
-                  Розпродаж
+                  {t("sale")}
                 </Link>
               </li>
             </ul>

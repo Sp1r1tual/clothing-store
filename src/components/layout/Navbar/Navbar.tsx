@@ -1,23 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { Link, usePathname } from "@/i18n/navigation";
 import { Heart, ShoppingBag, User } from "lucide-react";
 
 import { Logo } from "@/components/ui/Logo/Logo";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
 
-import { MobileDrawer } from "./MobileDrawer";
+import { CATALOG_LINKS } from "@/common/constants/navigation";
 
-import { CATALOG_LINKS } from "@/constants/navigation";
+import { MobileDrawer } from "./MobileDrawer";
 
 import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("Navbar");
 
   const close = () => setIsMenuOpen(false);
 
@@ -29,22 +30,25 @@ export const Navbar = () => {
         <Logo />
 
         <ul className={styles.navLinks}>
-          {CATALOG_LINKS.map(({ href, label }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className={`${styles.link} ${isActive(href) ? styles.linkActive : ""}`}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
+          {CATALOG_LINKS.map(({ href }) => {
+            const key = href.replace("/", "");
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className={`${styles.link} ${isActive(href) ? styles.linkActive : ""}`}
+                >
+                  {t(key)}
+                </Link>
+              </li>
+            );
+          })}
           <li>
             <Link
               href="/sale"
               className={`${styles.link} ${styles.linkSale} ${isActive("/sale") ? styles.linkActive : ""}`}
             >
-              Розпродаж
+              {t("sale")}
             </Link>
           </li>
         </ul>
@@ -53,13 +57,13 @@ export const Navbar = () => {
           <div className={styles.searchHide}>
             <SearchInput />
           </div>
-          <button className={styles.actionButton} aria-label="Favorites">
+          <button className={styles.actionButton} aria-label={t("favorites")}>
             <Heart size={20} />
           </button>
-          <Link href="/cart" className={styles.actionLink} aria-label="Cart">
+          <Link href="/cart" className={styles.actionLink} aria-label={t("cart")}>
             <ShoppingBag size={20} />
           </Link>
-          <Link href="/profile" className={styles.actionLink} aria-label="Profile">
+          <Link href="/profile" className={styles.actionLink} aria-label={t("profile")}>
             <User size={20} />
           </Link>
 

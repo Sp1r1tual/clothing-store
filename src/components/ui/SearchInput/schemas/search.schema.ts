@@ -1,11 +1,14 @@
 import { z } from "zod";
 
-export const searchSchema = z.object({
-  query: z
-    .string()
-    .trim()
-    .min(1, { message: "Пошуковий запит не може бути порожнім" })
-    .max(100, { message: "Пошуковий запит занадто довгий" }),
-});
+export const getSearchSchema = (t: (key: string) => string) =>
+  z.object({
+    query: z
+      .string()
+      .trim()
+      .min(1, { message: t("validation.empty") })
+      .max(100, { message: t("validation.tooLong") }),
+  });
 
-export type SearchFormData = z.infer<typeof searchSchema>;
+export type SearchFormData = {
+  query: string;
+};
