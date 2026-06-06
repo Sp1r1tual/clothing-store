@@ -1,23 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { upsertUserProfile } from "@/db/profile.db";
-import { createServerClient } from "@supabase/ssr";
 
-import { env } from "@/common/validation/env/env";
+import { createSupabaseServerClient } from "@/common/utils/supabase/supabase.utils";
 
 export async function POST(request: NextRequest) {
-  const supabase = createServerClient(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll() {},
-      },
-    },
-  );
+  const response = NextResponse.next();
+
+  const supabase = createSupabaseServerClient(request, response);
 
   const {
     data: { user },
@@ -39,11 +29,13 @@ export async function POST(request: NextRequest) {
       avatarUrl,
       phone,
     });
-    return NextResponse.json({ ok: true });
+
+    const json = NextResponse.json({ ok: true });
+    response.cookies.getAll().forEach((c) => json.cookies.set(c));
+    return json;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Failed to sync profile:", error);
-
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

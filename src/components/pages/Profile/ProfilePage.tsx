@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { useRouter } from "@/i18n/navigation";
 
 import { BackButton } from "@/components/ui/BackButton/BackButton";
-import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 
 import { OrdersList } from "./_components/OrdersList/OrdersList";
 import { ProfileHeader } from "./_components/ProfileHeader/ProfileHeader";
@@ -21,15 +18,9 @@ const mockOrders = [
 
 export const ProfilePage = () => {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isLoading } = useAuthStore();
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace("/");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  if (isLoading || !isAuthenticated) {
+  if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.spinner} />
@@ -44,7 +35,6 @@ export const ProfilePage = () => {
         <ProfileHeader onLoggedOut={() => router.push("/")} />
         <OrdersList orders={mockOrders} />
       </div>
-      <ScrollToTop />
     </>
   );
 };

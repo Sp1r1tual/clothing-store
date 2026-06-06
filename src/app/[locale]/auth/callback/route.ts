@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { syncUserProfileAction } from "@/db/profile.db";
-import { createServerClient } from "@supabase/ssr";
 
-import { env } from "@/common/validation/env/env";
+import { createSupabaseServerClient } from "@/common/utils/supabase/supabase.utils";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -19,6 +18,7 @@ export async function GET(request: NextRequest, { params }: Props) {
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = `/${locale}${next}`;
   redirectTo.searchParams.delete("code");
+  redirectTo.searchParams.delete("next");
 
   if (error) {
     redirectTo.pathname = `/${locale}/auth/auth-code-error`;
@@ -26,24 +26,12 @@ export async function GET(request: NextRequest, { params }: Props) {
   }
 
   if (code) {
-    const supabase = createServerClient(
-      env.NEXT_PUBLIC_SUPABASE_URL,
-      env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              request.cookies.set({ name, value, ...options }),
-            );
-          },
-        },
-      },
-    );
+    const response = NextResponse.redirect(redirectTo);
+
+    const supabase = createSupabaseServerClient(request, response);
 
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+
     if (!exchangeError && data?.user) {
       const { user } = data;
       const name =
@@ -67,8 +55,7 @@ export async function GET(request: NextRequest, { params }: Props) {
         return NextResponse.redirect(redirectTo);
       }
 
-      redirectTo.searchParams.delete("next");
-      return NextResponse.redirect(redirectTo);
+      return response;
     } else {
       redirectTo.pathname = `/${locale}/auth/auth-code-error`;
       return NextResponse.redirect(redirectTo);

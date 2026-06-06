@@ -15,6 +15,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const tProfile = useTranslations("Profile");
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) logout();
+    });
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -36,15 +40,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           avatar: profile?.avatar_url || meta.avatar_url || "",
           phone: profile?.phone || meta.phone || session.user.phone || "",
         });
-
-        if (event === "SIGNED_IN") {
-          const res = await fetch("/api/sync-profile", { method: "POST" });
-          if (!res.ok) {
-            const body = await res.json().catch(() => ({}));
-            console.error("Profile sync failed:", body?.error);
-            toast.error(tProfile("profileSyncError"));
-          }
-        }
 
         if (sessionStorage.getItem("pendingLogin")) {
           sessionStorage.removeItem("pendingLogin");
