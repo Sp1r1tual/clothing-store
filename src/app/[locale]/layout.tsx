@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { AuthProvider } from "@/providers/AuthProvider";
 
 import { Modal } from "@/components/ui/Modal/Modal";
 
@@ -44,10 +48,13 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
-          {children}
-          <Modal />
+          <AuthProvider>
+            {children}
+            <Modal />
+          </AuthProvider>
+          <ToastContainer position="top-center" autoClose={3000} />
         </NextIntlClientProvider>
       </body>
     </html>

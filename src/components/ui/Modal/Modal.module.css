@@ -15,6 +15,9 @@
   border-radius: 20px;
   width: 100%;
   max-width: 500px;
+  max-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   z-index: 1002;
   overflow: hidden;
@@ -29,18 +32,40 @@
 
 .innerContent {
   padding: 2.5rem 2rem 2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 @media (max-width: 576px) {
   .modalWrapper {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .modalContent {
     border-radius: 16px;
+    max-height: calc(100vh - 1.5rem);
   }
 
   .innerContent {
-    padding: 2rem 1.25rem 1.5rem;
+    padding: 1.75rem 1rem 1.25rem;
+  }
+}
+
+@media (max-height: 480px) {
+  .modalWrapper {
+    padding: 0.5rem;
+  }
+
+  .modalContent {
+    max-height: calc(100vh - 1rem);
+  }
+
+  .innerContent {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  .closeWrapper {
+    top: 0.5rem;
+    right: 0.5rem;
   }
 }

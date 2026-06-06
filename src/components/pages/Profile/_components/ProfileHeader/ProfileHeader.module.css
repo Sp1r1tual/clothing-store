@@ -1,0 +1,201 @@
+.profileHeader {
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.viewProfile {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.editFormTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+.formActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.avatarWrapper {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatarWrapper:hover .avatar {
+  transform: scale(1.08);
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-color), #d97706);
+  color: white;
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.profileMeta {
+  flex: 1;
+  min-width: 200px;
+}
+
+.nameContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.nameEditForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.nameInput {
+  font-size: 1.5rem;
+  font-weight: 700;
+  max-width: 300px;
+  height: 38px;
+  padding: 0 0.75rem;
+}
+
+.spinnerIcon {
+  animation: spin 1s linear infinite;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.email {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--text-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .viewProfile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .profileMeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nameContainer {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nameEditForm {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .headerActions > button {
+    flex: 1;
+  }
+
+  .formGroup {
+    max-width: 100%;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .formActions > button {
+    width: 100%;
+  }
+}

@@ -114,7 +114,13 @@
 .actionLink:hover {
   background-color: #f5f5f7;
   color: var(--accent-color);
-  transform: scale(1.05);
+}
+
+.actionLinkActive {
+  background-color: #f5f5f7;
+  color: var(--accent-color);
+  cursor: default;
+  pointer-events: none;
 }
 
 .hamburger {

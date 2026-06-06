@@ -117,5 +117,49 @@
     "section3Content": "All materials on the website are the intellectual property of X-Weevo. Any reproduction or distribution of materials without written consent is prohibited.",
     "section4Title": "4. Changes to Terms",
     "section4Content": "We reserve the right to modify these terms at any time by posting the updated version on this page. By continuing to use the website after changes, you automatically accept the new terms."
+  },
+  "AuthModal": {
+    "title": "Sign In to Personal Account",
+    "description": "Sign in to track orders, add items to favorites, and receive personalized offers.",
+    "googleButton": "Sign In with Google",
+    "successMessage": "Successfully signed in as {name}!",
+    "errorMessage": "Authentication error. Please try again."
+  },
+  "Profile": {
+    "title": "Personal Account",
+    "welcome": "Welcome, {name}!",
+    "emailLabel": "Email:",
+    "logoutButton": "Log Out",
+    "noOrders": "You don't have any orders yet.",
+    "recentOrders": "Recent Orders",
+    "logoutSuccess": "Successfully logged out!",
+    "profileSyncError": "Failed to sync profile. Please try again.",
+    "logoutConfirmTitle": "Log Out",
+    "logoutConfirmDesc": "Are you sure you want to log out of your account?",
+    "logoutConfirmYes": "Log Out",
+    "logoutConfirmNo": "Cancel",
+    "phoneLabel": "Phone number:",
+    "phoneNotSet": "not set",
+    "editProfile": "Edit Profile",
+    "nameLabel": "Name:",
+    "addPhone": "Add phone number",
+    "editPhone": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "phoneSuccess": "Phone number saved successfully!",
+    "phoneError": "Failed to save phone number",
+    "phonePlaceholder": "+380...",
+    "validation": {
+      "nameMin": "Name must be at least 2 characters",
+      "nameMax": "Name cannot exceed 50 characters",
+      "nameRegex": "Name can only contain letters, spaces, hyphens and apostrophes",
+      "phoneMax": "Phone number cannot exceed 20 characters",
+      "phoneRegex": "Invalid phone number format"
+    }
+  },
+  "AuthCodeError": {
+    "title": "Authentication Error",
+    "description": "Failed to verify the authentication code. The link may have expired or already been used.",
+    "button": "Back to Home"
   }
 }

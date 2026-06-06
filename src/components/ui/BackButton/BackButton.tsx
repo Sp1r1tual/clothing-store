@@ -12,18 +12,19 @@ import styles from "./BackButton.module.css";
 interface BackButtonProps {
   label?: string;
   scrollUp?: boolean;
+  redirectTo?: string;
 }
 
-export const BackButton = ({ label, scrollUp = false }: BackButtonProps) => {
+export const BackButton = ({ label, scrollUp = false, redirectTo }: BackButtonProps) => {
   const router = useRouter();
   const t = useTranslations("Common");
 
   useScrollUp(scrollUp);
 
   const handleBack = () => {
-    if (scrollUp) {
+    if (redirectTo) {
       window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-      router.push("/");
+      router.push(redirectTo);
     } else {
       router.back();
     }

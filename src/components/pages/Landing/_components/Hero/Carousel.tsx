@@ -60,6 +60,7 @@ export const HeroCarousel = () => {
         viewBox="-20 -20 240 260"
         xmlns="http://www.w3.org/2000/svg"
         overflow="visible"
+        preserveAspectRatio="none"
       >
         <defs>
           <pattern id="concrete-wall" width="1" height="1" patternContentUnits="objectBoundingBox">
@@ -85,7 +86,7 @@ export const HeroCarousel = () => {
           <polygon
             points="48,8 90,0 130,2 200,105 185,165 158,215 60,215 8,108 12,55"
             fill="white"
-            opacity="0.55"
+            opacity="0.35"
           />
         </g>
 

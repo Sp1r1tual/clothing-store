@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { ReactNode, useCallback, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,8 +15,23 @@ import styles from "./Modal.module.css";
 
 const emptySubscribe = () => () => {};
 
-export const Modal = () => {
-  const { isOpen, content, closeModal } = useModalStore();
+interface ModalProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  children?: ReactNode;
+}
+
+export const Modal = ({ isOpen: isOpenProp, onClose: onCloseProp, children }: ModalProps = {}) => {
+  const { isOpen: isOpenStore, content, closeModal: closeStore } = useModalStore();
+
+  const controlled = isOpenProp !== undefined;
+  const isOpen = controlled ? isOpenProp : isOpenStore;
+  const closeModal = useCallback(
+    () => (controlled ? onCloseProp?.() : closeStore()),
+    [controlled, onCloseProp, closeStore],
+  );
+  const modalContent = controlled ? children : content;
+
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -30,11 +45,13 @@ export const Modal = () => {
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, closeModal]);
@@ -57,11 +74,13 @@ export const Modal = () => {
             <div className={styles.closeWrapper}>
               <CloseButton onClick={closeModal} />
             </div>
-            <div className={styles.innerContent}>{content}</div>
+
+            <div className={styles.innerContent}>{modalContent}</div>
           </motion.div>
         </div>
       )}
     </AnimatePresence>,
+
     document.body,
   );
 };

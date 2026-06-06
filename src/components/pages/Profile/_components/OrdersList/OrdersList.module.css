@@ -1,0 +1,99 @@
+.contentSection {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+  transition: all 0.2s ease;
+}
+
+.orderCard:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  transform: translateY(-2px);
+}
+
+.orderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.orderId {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.orderDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.orderMeta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.orderTotal {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.statusBadge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.delivered {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.shipping {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.noOrders {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .orderCard {
+    padding: 1rem 1.25rem;
+  }
+
+  .orderMeta {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}

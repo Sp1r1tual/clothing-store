@@ -28,6 +28,13 @@
   transform: translateY(0);
 }
 
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
 .primary {
   background-color: #f59e0b;
   color: #ffffff;
@@ -57,6 +64,41 @@
 
 .ghost:hover {
   background-color: rgba(0, 0, 0, 0.06);
+}
+
+.google {
+  background-color: #fff;
+  color: #374151;
+  border-color: #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.google:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.danger {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: #fee2e2;
+}
+
+.danger:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.success {
+  background-color: #ecfdf5;
+  color: #10b981;
+  border-color: #a7f3d0;
+}
+
+.success:hover {
+  background-color: #d1fae5;
+  color: #047857;
 }
 
 .sm {
@@ -99,4 +141,25 @@
   border: 1.5px solid currentColor;
   flex-shrink: 0;
   line-height: 0;
+}
+
+.square {
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.square.sm {
+  width: 38px;
+}
+
+.square.md {
+  width: 52px;
+}
+
+.square.lg {
+  width: 60px;
+}
+
+.square:hover {
+  transform: none;
 }

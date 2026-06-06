@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  Customer
+  Admin
+}
+
+model Profile {
+  id        String   @id
+  name      String?  @db.VarChar(32)
+  email     String?  @db.VarChar(255)
+  avatarUrl String?  @map("avatar_url")
+  phone     String?  @db.VarChar(20)
+  role      UserRole @default(Customer)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@index([role])
+  @@map("profiles")
+}
