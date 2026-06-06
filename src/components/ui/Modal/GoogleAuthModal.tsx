@@ -3,11 +3,12 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 
 import googleLogo from "@/assets/others/google-logo.webp";
-import { supabase } from "@/libs/supabase";
 import { Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
 import { Modal } from "@/components/ui/Modal/Modal";
+
+import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 
 import styles from "./GoogleAuthModal.module.css";
 
@@ -23,7 +24,7 @@ export const GoogleAuthModal = ({ isOpen, onClose }: GoogleAuthModalProps) => {
   const handleGoogleSignIn = async () => {
     try {
       sessionStorage.setItem("pendingLogin", "1");
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await getSupabaseBrowser().auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/${locale}/auth/callback`,

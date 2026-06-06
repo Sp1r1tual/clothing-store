@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { syncUserProfileAction } from "@/db/profile.db";
+import { createServerClient } from "@supabase/ssr";
 
-import { createSupabaseServerClient } from "@/common/utils/supabase/supabase.utils";
+import { env } from "@/common/validation/env/env";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -28,7 +29,22 @@ export async function GET(request: NextRequest, { params }: Props) {
   if (code) {
     const response = NextResponse.redirect(redirectTo);
 
-    const supabase = createSupabaseServerClient(request, response);
+    const supabase = createServerClient(
+      env.NEXT_PUBLIC_SUPABASE_URL,
+      env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              response.cookies.set(name, value, options);
+            });
+          },
+        },
+      },
+    );
 
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -39,27 +55,25 @@ export async function GET(request: NextRequest, { params }: Props) {
         user.user_metadata.name ||
         user.email?.split("@")[0] ||
         "User";
-      const avatarUrl = user.user_metadata.avatar_url || "";
-      const phone = user.user_metadata.phone || user.phone || "";
 
       try {
         await syncUserProfileAction(user.id, {
           name,
           email: user.email,
-          avatarUrl,
-          phone,
+          avatarUrl: user.user_metadata.avatar_url || "",
+          phone: user.user_metadata.phone || user.phone || "",
         });
       } catch (dbError) {
-        console.error("Failed to sync profile during Google auth callback:", dbError);
+        console.error("Failed to sync profile:", dbError);
         redirectTo.pathname = `/${locale}/auth/auth-code-error`;
         return NextResponse.redirect(redirectTo);
       }
 
       return response;
-    } else {
-      redirectTo.pathname = `/${locale}/auth/auth-code-error`;
-      return NextResponse.redirect(redirectTo);
     }
+
+    redirectTo.pathname = `/${locale}/auth/auth-code-error`;
+    return NextResponse.redirect(redirectTo);
   }
 
   return NextResponse.redirect(redirectTo);

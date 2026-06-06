@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 
 import { updateProfileAction } from "@/db/profile.db";
 import { useRouter } from "@/i18n/navigation";
-import { supabase } from "@/libs/supabase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -21,6 +20,7 @@ import { PhoneSection } from "../PhoneSection/PhoneSection";
 
 import { useAuthStore } from "@/store/useAuthStore";
 
+import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 import {
   ProfileFormData,
   createProfileSchema,
@@ -101,6 +101,7 @@ export const ProfileHeader = ({ onLoggedOut }: ProfileHeaderProps) => {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
+      const supabase = getSupabaseBrowser();
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       onLoggedOut();

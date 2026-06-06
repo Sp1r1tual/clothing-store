@@ -24,14 +24,14 @@ export const Navbar = () => {
   const pathname = usePathname();
   const t = useTranslations("Navbar");
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
 
   const close = () => setIsMenuOpen(false);
 
   const isActive = (href: string) => pathname === href;
 
   const handleProfileClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isAuthenticated) {
+    if (!user) {
       e.preventDefault();
       setIsAuthModalOpen(true);
     } else if (pathname === "/profile") {

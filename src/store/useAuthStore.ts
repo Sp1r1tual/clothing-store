@@ -1,30 +1,23 @@
+import type { IUser } from "@/types";
 import { create } from "zustand";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  phone?: string;
-}
-
 interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
+  user: IUser | null;
   isLoading: boolean;
-  login: (user: User) => void;
+
+  login: (user: IUser) => void;
   logout: () => void;
-  setLoading: (isLoading: boolean) => void;
-  updateUser: (data: Partial<User>) => void;
+  updateUser: (data: Partial<IUser>) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isAuthenticated: false,
   isLoading: true,
-  login: (user) => set({ user, isAuthenticated: true, isLoading: false }),
-  logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
-  setLoading: (isLoading) => set({ isLoading }),
+
+  login: (user) => set({ user, isLoading: false }),
+
+  logout: () => set({ user: null, isLoading: false }),
+
   updateUser: (data) =>
     set((state) => ({
       user: state.user ? { ...state.user, ...data } : null,

@@ -1,37 +1,56 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { createServerClient } from "@supabase/ssr";
+
 import { routing } from "./i18n/navigation";
 
-import { createSupabaseServerClient } from "@/common/utils/supabase/supabase.utils";
+import { env } from "@/common/validation/env/env";
 
 const intlMiddleware = createMiddleware(routing);
-
 const PROTECTED_ROUTES = ["/profile"];
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const response = intlMiddleware(request);
+
   const isProtected = PROTECTED_ROUTES.some((route) =>
     pathname.match(new RegExp(`^/(uk|en)${route}`)),
   );
 
-  if (isProtected) {
-    const response = NextResponse.next();
+  if (!isProtected) return response;
 
-    const supabase = createSupabaseServerClient(request, response);
+  const supabase = createServerClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value);
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    },
+  );
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (!user) {
-      const locale = pathname.split("/")[1] ?? "uk";
-      return NextResponse.redirect(new URL(`/${locale}`, request.url));
-    }
+  console.log("[proxy]", pathname, "| user:", user?.email ?? "NO USER");
+
+  if (!user) {
+    const locale = pathname.split("/")[1] ?? "uk";
+    return NextResponse.redirect(new URL(`/${locale}`, request.url));
   }
 
-  return intlMiddleware(request);
+  return response;
 }
 
 export const config = {
