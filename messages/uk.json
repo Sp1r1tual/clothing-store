@@ -206,7 +206,11 @@
         },
         "deleteConfirm": "Видалити товар \"{name}\"?",
         "deleteSuccess": "Товар видалено",
-        "deleteError": "Помилка при видаленні"
+        "deleteError": "Помилка при видаленні",
+        "deleteModalTitle": "Видалення товару",
+        "deleteModalDescription": "Ви дійсно бажаєте видалити товар \"{name}\"? Цю дію неможливо скасувати.",
+        "confirmDelete": "Видалити",
+        "cancelDelete": "Скасувати"
       },
       "form": {
         "sections": {

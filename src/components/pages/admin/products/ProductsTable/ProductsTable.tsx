@@ -9,6 +9,8 @@ import { deleteProduct } from "@/actions/product.actions";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 
+import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
+
 import styles from "./ProductsTable.module.css";
 
 type Product = {
@@ -41,12 +43,12 @@ const STATUS_LABELS: Record<
 
 export const ProductsTable = ({ products }: ProductsTableProps) => {
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const router = useRouter();
   const t = useTranslations("Admin.products.table");
   const locale = useLocale();
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(t("deleteConfirm", { name }))) return;
+  const handleDelete = async (id: string) => {
     setDeleting(id);
     try {
       await deleteProduct(id);
@@ -160,9 +162,7 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                     <button
                       className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
                       title={t("actions.delete")}
-                      onClick={() =>
-                        handleDelete(product.id, locale === "uk" ? product.nameUk : product.nameEn)
-                      }
+                      onClick={() => setProductToDelete(product)}
                       disabled={deleting === product.id}
                     >
                       <Trash2 size={15} />
@@ -174,6 +174,27 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
           })}
         </tbody>
       </table>
+
+      <ConfirmChoiceModal
+        isOpen={!!productToDelete}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={() => {
+          if (productToDelete) {
+            handleDelete(productToDelete.id);
+          }
+        }}
+        title={t("deleteModalTitle")}
+        description={t("deleteModalDescription", {
+          name: productToDelete
+            ? locale === "uk"
+              ? productToDelete.nameUk
+              : productToDelete.nameEn
+            : "",
+        })}
+        confirmText={t("confirmDelete")}
+        cancelText={t("cancelDelete")}
+        isDanger
+      />
     </div>
   );
 };

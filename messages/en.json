@@ -206,7 +206,11 @@
         },
         "deleteConfirm": "Delete product \"{name}\"?",
         "deleteSuccess": "Product deleted",
-        "deleteError": "Error during deletion"
+        "deleteError": "Error during deletion",
+        "deleteModalTitle": "Delete Product",
+        "deleteModalDescription": "Are you sure you want to delete product \"{name}\"? This action cannot be undone.",
+        "confirmDelete": "Delete",
+        "cancelDelete": "Cancel"
       },
       "form": {
         "sections": {
