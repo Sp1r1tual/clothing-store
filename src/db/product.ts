@@ -7,14 +7,15 @@ export async function findProducts() {
     where: { deletedAt: null },
     select: {
       id: true,
-      name: true,
+      nameUk: true,
+      nameEn: true,
       slug: true,
       price: true,
       discountPrice: true,
       status: true,
       isFeatured: true,
       createdAt: true,
-      category: { select: { name: true } },
+      category: { select: { nameUk: true, nameEn: true } },
       images: {
         where: { isPrimary: true },
         select: { url: true },
@@ -27,8 +28,8 @@ export async function findProducts() {
 
 export async function findCategories() {
   return prisma.category.findMany({
-    select: { id: true, name: true, parentId: true },
-    orderBy: { name: "asc" },
+    select: { id: true, nameUk: true, nameEn: true, parentId: true },
+    orderBy: { nameUk: "asc" },
   });
 }
 

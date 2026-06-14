@@ -175,11 +175,11 @@
       "title": "Products",
       "subtitle": "{count} products in catalog",
       "addButton": "Add product",
-      "metaTitle": "Products — Admin Panel",
+      "metaTitle": "Products – Admin Panel",
       "new": {
         "title": "Add product",
         "subtitle": "Fill in the fields below and save the product",
-        "metaTitle": "Add product — Admin Panel"
+        "metaTitle": "Add product – Admin Panel"
       },
       "table": {
         "empty": "No products yet. Add the first one!",
@@ -284,9 +284,82 @@
           "productSlugRegex": "Slug can only contain lowercase letters, numbers, and hyphens",
           "productPriceRequired": "Provide a price",
           "productPricePositive": "Price must be greater than 0",
+          "productDiscountPricePositive": "Discounted price must be greater than 0",
           "productCategoryRequired": "Category is required",
           "imageSizeMax": "File size must be less than 5MB",
           "imageTypeInvalid": "Only image files are allowed"
+        }
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "{count} categories in catalog",
+      "addButton": "Add category",
+      "metaTitle": "Categories – Admin Panel",
+      "new": {
+        "title": "Add category",
+        "subtitle": "Fill in the fields and save the category",
+        "metaTitle": "Add category – Admin Panel"
+      },
+      "edit": {
+        "title": "Edit category",
+        "metaTitle": "Edit category – Admin Panel"
+      },
+      "table": {
+        "empty": "No categories yet. Add the first one!",
+        "root": "Root",
+        "th": {
+          "name": "Name",
+          "slug": "Slug",
+          "parent": "Parent",
+          "order": "Order",
+          "products": "Products"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "deleteConfirm": "Delete category \"{name}\"?",
+        "deleteSuccess": "Category deleted",
+        "deleteError": "Error during deletion",
+        "deleteHasChildren": "Cannot delete: has subcategories",
+        "deleteHasProducts": "Cannot delete: has products linked"
+      },
+      "form": {
+        "sections": {
+          "basic": "Basic Info",
+          "seo": "SEO"
+        },
+        "labels": {
+          "name": "Name *",
+          "slug": "Slug *",
+          "parent": "Parent category",
+          "order": "Order",
+          "seoTitle": "SEO Title",
+          "seoDescription": "SEO Description"
+        },
+        "placeholders": {
+          "name": "E.g. T-Shirts",
+          "slug": "t-shirts",
+          "noParent": "– Root category –",
+          "seoTitle": "Title for search engines",
+          "seoDescription": "Meta description"
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "messages": {
+          "createSuccess": "Category created!",
+          "updateSuccess": "Category updated!",
+          "error": "Error during saving"
+        },
+        "validation": {
+          "nameRequired": "Name is required",
+          "nameMax": "Name is too long",
+          "slugRequired": "Slug is required",
+          "slugRegex": "Only lowercase letters, numbers, and hyphens"
         }
       }
     }

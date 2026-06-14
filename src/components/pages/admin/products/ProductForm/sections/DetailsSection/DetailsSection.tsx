@@ -23,28 +23,54 @@ export const DetailsSection = ({ register, errors }: DetailsSectionProps) => {
 
       <div className={styles.grid2}>
         <AdminTextarea
-          label={t("labels.composition")}
+          label={`${t("labels.composition")} (Укр)`}
           placeholder={t("placeholders.composition")}
-          error={errors.composition?.message}
+          error={errors.compositionUk?.message}
           rows={3}
-          {...register("composition")}
+          {...register("compositionUk")}
         />
         <AdminTextarea
-          label={t("labels.careInstructions")}
-          placeholder={t("placeholders.careInstructions")}
-          error={errors.careInstructions?.message}
+          label={`${t("labels.composition")} (Eng)`}
+          placeholder={t("placeholders.composition")}
+          error={errors.compositionEn?.message}
           rows={3}
-          {...register("careInstructions")}
+          {...register("compositionEn")}
         />
       </div>
 
-      <AdminTextarea
-        label={t("labels.measurements")}
-        placeholder={t("placeholders.measurements")}
-        error={errors.measurements?.message}
-        rows={3}
-        {...register("measurements")}
-      />
+      <div className={styles.grid2}>
+        <AdminTextarea
+          label={`${t("labels.careInstructions")} (Укр)`}
+          placeholder={t("placeholders.careInstructions")}
+          error={errors.careInstructionsUk?.message}
+          rows={3}
+          {...register("careInstructionsUk")}
+        />
+        <AdminTextarea
+          label={`${t("labels.careInstructions")} (Eng)`}
+          placeholder={t("placeholders.careInstructions")}
+          error={errors.careInstructionsEn?.message}
+          rows={3}
+          {...register("careInstructionsEn")}
+        />
+      </div>
+
+      <div className={styles.grid2}>
+        <AdminTextarea
+          label={`${t("labels.measurements")} (Укр)`}
+          placeholder={t("placeholders.measurements")}
+          error={errors.measurementsUk?.message}
+          rows={3}
+          {...register("measurementsUk")}
+        />
+        <AdminTextarea
+          label={`${t("labels.measurements")} (Eng)`}
+          placeholder={t("placeholders.measurements")}
+          error={errors.measurementsEn?.message}
+          rows={3}
+          {...register("measurementsEn")}
+        />
+      </div>
     </section>
   );
 };

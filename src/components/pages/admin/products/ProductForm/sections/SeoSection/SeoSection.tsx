@@ -23,16 +23,28 @@ export const SeoSection = ({ register, errors }: SeoSectionProps) => {
 
       <div className={styles.grid2}>
         <AdminInput
-          label={t("labels.seoTitle")}
+          label={`${t("labels.seoTitle")} (Укр)`}
           placeholder={t("placeholders.seoTitle")}
-          error={errors.seoTitle?.message}
-          {...register("seoTitle")}
+          error={errors.seoTitleUk?.message}
+          {...register("seoTitleUk")}
         />
         <AdminInput
-          label={t("labels.seoDescription")}
+          label={`${t("labels.seoTitle")} (Eng)`}
+          placeholder={t("placeholders.seoTitle")}
+          error={errors.seoTitleEn?.message}
+          {...register("seoTitleEn")}
+        />
+        <AdminInput
+          label={`${t("labels.seoDescription")} (Укр)`}
           placeholder={t("placeholders.seoDescription")}
-          error={errors.seoDescription?.message}
-          {...register("seoDescription")}
+          error={errors.seoDescriptionUk?.message}
+          {...register("seoDescriptionUk")}
+        />
+        <AdminInput
+          label={`${t("labels.seoDescription")} (Eng)`}
+          placeholder={t("placeholders.seoDescription")}
+          error={errors.seoDescriptionEn?.message}
+          {...register("seoDescriptionEn")}
         />
       </div>
     </section>

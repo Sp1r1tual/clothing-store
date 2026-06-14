@@ -34,7 +34,7 @@ enum ItemStatus {
   ARCHIVED
 }
 
-// Profile.id is intentionally not @default(uuid()) — it mirrors the Supabase Auth user ID
+// Profile.id is intentionally not @default(uuid()) – it mirrors the Supabase Auth user ID
 model Profile {
   id                   String                @id
   name                 String?               @db.VarChar(32)
@@ -61,55 +61,65 @@ model Profile {
 }
 
 model Category {
-  id             String     @id @default(uuid())
-  name           String
-  slug           String     @unique
-  parentId       String?
-  parent         Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children       Category[] @relation("CategoryHierarchy")
-  products       Product[]
-  order          Int        @default(0)
-  seoTitle       String?
-  seoDescription String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id               String     @id @default(uuid())
+  nameUk           String
+  nameEn           String
+  slug             String     @unique
+  parentId         String?
+  parent           Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children         Category[] @relation("CategoryHierarchy")
+  products         Product[]
+  order            Int        @default(0)
+  seoTitleUk       String?
+  seoTitleEn       String?
+  seoDescriptionUk String?
+  seoDescriptionEn String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   @@index([parentId])
   @@map("categories")
 }
 
 model Product {
-  id               String           @id @default(uuid())
-  name             String
-  slug             String           @unique
-  description      String?
-  composition      String?          @db.Text
-  careInstructions String?          @db.Text
-  measurements     String?          @db.Text
-  price            Decimal          @db.Decimal(10, 2)
-  discountPrice    Decimal?         @db.Decimal(10, 2)
-  status           ItemStatus       @default(DRAFT)
-  seoTitle         String?
-  seoDescription   String?
-  categoryId       String
-  category         Category         @relation(fields: [categoryId], references: [id])
-  images           ProductImage[]
-  variants         ProductVariant[]
-  favorites        Favorite[]
-  cartItems        CartItem[]
-  reviews          Review[]
-  orderItems       OrderItem[]
-  tags             Tag[]
+  id                 String           @id @default(uuid())
+  nameUk             String
+  nameEn             String
+  slug               String           @unique
+  descriptionUk      String?
+  descriptionEn      String?
+  compositionUk      String?          @db.Text
+  compositionEn      String?          @db.Text
+  careInstructionsUk String?          @db.Text
+  careInstructionsEn String?          @db.Text
+  measurementsUk     String?          @db.Text
+  measurementsEn     String?          @db.Text
+  price              Decimal          @db.Decimal(10, 2)
+  discountPrice      Decimal?         @db.Decimal(10, 2)
+  status             ItemStatus       @default(DRAFT)
+  seoTitleUk         String?
+  seoTitleEn         String?
+  seoDescriptionUk   String?
+  seoDescriptionEn   String?
+  categoryId         String
+  category           Category         @relation(fields: [categoryId], references: [id])
+  images             ProductImage[]
+  variants           ProductVariant[]
+  favorites          Favorite[]
+  cartItems          CartItem[]
+  reviews            Review[]
+  orderItems         OrderItem[]
+  tags               Tag[]
   // Two separate named relations for related vs cross-sell products
-  relatedProducts  Product[]        @relation("RelatedProducts")
-  relatedTo        Product[]        @relation("RelatedProducts")
-  crossSells       Product[]        @relation("CrossSells")
-  crossSellOf      Product[]        @relation("CrossSells")
-  isFeatured       Boolean          @default(false)
-  deletedAt        DateTime? // soft delete
-  publishedAt      DateTime?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  relatedProducts    Product[]        @relation("RelatedProducts")
+  relatedTo          Product[]        @relation("RelatedProducts")
+  crossSells         Product[]        @relation("CrossSells")
+  crossSellOf        Product[]        @relation("CrossSells")
+  isFeatured         Boolean          @default(false)
+  deletedAt          DateTime? // soft delete
+  publishedAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
   @@index([categoryId])
   @@index([status])
@@ -249,18 +259,19 @@ model Order {
 }
 
 model OrderItem {
-  id           String          @id @default(uuid())
-  orderId      String
-  order        Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId    String?
-  product      Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
-  variantId    String?
-  variant      ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
-  productName  String
-  productSize  String?
-  productColor String?
-  price        Decimal         @db.Decimal(10, 2)
-  quantity     Int             @default(1)
+  id            String          @id @default(uuid())
+  orderId       String
+  order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String?
+  product       Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId     String?
+  variant       ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  productNameUk String
+  productNameEn String
+  productSize   String?
+  productColor  String?
+  price         Decimal         @db.Decimal(10, 2)
+  quantity      Int             @default(1)
 
   @@index([orderId])
   @@index([productId])

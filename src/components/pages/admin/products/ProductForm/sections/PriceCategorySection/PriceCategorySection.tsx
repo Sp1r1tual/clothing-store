@@ -11,7 +11,7 @@ import { type ProductFormData } from "@/common/validation/product/product.schema
 
 import styles from "./PriceCategorySection.module.css";
 
-type Category = { id: string; name: string; parentId: string | null };
+type Category = { id: string; nameUk: string; nameEn: string; parentId: string | null };
 
 interface PriceCategorySectionProps {
   register: UseFormRegister<ProductFormData>;
@@ -62,16 +62,17 @@ export const PriceCategorySection = ({
         >
           <option value="">{t("placeholders.selectCategory")}</option>
           {parentCategories.map((cat) => (
-            <optgroup key={cat.id} label={cat.name}>
+            <optgroup key={cat.id} label={locale === "uk" ? cat.nameUk : cat.nameEn}>
               {childCategories
                 .filter((c) => c.parentId === cat.id)
                 .map((child) => (
                   <option key={child.id} value={child.id}>
-                    {child.name}
+                    {locale === "uk" ? child.nameUk : child.nameEn}
                   </option>
                 ))}
               <option value={cat.id}>
-                {cat.name} ({locale === "uk" ? "загальна" : "general"})
+                {locale === "uk" ? cat.nameUk : cat.nameEn} (
+                {locale === "uk" ? "загальна" : "general"})
               </option>
             </optgroup>
           ))}

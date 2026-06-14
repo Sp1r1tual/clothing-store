@@ -24,7 +24,7 @@ import {
 
 import styles from "./ProductForm.module.css";
 
-type Category = { id: string; name: string; parentId: string | null };
+type Category = { id: string; nameUk: string; nameEn: string; parentId: string | null };
 
 interface ProductFormProps {
   categories: Category[];
@@ -62,16 +62,23 @@ export const ProductForm = ({ categories }: ProductFormProps) => {
   } = useForm<ProductFormData>({
     resolver: zodResolver(schema) as Resolver<ProductFormData>,
     defaultValues: {
-      name: "",
+      nameUk: "",
+      nameEn: "",
       slug: "",
-      description: "",
-      composition: "",
-      careInstructions: "",
-      measurements: "",
+      descriptionUk: "",
+      descriptionEn: "",
+      compositionUk: "",
+      compositionEn: "",
+      careInstructionsUk: "",
+      careInstructionsEn: "",
+      measurementsUk: "",
+      measurementsEn: "",
       status: "DRAFT",
       categoryId: "",
-      seoTitle: "",
-      seoDescription: "",
+      seoTitleUk: "",
+      seoTitleEn: "",
+      seoDescriptionUk: "",
+      seoDescriptionEn: "",
       isFeatured: false,
       images: [],
       variants: [],
@@ -100,15 +107,15 @@ export const ProductForm = ({ categories }: ProductFormProps) => {
     }
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameUkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setValue("name", value);
+    setValue("nameUk", value);
     setValue("slug", toSlug(value));
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <BasicInfoSection register={register} errors={errors} onNameChange={handleNameChange} />
+      <BasicInfoSection register={register} errors={errors} onNameChange={handleNameUkChange} />
 
       <PriceCategorySection register={register} errors={errors} categories={categories} />
 

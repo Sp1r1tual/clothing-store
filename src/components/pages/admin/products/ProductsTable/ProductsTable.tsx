@@ -13,15 +13,16 @@ import styles from "./ProductsTable.module.css";
 
 type Product = {
   id: string;
-  name: string;
+  nameUk: string;
+  nameEn: string;
   slug: string;
-  // price may come as Decimal-like or string from Prisma — normalize before rendering
+  // price may come as Decimal-like or string from Prisma – normalize before rendering
   price: number | string | { toString(): string };
   discountPrice: number | string | { toString(): string } | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   isFeatured: boolean;
   createdAt: Date;
-  category: { name: string };
+  category: { nameUk: string; nameEn: string };
   images: { url: string }[];
 };
 
@@ -91,7 +92,7 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                       {imgUrl ? (
                         <Image
                           src={imgUrl}
-                          alt={product.name}
+                          alt={locale === "uk" ? product.nameUk : product.nameEn}
                           width={64}
                           height={64}
                           className={styles.thumbImg}
@@ -101,12 +102,16 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                       )}
                     </div>
                     <div>
-                      <p className={styles.productName}>{product.name}</p>
+                      <p className={styles.productName}>
+                        {locale === "uk" ? product.nameUk : product.nameEn}
+                      </p>
                       <p className={styles.productSlug}>{product.slug}</p>
                     </div>
                   </div>
                 </td>
-                <td className={styles.td}>{product.category.name}</td>
+                <td className={styles.td}>
+                  {locale === "uk" ? product.category.nameUk : product.category.nameEn}
+                </td>
                 <td className={styles.td}>
                   <span className={styles.price}>
                     {(() => {
@@ -151,7 +156,9 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                     <button
                       className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
                       title={t("actions.delete")}
-                      onClick={() => handleDelete(product.id, product.name)}
+                      onClick={() =>
+                        handleDelete(product.id, locale === "uk" ? product.nameUk : product.nameEn)
+                      }
                       disabled={deleting === product.id}
                     >
                       <Trash2 size={15} />

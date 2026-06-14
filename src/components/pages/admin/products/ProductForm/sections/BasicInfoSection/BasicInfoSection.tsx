@@ -25,11 +25,17 @@ export const BasicInfoSection = ({ register, errors, onNameChange }: BasicInfoSe
 
       <div className={styles.grid2}>
         <AdminInput
-          label={t("labels.name")}
+          label={`${t("labels.name")} (Укр)`}
           placeholder={t("placeholders.name")}
-          error={errors.name?.message}
-          {...register("name")}
+          error={errors.nameUk?.message}
+          {...register("nameUk")}
           onChange={onNameChange}
+        />
+        <AdminInput
+          label={`${t("labels.name")} (Eng)`}
+          placeholder={t("placeholders.name")}
+          error={errors.nameEn?.message}
+          {...register("nameEn")}
         />
         <AdminInput
           label={t("labels.slug")}
@@ -39,13 +45,22 @@ export const BasicInfoSection = ({ register, errors, onNameChange }: BasicInfoSe
         />
       </div>
 
-      <AdminTextarea
-        label={t("labels.description")}
-        placeholder={t("placeholders.description")}
-        error={errors.description?.message}
-        rows={4}
-        {...register("description")}
-      />
+      <div className={styles.grid2}>
+        <AdminTextarea
+          label={`${t("labels.description")} (Укр)`}
+          placeholder={t("placeholders.description")}
+          error={errors.descriptionUk?.message}
+          rows={4}
+          {...register("descriptionUk")}
+        />
+        <AdminTextarea
+          label={`${t("labels.description")} (Eng)`}
+          placeholder={t("placeholders.description")}
+          error={errors.descriptionEn?.message}
+          rows={4}
+          {...register("descriptionEn")}
+        />
+      </div>
     </section>
   );
 };

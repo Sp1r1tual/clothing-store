@@ -32,21 +32,28 @@ export const createProductVariantSchema = (msg: ProductSchemaMessages) =>
 
 export const createProductSchema = (msg: ProductSchemaMessages) =>
   z.object({
-    name: z.string().min(1, msg.productNameRequired).max(255, msg.productNameMax),
+    nameUk: z.string().min(1, msg.productNameRequired).max(255, msg.productNameMax),
+    nameEn: z.string().min(1, msg.productNameRequired).max(255, msg.productNameMax),
     slug: z
       .string()
       .min(1, msg.productSlugRequired)
       .regex(/^[a-z0-9-]+$/, msg.productSlugRegex),
-    description: z.string().optional(),
-    composition: z.string().optional(),
-    careInstructions: z.string().optional(),
-    measurements: z.string().optional(),
+    descriptionUk: z.string().optional(),
+    descriptionEn: z.string().optional(),
+    compositionUk: z.string().optional(),
+    compositionEn: z.string().optional(),
+    careInstructionsUk: z.string().optional(),
+    careInstructionsEn: z.string().optional(),
+    measurementsUk: z.string().optional(),
+    measurementsEn: z.string().optional(),
     price: z.number({ message: msg.productPriceRequired }).positive(msg.productPricePositive),
     discountPrice: z.number().positive(msg.productDiscountPricePositive).optional().nullable(),
     status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]),
     categoryId: z.string().min(1, msg.productCategoryRequired),
-    seoTitle: z.string().optional(),
-    seoDescription: z.string().optional(),
+    seoTitleUk: z.string().optional(),
+    seoTitleEn: z.string().optional(),
+    seoDescriptionUk: z.string().optional(),
+    seoDescriptionEn: z.string().optional(),
     isFeatured: z.boolean().default(false),
     images: z.array(createProductImageSchema(msg)).default([]),
     variants: z.array(createProductVariantSchema(msg)).default([]),

@@ -1,0 +1,100 @@
+import { prisma } from "@/libs/prisma";
+
+import type { CategoryFormData } from "@/common/validation/category/category.schema";
+
+export async function findAllCategories() {
+  return prisma.category.findMany({
+    select: {
+      id: true,
+      nameUk: true,
+      nameEn: true,
+      slug: true,
+      order: true,
+      parentId: true,
+      parent: { select: { nameUk: true, nameEn: true } },
+      _count: { select: { products: true, children: true } },
+    },
+    orderBy: [{ order: "asc" }, { nameUk: "asc" }],
+  });
+}
+
+export async function findCategoryById(id: string) {
+  return prisma.category.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      nameUk: true,
+      nameEn: true,
+      slug: true,
+      parentId: true,
+      order: true,
+      seoTitleUk: true,
+      seoTitleEn: true,
+      seoDescriptionUk: true,
+      seoDescriptionEn: true,
+    },
+  });
+}
+
+/** Flat list used for <select> dropdowns */
+export async function findCategoriesForSelect() {
+  return prisma.category.findMany({
+    select: { id: true, nameUk: true, nameEn: true, parentId: true },
+    orderBy: [{ order: "asc" }, { nameUk: "asc" }],
+  });
+}
+
+export async function insertCategory(data: CategoryFormData) {
+  return prisma.category.create({
+    data: {
+      nameUk: data.nameUk,
+      nameEn: data.nameEn,
+      slug: data.slug,
+      parentId: data.parentId ?? null,
+      order: data.order ?? 0,
+      seoTitleUk: data.seoTitleUk ?? null,
+      seoTitleEn: data.seoTitleEn ?? null,
+      seoDescriptionUk: data.seoDescriptionUk ?? null,
+      seoDescriptionEn: data.seoDescriptionEn ?? null,
+    },
+    select: { id: true, slug: true },
+  });
+}
+
+export async function updateCategory(id: string, data: CategoryFormData) {
+  return prisma.category.update({
+    where: { id },
+    data: {
+      nameUk: data.nameUk,
+      nameEn: data.nameEn,
+      slug: data.slug,
+      parentId: data.parentId ?? null,
+      order: data.order ?? 0,
+      seoTitleUk: data.seoTitleUk ?? null,
+      seoTitleEn: data.seoTitleEn ?? null,
+      seoDescriptionUk: data.seoDescriptionUk ?? null,
+      seoDescriptionEn: data.seoDescriptionEn ?? null,
+    },
+    select: { id: true, slug: true },
+  });
+}
+
+export async function deleteCategory(id: string) {
+  // Check for children or products before deleting
+  const category = await prisma.category.findUnique({
+    where: { id },
+    select: {
+      slug: true,
+      _count: { select: { children: true, products: true } },
+    },
+  });
+
+  if (!category) throw new Error("NOT_FOUND");
+  if (["men", "women", "other"].includes(category.slug)) {
+    throw new Error("CANNOT_DELETE_BASE_CATEGORY");
+  }
+  if (category._count.children > 0) throw new Error("HAS_CHILDREN");
+  if (category._count.products > 0) throw new Error("HAS_PRODUCTS");
+
+  return prisma.category.delete({ where: { id } });
+}
