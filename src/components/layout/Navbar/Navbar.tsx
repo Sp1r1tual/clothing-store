@@ -6,11 +6,10 @@ import { useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Heart, ShoppingBag, User } from "lucide-react";
 
+import { Drawer } from "@/components/ui/Drawer/Drawer";
 import { Logo } from "@/components/ui/Logo/Logo";
 import { GoogleAuthModal } from "@/components/ui/Modal/GoogleAuthModal";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
-
-import { MobileDrawer } from "./MobileDrawer";
 
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -105,7 +104,23 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <MobileDrawer isOpen={isMenuOpen} onClose={close} links={CATALOG_LINKS} />
+        <Drawer
+          isOpen={isMenuOpen}
+          onClose={close}
+          direction="right"
+          theme="light"
+          links={[
+            ...CATALOG_LINKS.map(({ href }) => ({
+              href,
+              label: t(href.replace("/", "")),
+            })),
+            {
+              href: "/sale",
+              label: t("sale"),
+              isDanger: true,
+            },
+          ]}
+        />
       </nav>
 
       <GoogleAuthModal
