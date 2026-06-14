@@ -25,7 +25,7 @@ type ParentCategory = { id: string; nameUk: string; nameEn: string; parentId: st
 
 interface CategoryFormProps {
   categories: ParentCategory[];
-  /** When provided, the form is in edit mode */
+
   editId?: string;
   defaultValues?: Partial<CategoryFormData>;
 }
@@ -90,12 +90,11 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
     }
   };
 
-  // Filter out current category from parent options (avoid self-reference)
   const parentOptions = categories.filter((c) => c.id !== editId);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      {/* Basic info */}
+      {}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>{t("sections.basic")}</h2>
         <div className={styles.grid2}>
@@ -150,7 +149,7 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
         </div>
       </section>
 
-      {/* SEO */}
+      {}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>{t("sections.seo")}</h2>
         <div className={styles.grid2}>
@@ -187,7 +186,7 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
         </div>
       </section>
 
-      {/* Actions */}
+      {}
       <div className={styles.submitRow}>
         <button type="button" className={styles.cancelBtn} onClick={() => router.back()}>
           {t("buttons.cancel")}

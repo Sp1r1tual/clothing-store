@@ -163,3 +163,20 @@
 .square:hover {
   transform: none;
 }
+
+.xs {
+  padding: 0;
+  height: 28px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.square.xs {
+  width: 28px;
+}
+
+.absolute {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}

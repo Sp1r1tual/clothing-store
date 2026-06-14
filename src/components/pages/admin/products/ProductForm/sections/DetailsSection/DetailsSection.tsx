@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { type FieldErrors, type UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import { AdminTextarea } from "@/components/ui/admin/AdminTextarea/AdminTextarea";
 
@@ -9,13 +9,12 @@ import { type ProductFormData } from "@/common/validation/product/product.schema
 
 import styles from "./DetailsSection.module.css";
 
-interface DetailsSectionProps {
-  register: UseFormRegister<ProductFormData>;
-  errors: FieldErrors<ProductFormData>;
-}
-
-export const DetailsSection = ({ register, errors }: DetailsSectionProps) => {
+export const DetailsSection = () => {
   const t = useTranslations("Admin.products.form");
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
 
   return (
     <section className={styles.section}>

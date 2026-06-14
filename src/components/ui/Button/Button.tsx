@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./Button.module.css";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "google" | "danger" | "success";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "xs" | "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -12,6 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
   iconCircle?: boolean;
   isSquare?: boolean;
+  absolute?: boolean;
   children?: ReactNode;
 }
 
@@ -22,6 +23,7 @@ export const Button = ({
   icon,
   iconCircle = false,
   isSquare = false,
+  absolute = false,
   children,
   className,
   ...rest
@@ -32,6 +34,7 @@ export const Button = ({
     styles[size],
     fullWidth ? styles.fullWidth : "",
     isSquare ? styles.square : "",
+    absolute ? styles.absolute : "",
     className ?? "",
   ]
     .filter(Boolean)

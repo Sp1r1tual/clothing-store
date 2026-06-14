@@ -36,7 +36,6 @@ export async function findCategoryById(id: string) {
   });
 }
 
-/** Flat list used for <select> dropdowns */
 export async function findCategoriesForSelect() {
   return prisma.category.findMany({
     select: { id: true, nameUk: true, nameEn: true, parentId: true },
@@ -80,7 +79,6 @@ export async function updateCategory(id: string, data: CategoryFormData) {
 }
 
 export async function deleteCategory(id: string) {
-  // Check for children or products before deleting
   const category = await prisma.category.findUnique({
     where: { id },
     select: {

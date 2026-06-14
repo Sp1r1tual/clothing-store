@@ -2,7 +2,7 @@
 
 import { getTranslations } from "next-intl/server";
 
-import { insertProduct, softDeleteProduct } from "@/db/product";
+import { insertProduct, softDeleteProduct, updateProductInDb } from "@/db/product";
 
 import { assertAdmin } from "@/common/auth/server";
 import { revalidateLocalizedPath } from "@/common/utils/revalidate";
@@ -16,6 +16,9 @@ async function getProductSchema(locale: string) {
 
   return createProductSchema({
     imageUrlRequired: t("validation.imageUrlRequired"),
+    imagesTooMany: t("validation.imagesTooMany"),
+    imageDuplicateUrl: t("validation.imageDuplicateUrl"),
+    imageAltMax: t("validation.imageAltMax"),
     variantSizeRequired: t("validation.variantSizeRequired"),
     variantStockMin: t("validation.variantStockMin"),
     productNameRequired: t("validation.productNameRequired"),
@@ -42,6 +45,23 @@ export async function createProduct(data: ProductFormData, locale: string) {
   const product = await insertProduct(result.data);
 
   revalidateLocalizedPath("/admin/products");
+  return product;
+}
+
+export async function updateProduct(id: string, data: ProductFormData, locale: string) {
+  await assertAdmin();
+
+  const schema = await getProductSchema(locale);
+  const result = schema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+
+  const product = await updateProductInDb(id, result.data);
+
+  revalidateLocalizedPath("/admin/products");
+  revalidateLocalizedPath(`/admin/products/${id}`);
   return product;
 }
 

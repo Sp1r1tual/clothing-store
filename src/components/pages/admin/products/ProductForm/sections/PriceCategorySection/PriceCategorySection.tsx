@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { type FieldErrors, type UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import { AdminCheckbox } from "@/components/ui/admin/AdminCheckbox/AdminCheckbox";
 import { AdminInput } from "@/components/ui/admin/AdminInput/AdminInput";
@@ -14,18 +14,16 @@ import styles from "./PriceCategorySection.module.css";
 type Category = { id: string; nameUk: string; nameEn: string; parentId: string | null };
 
 interface PriceCategorySectionProps {
-  register: UseFormRegister<ProductFormData>;
-  errors: FieldErrors<ProductFormData>;
   categories: Category[];
 }
 
-export const PriceCategorySection = ({
-  register,
-  errors,
-  categories,
-}: PriceCategorySectionProps) => {
+export const PriceCategorySection = ({ categories }: PriceCategorySectionProps) => {
   const t = useTranslations("Admin.products.form");
   const locale = useLocale();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
 
   const parentCategories = categories.filter((c) => !c.parentId);
   const childCategories = categories.filter((c) => c.parentId);

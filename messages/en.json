@@ -181,6 +181,11 @@
         "subtitle": "Fill in the fields below and save the product",
         "metaTitle": "Add product – Admin Panel"
       },
+      "edit": {
+        "title": "Edit product",
+        "subtitle": "Update the fields below and save changes",
+        "metaTitle": "Edit product – Admin Panel"
+      },
       "table": {
         "empty": "No products yet. Add the first one!",
         "th": {
@@ -227,6 +232,7 @@
           "imageUrl": "Image URL *",
           "imageAlt": "Alt Text",
           "isPrimaryImage": "Primary Image",
+          "cover": "Cover",
           "variantSize": "Size *",
           "variantColor": "Color",
           "variantStock": "Stock",
@@ -259,8 +265,11 @@
           "ARCHIVED": "Archived"
         },
         "hints": {
-          "emptyImages": "Add at least one image (URL)",
-          "emptyVariants": "No variants. Add sizes/colors."
+          "emptyImagesTitle": "Click or drag images here",
+          "emptyImages": "Supports PNG, JPG, WEBP. First photo is the product cover.",
+          "emptyVariants": "No variants. Add sizes/colors.",
+          "imagesOrder": "First photo is the cover. Drag cards to reorder.",
+          "pendingUpload": "Will be uploaded on save"
         },
         "buttons": {
           "addImage": "Add image",
@@ -270,12 +279,22 @@
           "save": "Save",
           "saving": "Saving..."
         },
+        "confirmDeleteImage": {
+          "title": "Delete Photo",
+          "description": "Are you sure you want to delete this image?",
+          "confirm": "Delete",
+          "cancel": "Cancel"
+        },
         "messages": {
           "success": "Product created successfully!",
+          "updateSuccess": "Product updated successfully!",
           "error": "Error during saving"
         },
         "validation": {
           "imageUrlRequired": "Image URL is required",
+          "imagesTooMany": "Maximum 10 images per product",
+          "imageDuplicateUrl": "Duplicate images are not allowed",
+          "imageAltMax": "Alt text cannot exceed 125 characters",
           "variantSizeRequired": "Size is required",
           "variantStockMin": "Stock cannot be negative",
           "productNameRequired": "Name is required",

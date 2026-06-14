@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { deleteProduct } from "@/actions/product.actions";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 
 import styles from "./ProductsTable.module.css";
@@ -16,7 +16,7 @@ type Product = {
   nameUk: string;
   nameEn: string;
   slug: string;
-  // price may come as Decimal-like or string from Prisma – normalize before rendering
+
   price: number | string | { toString(): string };
   discountPrice: number | string | { toString(): string } | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
@@ -150,9 +150,13 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                 </td>
                 <td className={styles.td}>
                   <div className={styles.actions}>
-                    <button className={styles.actionBtn} title={t("actions.edit")} disabled>
+                    <Link
+                      href={`/admin/products/${product.id}`}
+                      className={styles.actionBtn}
+                      title={t("actions.edit")}
+                    >
                       <Pencil size={15} />
-                    </button>
+                    </Link>
                     <button
                       className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
                       title={t("actions.delete")}

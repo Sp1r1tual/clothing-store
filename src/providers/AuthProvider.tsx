@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 import { useRouter } from "@/i18n/navigation";
@@ -27,9 +27,11 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
   const routerRef = useRef(router);
   const tAuthRef = useRef(tAuth);
   const tProfileRef = useRef(tProfile);
-  useState(() => {
+  const isInitialized = useRef<boolean | null>(null);
+  if (isInitialized.current == null) {
     useAuthStore.setState({ user: initialUser, isLoading: false });
-  });
+    isInitialized.current = true;
+  }
 
   useEffect(() => {
     routerRef.current = router;

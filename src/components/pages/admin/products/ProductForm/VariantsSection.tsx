@@ -3,10 +3,9 @@
 import { useTranslations } from "next-intl";
 import {
   type FieldArrayWithId,
-  type FieldErrors,
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
-  type UseFormRegister,
+  useFormContext,
 } from "react-hook-form";
 
 import { Plus, Trash2 } from "lucide-react";
@@ -21,18 +20,18 @@ interface VariantsSectionProps {
   variantFields: FieldArrayWithId<ProductFormData, "variants", "id">[];
   appendVariant: UseFieldArrayAppend<ProductFormData, "variants">;
   removeVariant: UseFieldArrayRemove;
-  register: UseFormRegister<ProductFormData>;
-  errors: FieldErrors<ProductFormData>;
 }
 
 export const VariantsSection = ({
   variantFields,
   appendVariant,
   removeVariant,
-  register,
-  errors,
 }: VariantsSectionProps) => {
   const t = useTranslations("Admin.products.form");
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProductFormData>();
 
   return (
     <section className={styles.section}>

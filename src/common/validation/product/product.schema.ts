@@ -2,6 +2,9 @@ import { z } from "zod";
 
 export interface ProductSchemaMessages {
   imageUrlRequired: string;
+  imagesTooMany: string;
+  imageDuplicateUrl: string;
+  imageAltMax: string;
   variantSizeRequired: string;
   variantStockMin: string;
   productNameRequired: string;
@@ -14,10 +17,12 @@ export interface ProductSchemaMessages {
   productCategoryRequired: string;
 }
 
+export const MAX_IMAGES = 10;
+
 export const createProductImageSchema = (msg: ProductSchemaMessages) =>
   z.object({
     url: z.string().min(1, msg.imageUrlRequired),
-    altText: z.string().optional(),
+    altText: z.string().max(125, msg.imageAltMax).optional(),
     isPrimary: z.boolean().default(false),
     order: z.number().default(0),
   });
@@ -55,12 +60,25 @@ export const createProductSchema = (msg: ProductSchemaMessages) =>
     seoDescriptionUk: z.string().optional(),
     seoDescriptionEn: z.string().optional(),
     isFeatured: z.boolean().default(false),
-    images: z.array(createProductImageSchema(msg)).default([]),
+    images: z
+      .array(createProductImageSchema(msg))
+      .max(MAX_IMAGES, msg.imagesTooMany)
+      .refine(
+        (imgs) => {
+          const realUrls = imgs.map((i) => i.url).filter((u) => u !== "__pending__");
+          return realUrls.length === new Set(realUrls).size;
+        },
+        { message: msg.imageDuplicateUrl },
+      )
+      .default([]),
     variants: z.array(createProductVariantSchema(msg)).default([]),
   });
 
 export const productSchema = createProductSchema({
   imageUrlRequired: "Image URL is required",
+  imagesTooMany: "Maximum 10 images per product",
+  imageDuplicateUrl: "Duplicate image URLs are not allowed",
+  imageAltMax: "Alt text cannot exceed 125 characters",
   variantSizeRequired: "Size is required",
   variantStockMin: "Stock cannot be negative",
   productNameRequired: "Name is required",

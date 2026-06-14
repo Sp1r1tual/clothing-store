@@ -10,9 +10,10 @@ interface CloseButtonProps {
 export const CloseButton = ({ onClick, className = "" }: CloseButtonProps) => {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`${styles.closeButton} ${className}`}
-      aria-label="Close modal"
+      aria-label="Close"
     >
       <X size={20} strokeWidth={1.5} />
     </button>
