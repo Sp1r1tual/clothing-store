@@ -30,15 +30,6 @@ export const Navbar = () => {
 
   const isActive = (href: string) => pathname === href;
 
-  const handleProfileClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!user) {
-      e.preventDefault();
-      setIsAuthModalOpen(true);
-    } else if (pathname === "/profile") {
-      e.preventDefault();
-    }
-  };
-
   return (
     <>
       <nav className={styles.navbar}>
@@ -88,9 +79,16 @@ export const Navbar = () => {
             </Link>
             <Link
               href="/profile"
-              className={`${styles.actionLink} ${isActive("/profile") ? styles.actionLinkActive : ""}`}
+              className={`${styles.actionLink} ${user && isActive("/profile") ? styles.actionLinkActive : ""}`}
               aria-label={t("profile")}
-              onClick={handleProfileClick}
+              onClick={(e) => {
+                if (!user) {
+                  e.preventDefault();
+                  setIsAuthModalOpen(true);
+                } else if (isActive("/profile")) {
+                  e.preventDefault();
+                }
+              }}
             >
               <User size={20} />
             </Link>
@@ -110,7 +108,11 @@ export const Navbar = () => {
         <MobileDrawer isOpen={isMenuOpen} onClose={close} links={CATALOG_LINKS} />
       </nav>
 
-      <GoogleAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <GoogleAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        redirectPath="/profile"
+      />
     </>
   );
 };

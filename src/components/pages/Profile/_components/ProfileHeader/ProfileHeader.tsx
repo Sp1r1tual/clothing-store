@@ -1,18 +1,19 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { updateProfileAction } from "@/db/profile.db";
-import { useRouter } from "@/i18n/navigation";
+import { updateProfileAction } from "@/actions/profile.actions";
+import { Link, useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
+import btnStyles from "@/components/ui/Button/Button.module.css";
 import { Input } from "@/components/ui/Input/Input";
 import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
 
@@ -28,16 +29,12 @@ import {
 
 import styles from "./ProfileHeader.module.css";
 
-interface ProfileHeaderProps {
-  onLoggedOut: () => void;
-}
-
-export const ProfileHeader = ({ onLoggedOut }: ProfileHeaderProps) => {
+export const ProfileHeader = () => {
   const t = useTranslations("Profile");
   const router = useRouter();
+  const locale = useLocale();
   const user = useAuthStore((s) => s.user);
   const updateUser = useAuthStore((s) => s.updateUser);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -79,10 +76,13 @@ export const ProfileHeader = ({ onLoggedOut }: ProfileHeaderProps) => {
       const hasPhoneChanged = phone !== (user.phone || "");
 
       if (hasNameChanged || hasPhoneChanged) {
-        const updatedData = await updateProfileAction(user.id, {
-          name: trimmedName,
-          phone,
-        });
+        const updatedData = await updateProfileAction(
+          {
+            name: trimmedName,
+            phone,
+          },
+          locale,
+        );
 
         updateUser({
           name: updatedData.name || trimmedName,
@@ -100,27 +100,20 @@ export const ProfileHeader = ({ onLoggedOut }: ProfileHeaderProps) => {
 
   const handleLogout = async () => {
     try {
-      setIsLoggingOut(true);
       const supabase = getSupabaseBrowser();
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      onLoggedOut();
+      if (error) {
+        throw error;
+      }
+
       router.push("/");
     } catch (error) {
-      setIsLoggingOut(false);
       const message = error instanceof Error ? error.message : "Failed to log out";
       toast.error(message);
     }
   };
 
   if (!user) return null;
-  if (isLoggingOut) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner} />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -208,10 +201,22 @@ export const ProfileHeader = ({ onLoggedOut }: ProfileHeaderProps) => {
                 <PhoneSection />
               </div>
               <div className={styles.headerActions}>
-                <Button variant="secondary" onClick={startEditing}>
+                {user.role === "ADMIN" && (
+                  <Link
+                    href="/admin/products"
+                    className={`${btnStyles.btn} ${btnStyles.primary} ${btnStyles.md} ${styles.profileBtn}`}
+                  >
+                    {t("openAdmin")}
+                  </Link>
+                )}
+                <Button variant="secondary" className={styles.profileBtn} onClick={startEditing}>
                   {t("editProfile") || "Edit Profile"}
                 </Button>
-                <Button variant="danger" onClick={() => setIsConfirmLogoutOpen(true)}>
+                <Button
+                  variant="danger"
+                  className={styles.profileBtn}
+                  onClick={() => setIsConfirmLogoutOpen(true)}
+                >
                   {t("logoutButton")}
                 </Button>
               </div>

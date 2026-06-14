@@ -7,7 +7,6 @@ export const CATALOG_LINKS: ILinkItem[] = [
   { href: "/men", label: "Чоловіки" },
   { href: "/women", label: "Жінки" },
   { href: "/new-arrivals", label: "Новинки" },
-  { href: "/brands", label: "Бренди" },
   { href: "/other", label: "Інше" },
 ];
 

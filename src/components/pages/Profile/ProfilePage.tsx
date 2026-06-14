@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "@/i18n/navigation";
-
 import { BackButton } from "@/components/ui/BackButton/BackButton";
 
 import { OrdersList } from "./_components/OrdersList/OrdersList";
@@ -17,7 +15,6 @@ const mockOrders = [
 ];
 
 export const ProfilePage = () => {
-  const router = useRouter();
   const { isLoading } = useAuthStore();
 
   if (isLoading) {
@@ -32,7 +29,7 @@ export const ProfilePage = () => {
     <>
       <div className={styles.container}>
         <BackButton scrollUp={true} />
-        <ProfileHeader onLoggedOut={() => router.push("/")} />
+        <ProfileHeader />
         <OrdersList orders={mockOrders} />
       </div>
     </>

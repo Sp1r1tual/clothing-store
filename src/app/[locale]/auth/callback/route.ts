@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { syncUserProfileAction } from "@/db/profile.db";
-import { createServerClient } from "@supabase/ssr";
+import { upsertUserProfile } from "@/db/profile";
 
-import { env } from "@/common/validation/env/env";
+import { sanitizeNextPath } from "@/common/auth/routes";
+import { createSupabaseRouteHandlerClient } from "@/common/utils/supabase/route-handler";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, { params }: Props) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
-  const next = searchParams.get("next") ?? "/profile";
+  const next = sanitizeNextPath(searchParams.get("next"));
 
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = `/${locale}${next}`;
@@ -26,55 +26,35 @@ export async function GET(request: NextRequest, { params }: Props) {
     return NextResponse.redirect(redirectTo);
   }
 
-  if (code) {
-    const response = NextResponse.redirect(redirectTo);
+  if (!code) {
+    return NextResponse.redirect(redirectTo);
+  }
 
-    const supabase = createServerClient(
-      env.NEXT_PUBLIC_SUPABASE_URL,
-      env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options);
-            });
-          },
-        },
-      },
-    );
+  const response = NextResponse.redirect(redirectTo);
+  const supabase = createSupabaseRouteHandlerClient(request, response);
+  const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
-    const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!exchangeError && data?.user) {
-      const { user } = data;
-      const name =
-        user.user_metadata.full_name ||
-        user.user_metadata.name ||
-        user.email?.split("@")[0] ||
-        "User";
-
-      try {
-        await syncUserProfileAction(user.id, {
-          name,
-          email: user.email,
-          avatarUrl: user.user_metadata.avatar_url || "",
-          phone: user.user_metadata.phone || user.phone || "",
-        });
-      } catch (dbError) {
-        console.error("Failed to sync profile:", dbError);
-        redirectTo.pathname = `/${locale}/auth/auth-code-error`;
-        return NextResponse.redirect(redirectTo);
-      }
-
-      return response;
-    }
-
+  if (exchangeError || !data?.user) {
     redirectTo.pathname = `/${locale}/auth/auth-code-error`;
     return NextResponse.redirect(redirectTo);
   }
 
-  return NextResponse.redirect(redirectTo);
+  const { user } = data;
+  const metadata = user.user_metadata ?? {};
+  const name = metadata.full_name || metadata.name || user.email?.split("@")[0] || "User";
+
+  try {
+    await upsertUserProfile(user.id, {
+      name,
+      email: user.email,
+      avatarUrl: metadata.avatar_url || "",
+      phone: metadata.phone || user.phone || "",
+    });
+  } catch (dbError) {
+    console.error("Failed to sync profile:", dbError);
+    redirectTo.pathname = `/${locale}/auth/auth-code-error`;
+    return NextResponse.redirect(redirectTo);
+  }
+
+  return response;
 }

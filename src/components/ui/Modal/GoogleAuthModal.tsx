@@ -15,19 +15,37 @@ import styles from "./GoogleAuthModal.module.css";
 interface GoogleAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  redirectPath?: string;
 }
 
-export const GoogleAuthModal = ({ isOpen, onClose }: GoogleAuthModalProps) => {
+function resolveRedirectPath(redirectPath?: string) {
+  if (redirectPath) {
+    return redirectPath;
+  }
+
+  if (typeof window === "undefined") {
+    return "/profile";
+  }
+
+  return new URLSearchParams(window.location.search).get("next") || "/profile";
+}
+
+export const GoogleAuthModal = ({ isOpen, onClose, redirectPath }: GoogleAuthModalProps) => {
   const t = useTranslations("AuthModal");
   const locale = useLocale();
 
   const handleGoogleSignIn = async () => {
     try {
       sessionStorage.setItem("pendingLogin", "1");
+
+      const next = resolveRedirectPath(redirectPath);
+      const callbackUrl = new URL(`${window.location.origin}/${locale}/auth/callback`);
+      callbackUrl.searchParams.set("next", next);
+
       const { error } = await getSupabaseBrowser().auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/${locale}/auth/callback`,
+          redirectTo: callbackUrl.toString(),
         },
       });
 

@@ -10,6 +10,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 
 import { Modal } from "@/components/ui/Modal/Modal";
 
+import { getCurrentUser } from "@/common/auth/server";
 import { geistMono, geistSans } from "@/common/fonts/fonts";
 
 import "@/app/globals.css";
@@ -41,7 +42,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
     notFound();
   }
 
-  const messages = await getMessages();
+  const [messages, initialUser] = await Promise.all([getMessages(), getCurrentUser()]);
 
   return (
     <html
@@ -62,7 +63,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
         />
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>
+          <AuthProvider initialUser={initialUser}>
             {children}
             <Modal />
           </AuthProvider>
