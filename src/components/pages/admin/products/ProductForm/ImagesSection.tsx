@@ -92,36 +92,38 @@ export const ImagesSection = ({
         {imageFields.map((field, index) => (
           <div key={field.id} className={styles.imageRow}>
             <div className={styles.imageRowMain}>
-              <div className={styles.urlUploadWrapper}>
-                <div className={styles.urlInput}>
-                  <AdminInput
-                    label={t("labels.imageUrl")}
-                    placeholder={t("placeholders.imageUrl")}
-                    error={errors.images?.[index]?.url?.message}
-                    {...register(`images.${index}.url`)}
-                  />
-                </div>
-                <div className={styles.uploadButtonWrapper}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className={styles.hiddenFileInput}
-                    onChange={(e) => handleFileUpload(index, e)}
-                    ref={(el) => {
-                      fileInputRefs.current[index] = el;
-                    }}
-                    id={`image-upload-${index}`}
-                  />
-                  <label
-                    htmlFor={`image-upload-${index}`}
-                    className={`${styles.uploadBtn} ${uploadingIndex === index ? styles.uploading : ""}`}
-                  >
-                    {uploadingIndex === index ? (
-                      <Loader2 size={18} className={styles.spinner} />
-                    ) : (
-                      <Upload size={18} />
-                    )}
-                  </label>
+              <div className={styles.imageInputGroup}>
+                <label className={styles.fieldLabel}>{t("labels.imageUrl")}</label>
+                <div className={styles.urlUploadWrapper}>
+                  <div className={styles.urlInput}>
+                    <AdminInput
+                      placeholder={t("placeholders.imageUrl")}
+                      error={errors.images?.[index]?.url?.message}
+                      {...register(`images.${index}.url`)}
+                    />
+                  </div>
+                  <div className={styles.uploadButtonWrapper}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className={styles.hiddenFileInput}
+                      onChange={(e) => handleFileUpload(index, e)}
+                      ref={(el) => {
+                        fileInputRefs.current[index] = el;
+                      }}
+                      id={`image-upload-${index}`}
+                    />
+                    <label
+                      htmlFor={`image-upload-${index}`}
+                      className={`${styles.uploadBtn} ${uploadingIndex === index ? styles.uploading : ""}`}
+                    >
+                      {uploadingIndex === index ? (
+                        <Loader2 size={18} className={styles.spinner} />
+                      ) : (
+                        <Upload size={18} />
+                      )}
+                    </label>
+                  </div>
                 </div>
               </div>
               <AdminInput
