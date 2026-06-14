@@ -7,21 +7,320 @@ datasource db {
 }
 
 enum UserRole {
-  Customer
-  Admin
+  CUSTOMER
+  ADMIN
 }
 
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum ShippingCarrier {
+  NOVA_POSHTA
+  UKRPOSHTA
+  MEEST
+  COURIER
+  SELF_PICKUP
+}
+
+enum ItemStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Profile.id is intentionally not @default(uuid()) — it mirrors the Supabase Auth user ID
 model Profile {
-  id        String   @id
-  name      String?  @db.VarChar(32)
-  email     String?  @db.VarChar(255)
-  avatarUrl String?  @map("avatar_url")
-  phone     String?  @db.VarChar(20)
-  role      UserRole @default(Customer)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                   String                @id
+  name                 String?               @db.VarChar(32)
+  email                String?               @db.VarChar(255)
+  avatarUrl            String?               @map("avatar_url")
+  phone                String?               @db.VarChar(20)
+  role                 UserRole              @default(CUSTOMER)
+  // NOTE: kept for quick UI checks; source of truth is NewsletterSubscriber table
+  isSubscribed         Boolean               @default(false)
+  deletedAt            DateTime?             @map("deleted_at") // soft delete
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  cart                 Cart?
+  favorites            Favorite[]
+  reviews              Review[]
+  orders               Order[]
+  addresses            Address[]
+  newsletterSubscriber NewsletterSubscriber?
 
   @@index([createdAt])
   @@index([role])
+  @@index([deletedAt])
   @@map("profiles")
+}
+
+model Category {
+  id             String     @id @default(uuid())
+  name           String
+  slug           String     @unique
+  parentId       String?
+  parent         Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children       Category[] @relation("CategoryHierarchy")
+  products       Product[]
+  order          Int        @default(0)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Product {
+  id               String           @id @default(uuid())
+  name             String
+  slug             String           @unique
+  description      String?
+  composition      String?          @db.Text
+  careInstructions String?          @db.Text
+  measurements     String?          @db.Text
+  price            Decimal          @db.Decimal(10, 2)
+  discountPrice    Decimal?         @db.Decimal(10, 2)
+  status           ItemStatus       @default(DRAFT)
+  seoTitle         String?
+  seoDescription   String?
+  categoryId       String
+  category         Category         @relation(fields: [categoryId], references: [id])
+  images           ProductImage[]
+  variants         ProductVariant[]
+  favorites        Favorite[]
+  cartItems        CartItem[]
+  reviews          Review[]
+  orderItems       OrderItem[]
+  tags             Tag[]
+  // Two separate named relations for related vs cross-sell products
+  relatedProducts  Product[]        @relation("RelatedProducts")
+  relatedTo        Product[]        @relation("RelatedProducts")
+  crossSells       Product[]        @relation("CrossSells")
+  crossSellOf      Product[]        @relation("CrossSells")
+  isFeatured       Boolean          @default(false)
+  deletedAt        DateTime? // soft delete
+  publishedAt      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([discountPrice])
+  @@index([createdAt])
+  @@index([publishedAt])
+  @@index([deletedAt])
+  @@map("products")
+}
+
+model ProductVariant {
+  id         String      @id @default(uuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size       String
+  color      String?
+  // IMPORTANT: enforce stock >= 0 via a raw migration CHECK constraint
+  // ALTER TABLE product_variants ADD CONSTRAINT stock_non_negative CHECK (stock >= 0);
+  stock      Int         @default(0)
+  sku        String?     @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altText   String?
+  isPrimary Boolean @default(false)
+  order     Int     @default(0)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([profileId, productId])
+  @@index([profileId])
+  @@index([productId])
+  @@map("favorites")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  profileId String     @unique
+  profile   Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String          @id @default(uuid())
+  cartId    String
+  cart      Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  quantity  Int             @default(1)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  // NOTE: PostgreSQL treats NULL != NULL, so two rows with variantId=NULL won't conflict here.
+  // Apply this raw migration for correct behaviour:
+  //   CREATE UNIQUE INDEX cart_items_no_variant_unique
+  //     ON cart_items (cart_id, product_id)
+  //     WHERE variant_id IS NULL;
+  @@unique([cartId, productId, variantId])
+  @@index([cartId])
+  @@index([productId])
+  @@map("cart_items")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  // Enforce 1–5 via raw migration:
+  // ALTER TABLE reviews ADD CONSTRAINT rating_range CHECK (rating >= 1 AND rating <= 5);
+  rating    Int
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([profileId, productId])
+  @@index([productId])
+  @@index([profileId])
+  @@map("reviews")
+}
+
+model Order {
+  id              String          @id @default(uuid())
+  profileId       String
+  profile         Profile         @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  status          OrderStatus     @default(PENDING)
+  totalAmount     Decimal         @db.Decimal(10, 2)
+  contactName     String
+  contactEmail    String
+  contactPhone    String
+  carrier         ShippingCarrier @default(NOVA_POSHTA)
+  shippingAddress String          @db.Text
+  trackingNumber  String?
+  note            String?         @db.Text
+  promoCodeId     String?
+  promoCode       PromoCode?      @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
+  discountAmount  Decimal?        @db.Decimal(10, 2)
+  paidAt          DateTime? // set when payment is confirmed
+  items           OrderItem[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([profileId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([paidAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String          @id @default(uuid())
+  orderId      String
+  order        Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String?
+  product      Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId    String?
+  variant      ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  productName  String
+  productSize  String?
+  productColor String?
+  price        Decimal         @db.Decimal(10, 2)
+  quantity     Int             @default(1)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Address {
+  id         String           @id @default(uuid())
+  profileId  String
+  profile    Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title      String?
+  carrier    ShippingCarrier? // determines whether warehouse or street address is used
+  city       String
+  street     String?
+  postalCode String?
+  warehouse  String? // branch number for Nova Poshta / Ukrposhta etc.
+  isDefault  Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([profileId])
+  @@map("addresses")
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[]
+
+  @@map("tags")
+}
+
+model PromoCode {
+  id                 String    @id @default(uuid())
+  code               String    @unique
+  discountPercentage Int?
+  discountAmount     Decimal?  @db.Decimal(10, 2)
+  minOrderAmount     Decimal?  @db.Decimal(10, 2)
+  usageLimit         Int? // total uses across all users
+  usageLimitPerUser  Int       @default(1)
+  usedCount          Int       @default(0)
+  isActive           Boolean   @default(true)
+  expiresAt          DateTime?
+  orders             Order[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("promo_codes")
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  profileId String?  @unique
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
 }

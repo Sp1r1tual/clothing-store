@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #888888;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+.actionSlot {
+  flex-shrink: 0;
+}

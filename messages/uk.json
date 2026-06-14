@@ -14,7 +14,6 @@
     "men": "Чоловіки",
     "women": "Жінки",
     "new-arrivals": "Новинки",
-    "brands": "Бренди",
     "other": "Інше",
     "sale": "Розпродаж",
     "searchPlaceholder": "Пошук",
@@ -130,6 +129,7 @@
     "welcome": "Вітаємо, {name}!",
     "emailLabel": "Електронна пошта:",
     "logoutButton": "Вийти з акаунта",
+    "openAdmin": "Відкрити панель адміністратора",
     "noOrders": "У вас ще немає замовлень.",
     "recentOrders": "Останні замовлення",
     "logoutSuccess": "Ви успішно вийшли з акаунта!",
@@ -161,5 +161,134 @@
     "title": "Помилка авторизації",
     "description": "Не вдалося підтвердити авторизаційний код. Можливо, посилання застаріло або вже було використане.",
     "button": "Повернутися на головну"
+  },
+  "Admin": {
+    "layout": {
+      "title": "Адмін-панель",
+      "nav": {
+        "products": "Товари",
+        "categories": "Категорії"
+      },
+      "backToSite": "На сайт"
+    },
+    "products": {
+      "title": "Товари",
+      "subtitle": "{count} товарів у каталозі",
+      "addButton": "Додати товар",
+      "metaTitle": "Товари — Адмін-панель",
+      "new": {
+        "title": "Додати товар",
+        "subtitle": "Заповніть поля нижче та збережіть товар",
+        "metaTitle": "Додати товар — Адмін-панель"
+      },
+      "table": {
+        "empty": "Товарів ще немає. Додайте перший!",
+        "th": {
+          "product": "Товар",
+          "category": "Категорія",
+          "price": "Ціна",
+          "status": "Статус",
+          "date": "Дата"
+        },
+        "status": {
+          "DRAFT": "Чернетка",
+          "PUBLISHED": "Опублікований",
+          "ARCHIVED": "Архів"
+        },
+        "actions": {
+          "edit": "Редагувати",
+          "delete": "Видалити"
+        },
+        "deleteConfirm": "Видалити товар \"{name}\"?",
+        "deleteSuccess": "Товар видалено",
+        "deleteError": "Помилка при видаленні"
+      },
+      "form": {
+        "sections": {
+          "basic": "Основна інформація",
+          "priceCategory": "Ціна та категорія",
+          "details": "Деталі товару",
+          "images": "Зображення",
+          "variants": "Варіанти (розміри / кольори)",
+          "seo": "SEO"
+        },
+        "labels": {
+          "name": "Назва товару *",
+          "slug": "Slug *",
+          "description": "Опис",
+          "price": "Ціна (₴) *",
+          "discountPrice": "Знижена ціна (₴)",
+          "category": "Категорія *",
+          "status": "Статус *",
+          "isFeatured": "Featured (рекомендований товар)",
+          "composition": "Склад",
+          "careInstructions": "Догляд",
+          "measurements": "Мірки / таблиця розмірів",
+          "imageUrl": "URL зображення *",
+          "imageAlt": "Alt-текст",
+          "isPrimaryImage": "Головне зображення",
+          "variantSize": "Розмір *",
+          "variantColor": "Колір",
+          "variantStock": "Залишок",
+          "variantSku": "SKU",
+          "seoTitle": "SEO заголовок",
+          "seoDescription": "SEO опис"
+        },
+        "placeholders": {
+          "name": "Наприклад: Класична футболка",
+          "slug": "klasychna-futbolka",
+          "description": "Короткий опис товару...",
+          "price": "0.00",
+          "discountPrice": "0.00",
+          "selectCategory": "Оберіть категорію",
+          "composition": "Наприклад: 100% бавовна",
+          "careInstructions": "Інструкції по догляду...",
+          "measurements": "XS: груди 84, талія 64...",
+          "imageUrl": "https://...",
+          "imageAlt": "Опис зображення",
+          "variantSize": "XS / S / M / L / XL",
+          "variantColor": "Чорний",
+          "variantStock": "0",
+          "variantSku": "SHIRT-BLK-M",
+          "seoTitle": "Title для пошукових систем",
+          "seoDescription": "Meta description"
+        },
+        "status": {
+          "DRAFT": "Чернетка",
+          "PUBLISHED": "Опублікований",
+          "ARCHIVED": "Архів"
+        },
+        "hints": {
+          "emptyImages": "Додайте хоча б одне зображення (URL)",
+          "emptyVariants": "Немає варіантів. Додайте розміри/кольори."
+        },
+        "buttons": {
+          "addImage": "Додати зображення",
+          "addVariant": "Додати варіант",
+          "delete": "Видалити",
+          "cancel": "Скасувати",
+          "save": "Зберегти",
+          "saving": "Збереження..."
+        },
+        "messages": {
+          "success": "Товар успішно створено!",
+          "error": "Помилка при збереженні"
+        },
+        "validation": {
+          "imageUrlRequired": "URL зображення обов'язковий",
+          "variantSizeRequired": "Розмір обов'язковий",
+          "variantStockMin": "Залишок не може бути від'ємним",
+          "productNameRequired": "Назва обов'язкова",
+          "productNameMax": "Назва занадто довга",
+          "productSlugRequired": "Slug обов'язковий",
+          "productSlugRegex": "Slug може містити лише малі літери, цифри та дефіси",
+          "productPriceRequired": "Вкажіть ціну",
+          "productPricePositive": "Ціна має бути більше 0",
+          "productCategoryRequired": "Категорія обов'язкова",
+          "imageSizeMax": "Розмір файлу має бути менше 5МБ",
+          "imageTypeInvalid": "Дозволено завантажувати тільки зображення"
+        }
+      }
+    }
   }
 }

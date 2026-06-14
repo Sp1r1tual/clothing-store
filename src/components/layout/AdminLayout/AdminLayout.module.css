@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f8f8;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+}

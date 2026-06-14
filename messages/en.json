@@ -14,7 +14,6 @@
     "men": "Men",
     "women": "Women",
     "new-arrivals": "New Arrivals",
-    "brands": "Brands",
     "other": "Other",
     "sale": "Sale",
     "searchPlaceholder": "Search",
@@ -130,6 +129,7 @@
     "welcome": "Welcome, {name}!",
     "emailLabel": "Email:",
     "logoutButton": "Log Out",
+    "openAdmin": "Open admin panel",
     "noOrders": "You don't have any orders yet.",
     "recentOrders": "Recent Orders",
     "logoutSuccess": "Successfully logged out!",
@@ -161,5 +161,134 @@
     "title": "Authentication Error",
     "description": "Failed to verify the authentication code. The link may have expired or already been used.",
     "button": "Back to Home"
+  },
+  "Admin": {
+    "layout": {
+      "title": "Admin Panel",
+      "nav": {
+        "products": "Products",
+        "categories": "Categories"
+      },
+      "backToSite": "To site"
+    },
+    "products": {
+      "title": "Products",
+      "subtitle": "{count} products in catalog",
+      "addButton": "Add product",
+      "metaTitle": "Products — Admin Panel",
+      "new": {
+        "title": "Add product",
+        "subtitle": "Fill in the fields below and save the product",
+        "metaTitle": "Add product — Admin Panel"
+      },
+      "table": {
+        "empty": "No products yet. Add the first one!",
+        "th": {
+          "product": "Product",
+          "category": "Category",
+          "price": "Price",
+          "status": "Status",
+          "date": "Date"
+        },
+        "status": {
+          "DRAFT": "Draft",
+          "PUBLISHED": "Published",
+          "ARCHIVED": "Archived"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "deleteConfirm": "Delete product \"{name}\"?",
+        "deleteSuccess": "Product deleted",
+        "deleteError": "Error during deletion"
+      },
+      "form": {
+        "sections": {
+          "basic": "Basic Info",
+          "priceCategory": "Price & Category",
+          "details": "Product Details",
+          "images": "Images",
+          "variants": "Variants (sizes / colors)",
+          "seo": "SEO"
+        },
+        "labels": {
+          "name": "Product Name *",
+          "slug": "Slug *",
+          "description": "Description",
+          "price": "Price (₴) *",
+          "discountPrice": "Discount Price (₴)",
+          "category": "Category *",
+          "status": "Status *",
+          "isFeatured": "Featured (recommended product)",
+          "composition": "Composition",
+          "careInstructions": "Care",
+          "measurements": "Measurements / size table",
+          "imageUrl": "Image URL *",
+          "imageAlt": "Alt Text",
+          "isPrimaryImage": "Primary Image",
+          "variantSize": "Size *",
+          "variantColor": "Color",
+          "variantStock": "Stock",
+          "variantSku": "SKU",
+          "seoTitle": "SEO Title",
+          "seoDescription": "SEO Description"
+        },
+        "placeholders": {
+          "name": "E.g. Classic T-shirt",
+          "slug": "classic-t-shirt",
+          "description": "Short description of the product...",
+          "price": "0.00",
+          "discountPrice": "0.00",
+          "selectCategory": "Select category",
+          "composition": "E.g. 100% cotton",
+          "careInstructions": "Care instructions...",
+          "measurements": "XS: chest 84, waist 64...",
+          "imageUrl": "https://...",
+          "imageAlt": "Image description",
+          "variantSize": "XS / S / M / L / XL",
+          "variantColor": "Black",
+          "variantStock": "0",
+          "variantSku": "SHIRT-BLK-M",
+          "seoTitle": "Title for search engines",
+          "seoDescription": "Meta description"
+        },
+        "status": {
+          "DRAFT": "Draft",
+          "PUBLISHED": "Published",
+          "ARCHIVED": "Archived"
+        },
+        "hints": {
+          "emptyImages": "Add at least one image (URL)",
+          "emptyVariants": "No variants. Add sizes/colors."
+        },
+        "buttons": {
+          "addImage": "Add image",
+          "addVariant": "Add variant",
+          "delete": "Delete",
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "messages": {
+          "success": "Product created successfully!",
+          "error": "Error during saving"
+        },
+        "validation": {
+          "imageUrlRequired": "Image URL is required",
+          "variantSizeRequired": "Size is required",
+          "variantStockMin": "Stock cannot be negative",
+          "productNameRequired": "Name is required",
+          "productNameMax": "Name is too long",
+          "productSlugRequired": "Slug is required",
+          "productSlugRegex": "Slug can only contain lowercase letters, numbers, and hyphens",
+          "productPriceRequired": "Provide a price",
+          "productPricePositive": "Price must be greater than 0",
+          "productCategoryRequired": "Category is required",
+          "imageSizeMax": "File size must be less than 5MB",
+          "imageTypeInvalid": "Only image files are allowed"
+        }
+      }
+    }
   }
 }
