@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sm {
+  font-size: 0.875rem;
+}
+
+.md {
+  font-size: 1rem;
+}
+
+.lg {
+  font-size: 1.25rem;
+}
+
+.regularPrice {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.discountPrice {
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.originalPrice {
+  font-weight: 500;
+  color: #888888;
+  text-decoration: line-through;
+  font-size: 0.9em;
+}

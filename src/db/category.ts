@@ -96,3 +96,49 @@ export async function deleteCategory(id: string) {
 
   return prisma.category.delete({ where: { id } });
 }
+
+export async function findCategoryBySlug(slug: string) {
+  return prisma.category.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      nameUk: true,
+      nameEn: true,
+      slug: true,
+      parentId: true,
+      seoTitleUk: true,
+      seoTitleEn: true,
+      seoDescriptionUk: true,
+      seoDescriptionEn: true,
+      parent: { select: { nameUk: true, nameEn: true, slug: true } },
+      children: {
+        select: {
+          id: true,
+          nameUk: true,
+          nameEn: true,
+          slug: true,
+          _count: { select: { products: true } },
+        },
+        orderBy: [{ order: "asc" }, { nameUk: "asc" }],
+      },
+    },
+  });
+}
+
+export async function findAllDescendantCategoryIds(parentId: string): Promise<string[]> {
+  const children = await prisma.category.findMany({
+    where: { parentId },
+    select: { id: true },
+  });
+
+  const childIds = children.map((c) => c.id);
+  const descendantIds: string[] = [];
+
+  for (const childId of childIds) {
+    descendantIds.push(childId);
+    const nested = await findAllDescendantCategoryIds(childId);
+    descendantIds.push(...nested);
+  }
+
+  return descendantIds;
+}

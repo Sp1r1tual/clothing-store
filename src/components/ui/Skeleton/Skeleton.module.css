@@ -1,0 +1,59 @@
+.rect {
+  border-radius: 6px;
+  width: 100%;
+  height: 20px;
+}
+
+.text {
+  border-radius: 4px;
+  height: 14px;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.card {
+  border-radius: 12px;
+  width: 100%;
+  height: 200px;
+}
+
+.productCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.productImage {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  height: auto;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}

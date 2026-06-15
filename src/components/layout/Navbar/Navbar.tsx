@@ -27,7 +27,8 @@ export const Navbar = () => {
 
   const close = () => setIsMenuOpen(false);
 
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname.startsWith(href));
 
   return (
     <>

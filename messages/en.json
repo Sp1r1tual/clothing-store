@@ -386,5 +386,44 @@
         }
       }
     }
+  },
+  "Catalog": {
+    "filters": {
+      "title": "Filters",
+      "price": "Price",
+      "sizes": "Sizes",
+      "sort": "Sort by",
+      "clear": "Clear All",
+      "apply": "Apply",
+      "min": "From",
+      "max": "To"
+    },
+    "sorting": {
+      "newest": "Newest",
+      "popular": "Popular",
+      "price-asc": "Price: Low to High",
+      "price-desc": "Price: High to Low"
+    },
+    "empty": {
+      "title": "No products found",
+      "description": "Try changing the filters or search query to find what you're looking for.",
+      "clearFilters": "Clear Filters"
+    },
+    "newArrivals": "New Arrivals",
+    "sale": "Sale",
+    "showing": "Showing {start}-{end} of {total} products"
+  },
+  "ProductDetail": {
+    "add-to-cart": "Add to Cart",
+    "add-to-favorites": "Add to Favorites",
+    "size": "Size",
+    "color": "Color",
+    "details": "Details",
+    "composition": "Composition",
+    "care": "Care",
+    "measurements": "Measurements",
+    "related": "You May Also Like",
+    "out-of-stock": "Out of Stock",
+    "select-size": "Select size"
   }
 }

@@ -1,0 +1,46 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sm {
+  padding: 3px 8px;
+  font-size: 0.625rem;
+}
+
+.md {
+  padding: 5px 10px;
+  font-size: 0.6875rem;
+}
+
+.default {
+  background-color: #f5f5f7;
+  color: var(--text-secondary);
+}
+
+.sale {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.new {
+  background-color: #059669;
+  color: #ffffff;
+}
+
+.featured {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
+
+.outOfStock {
+  background-color: #e5e5e5;
+  color: #888888;
+}
