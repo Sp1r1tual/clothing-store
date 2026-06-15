@@ -32,6 +32,7 @@ import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
 
 import { SortableImageCard } from "./SortableImageCard";
 
+import { convertToWebP } from "@/common/utils/image";
 import { type ProductFormData } from "@/common/validation/product/product.schema";
 
 import styles from "./ImagesSection.module.css";
@@ -101,14 +102,28 @@ export function ImagesSection({
   }, []);
 
   const addFiles = useCallback(
-    (files: File[]) => {
+    async (files: File[]) => {
       const remaining = maxImages - imageFields.length;
+
+      const convertedFiles = await Promise.all(
+        files.map(async (f) => {
+          if (f.type.startsWith("image/") && f.type !== "image/webp") {
+            try {
+              return await convertToWebP(f, 0.85);
+            } catch (err) {
+              console.error("Failed to convert image to WebP", err);
+              return f;
+            }
+          }
+          return f;
+        }),
+      );
 
       const pendingFingerprints = new Set(
         pending.map((p) => `${p.file.name}|${p.file.size}|${p.file.lastModified}`),
       );
 
-      const toAdd = files
+      const toAdd = convertedFiles
         .filter((f) => f.type.startsWith("image/"))
         .filter((f) => {
           const fp = `${f.name}|${f.size}|${f.lastModified}`;
@@ -267,7 +282,6 @@ export function ImagesSection({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {}
       <div className={styles.sectionHeader}>
         <div>
           <h2 className={styles.sectionTitle}>{t("sections.images")}</h2>
@@ -299,7 +313,6 @@ export function ImagesSection({
         </div>
       </div>
 
-      {}
       {imageFields.length === 0 && (
         <label htmlFor="multi-image-upload" className={styles.emptyZone}>
           <ImageIcon size={32} className={styles.emptyIcon} />
@@ -308,7 +321,6 @@ export function ImagesSection({
         </label>
       )}
 
-      {}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
