@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { upsertUserProfile } from "@/db/profile";
 
 import { sanitizeNextPath } from "@/common/auth/routes";
+import { limiter } from "@/common/utils/rate-limit";
 import { createSupabaseRouteHandlerClient } from "@/common/utils/supabase/route-handler";
 
 interface Props {
@@ -15,6 +16,13 @@ export async function GET(request: NextRequest, { params }: Props) {
   const code = searchParams.get("code");
   const error = searchParams.get("error");
   const next = sanitizeNextPath(searchParams.get("next"));
+
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  try {
+    await limiter.check(10, `auth_${ip}`);
+  } catch {
+    return new NextResponse("Too Many Requests", { status: 429 });
+  }
 
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = `/${locale}${next}`;

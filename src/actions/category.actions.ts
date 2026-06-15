@@ -1,30 +1,16 @@
 "use server";
 
-import { getTranslations } from "next-intl/server";
-
 import {
   deleteCategory as deleteCategoryDb,
   insertCategory,
   updateCategory as updateCategoryDb,
 } from "@/db/category";
+import { z } from "zod";
 
 import { assertAdmin } from "@/common/auth/server";
 import { revalidateLocalizedPath } from "@/common/utils/revalidate";
-import {
-  type CategoryFormData,
-  createCategorySchema,
-} from "@/common/validation/category/category.schema";
-
-async function getCategorySchema(locale: string) {
-  const t = await getTranslations({ locale, namespace: "Admin.categories.form" });
-
-  return createCategorySchema({
-    nameRequired: t("validation.nameRequired"),
-    nameMax: t("validation.nameMax"),
-    slugRequired: t("validation.slugRequired"),
-    slugRegex: t("validation.slugRegex"),
-  });
-}
+import { type CategoryFormData } from "@/common/validation/category/category.schema";
+import { getCategorySchema } from "@/common/validation/category/category.schema.server";
 
 export async function createCategory(data: CategoryFormData, locale: string) {
   await assertAdmin();
@@ -45,6 +31,10 @@ export async function createCategory(data: CategoryFormData, locale: string) {
 export async function updateCategory(id: string, data: CategoryFormData, locale: string) {
   await assertAdmin();
 
+  if (!z.uuid().safeParse(id).success) {
+    throw new Error("Invalid category ID");
+  }
+
   const schema = await getCategorySchema(locale);
   const result = schema.safeParse(data);
 
@@ -52,15 +42,39 @@ export async function updateCategory(id: string, data: CategoryFormData, locale:
     throw new Error(result.error.issues[0].message);
   }
 
-  const category = await updateCategoryDb(id, result.data);
-
-  revalidateLocalizedPath("/admin/categories");
-  return category;
+  try {
+    const category = await updateCategoryDb(id, result.data);
+    revalidateLocalizedPath("/admin/categories");
+    return category;
+  } catch (error) {
+    console.error("Failed to update category:", error);
+    throw new Error("Failed to update category due to an internal error");
+  }
 }
 
 export async function deleteCategory(id: string) {
   await assertAdmin();
 
-  await deleteCategoryDb(id);
-  revalidateLocalizedPath("/admin/categories");
+  if (!z.uuid().safeParse(id).success) {
+    throw new Error("Invalid category ID");
+  }
+
+  try {
+    await deleteCategoryDb(id);
+    revalidateLocalizedPath("/admin/categories");
+  } catch (error) {
+    console.error("Failed to delete category:", error);
+    if (error instanceof Error) {
+      if (error.message === "CANNOT_DELETE_BASE_CATEGORY") {
+        throw new Error("Cannot delete base categories like 'men', 'women', or 'other'.");
+      }
+      if (error.message === "HAS_CHILDREN") {
+        throw new Error("Cannot delete a category that has subcategories.");
+      }
+      if (error.message === "HAS_PRODUCTS") {
+        throw new Error("Cannot delete a category that has products.");
+      }
+    }
+    throw new Error("Failed to delete category due to an internal error");
+  }
 }

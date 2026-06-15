@@ -1,26 +1,10 @@
 "use server";
 
-import { getTranslations } from "next-intl/server";
-
 import { updateProfile } from "@/db/profile";
 
 import { assertAuth } from "@/common/auth/server";
-import {
-  type ProfileFormData,
-  createProfileSchema,
-} from "@/common/validation/profile/schemas/profile.schema";
-
-async function getProfileSchema(locale: string) {
-  const t = await getTranslations({ locale, namespace: "Profile" });
-
-  return createProfileSchema({
-    nameMin: t("validation.nameMin"),
-    nameMax: t("validation.nameMax"),
-    nameRegex: t("validation.nameRegex"),
-    phoneMax: t("validation.phoneMax"),
-    phoneRegex: t("validation.phoneRegex"),
-  });
-}
+import { type ProfileFormData } from "@/common/validation/profile/schemas/profile.schema";
+import { getProfileSchema } from "@/common/validation/profile/schemas/profile.schema.server";
 
 export async function updateProfileAction(data: ProfileFormData, locale: string) {
   const user = await assertAuth();

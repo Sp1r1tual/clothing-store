@@ -110,6 +110,22 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
       ? Number(discountPrice)
       : null;
 
+  const currentProduct = await prisma.product.findUnique({
+    where: { id },
+    select: { status: true, publishedAt: true },
+  });
+
+  if (!currentProduct) {
+    throw new Error("Product not found");
+  }
+
+  let publishedAt = currentProduct.publishedAt;
+  if (productData.status === "PUBLISHED" && currentProduct.status !== "PUBLISHED") {
+    publishedAt = new Date();
+  } else if (productData.status !== "PUBLISHED") {
+    publishedAt = null;
+  }
+
   return prisma.$transaction(async (tx) => {
     // 1. Update basic fields
     await tx.product.update({
@@ -117,7 +133,7 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
       data: {
         ...productData,
         discountPrice: discount,
-        publishedAt: productData.status === "PUBLISHED" ? new Date() : null,
+        publishedAt: publishedAt,
       },
     });
 

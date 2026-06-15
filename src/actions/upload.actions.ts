@@ -1,13 +1,22 @@
 "use server";
 
 import { getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 
 import { assertAdmin } from "@/common/auth/server";
+import { limiter } from "@/common/utils/rate-limit";
 import { getSupabaseServer } from "@/common/utils/supabase/server";
 import { validateImageFile } from "@/common/validation/file.validation";
 
 export async function uploadProductImage(formData: FormData) {
-  await assertAdmin();
+  const user = await assertAdmin();
+
+  const ip = (await headers()).get("x-forwarded-for") ?? "127.0.0.1";
+  try {
+    await limiter.check(50, `upload_${user.id}_${ip}`);
+  } catch {
+    throw new Error("Rate limit exceeded. Try again later.");
+  }
 
   const file = formData.get("file") as File;
   if (!file) {
@@ -15,7 +24,7 @@ export async function uploadProductImage(formData: FormData) {
   }
 
   const t = await getTranslations("Admin.products.form.validation");
-  validateImageFile(file, {
+  await validateImageFile(file, {
     imageSizeMax: t("imageSizeMax"),
     imageTypeInvalid: t("imageTypeInvalid"),
   });

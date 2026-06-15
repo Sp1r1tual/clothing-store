@@ -1,36 +1,12 @@
 "use server";
 
-import { getTranslations } from "next-intl/server";
-
 import { insertProduct, softDeleteProduct, updateProductInDb } from "@/db/product";
+import { z } from "zod";
 
 import { assertAdmin } from "@/common/auth/server";
 import { revalidateLocalizedPath } from "@/common/utils/revalidate";
-import {
-  type ProductFormData,
-  createProductSchema,
-} from "@/common/validation/product/product.schema";
-
-async function getProductSchema(locale: string) {
-  const t = await getTranslations({ locale, namespace: "Admin.products.form" });
-
-  return createProductSchema({
-    imageUrlRequired: t("validation.imageUrlRequired"),
-    imagesTooMany: t("validation.imagesTooMany"),
-    imageDuplicateUrl: t("validation.imageDuplicateUrl"),
-    imageAltMax: t("validation.imageAltMax"),
-    variantSizeRequired: t("validation.variantSizeRequired"),
-    variantStockMin: t("validation.variantStockMin"),
-    productNameRequired: t("validation.productNameRequired"),
-    productNameMax: t("validation.productNameMax"),
-    productSlugRequired: t("validation.productSlugRequired"),
-    productSlugRegex: t("validation.productSlugRegex"),
-    productPriceRequired: t("validation.productPriceRequired"),
-    productPricePositive: t("validation.productPricePositive"),
-    productDiscountPricePositive: t("validation.productDiscountPricePositive"),
-    productCategoryRequired: t("validation.productCategoryRequired"),
-  });
-}
+import { type ProductFormData } from "@/common/validation/product/product.schema";
+import { getProductSchema } from "@/common/validation/product/product.schema.server";
 
 export async function createProduct(data: ProductFormData, locale: string) {
   await assertAdmin();
@@ -51,6 +27,10 @@ export async function createProduct(data: ProductFormData, locale: string) {
 export async function updateProduct(id: string, data: ProductFormData, locale: string) {
   await assertAdmin();
 
+  if (!z.uuid().safeParse(id).success) {
+    throw new Error("Invalid product ID");
+  }
+
   const schema = await getProductSchema(locale);
   const result = schema.safeParse(data);
 
@@ -58,16 +38,29 @@ export async function updateProduct(id: string, data: ProductFormData, locale: s
     throw new Error(result.error.issues[0].message);
   }
 
-  const product = await updateProductInDb(id, result.data);
-
-  revalidateLocalizedPath("/admin/products");
-  revalidateLocalizedPath(`/admin/products/${id}`);
-  return product;
+  try {
+    const product = await updateProductInDb(id, result.data);
+    revalidateLocalizedPath("/admin/products");
+    revalidateLocalizedPath(`/admin/products/${id}`);
+    return product;
+  } catch (error) {
+    console.error("Failed to update product:", error);
+    throw new Error("Failed to update product due to an internal error");
+  }
 }
 
 export async function deleteProduct(id: string) {
   await assertAdmin();
 
-  await softDeleteProduct(id);
-  revalidateLocalizedPath("/admin/products");
+  if (!z.uuid().safeParse(id).success) {
+    throw new Error("Invalid product ID");
+  }
+
+  try {
+    await softDeleteProduct(id);
+    revalidateLocalizedPath("/admin/products");
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+    throw new Error("Failed to delete product due to an internal error");
+  }
 }

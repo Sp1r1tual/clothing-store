@@ -18,7 +18,7 @@ export function isAuthRequiredPath(path: string): boolean {
 }
 
 export function sanitizeNextPath(next: string | null, fallback = "/profile"): string {
-  if (!next || !next.startsWith("/") || next.startsWith("//")) {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.includes("\\")) {
     return fallback;
   }
 
