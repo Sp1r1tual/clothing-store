@@ -33,23 +33,6 @@
     transform 0.8s ease;
 }
 
-.primaryImage {
-  opacity: 1;
-}
-
-.secondaryImage {
-  opacity: 0;
-}
-
-.card:hover .primaryImage {
-  opacity: 0;
-}
-
-.card:hover .secondaryImage {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
 .badges {
   position: absolute;
   top: 12px;

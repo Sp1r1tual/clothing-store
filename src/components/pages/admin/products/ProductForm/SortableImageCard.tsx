@@ -53,15 +53,12 @@ export const SortableImageCard = memo(function SortableImageCard({
 
   return (
     <div ref={setNodeRef} style={style} className={styles.imageCard}>
-      {}
       <div className={styles.dragHandle} {...attributes} {...listeners}>
         <GripVertical size={16} />
       </div>
 
-      {}
       {isPrimary && <span className={styles.primaryBadge}>{t("labels.cover")}</span>}
 
-      {}
       <Button
         type="button"
         variant="danger"
@@ -75,7 +72,6 @@ export const SortableImageCard = memo(function SortableImageCard({
         <Trash2 size={14} />
       </Button>
 
-      {}
       <div className={styles.thumbnail}>
         {preview ? (
           <Image
@@ -93,7 +89,6 @@ export const SortableImageCard = memo(function SortableImageCard({
         )}
       </div>
 
-      {}
       <div className={styles.cardFields}>
         <div className={styles.altGroup}>
           <AdminInput
@@ -115,7 +110,6 @@ export const SortableImageCard = memo(function SortableImageCard({
         {isPending && <div className={styles.pendingBadge}>{t("hints.pendingUpload")}</div>}
       </div>
 
-      {}
       <input type="hidden" {...register(`images.${index}.isPrimary`)} />
       <input type="hidden" {...register(`images.${index}.order`)} />
     </div>

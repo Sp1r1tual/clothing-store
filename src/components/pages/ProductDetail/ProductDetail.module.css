@@ -8,17 +8,19 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px;
-}
-
-.breadcrumbs {
-  margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .mainContent {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 440px) minmax(0, 500px);
   gap: 64px;
+  justify-content: center;
   align-items: start;
+}
+
+.gallerySection {
+  width: 100%;
 }
 
 .infoSection {
@@ -142,9 +144,19 @@
 }
 
 @media (max-width: 768px) {
+  .wrapper {
+    padding: 0 16px;
+  }
+
   .mainContent {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+
+  .gallerySection {
+    max-width: 440px;
+    width: 100%;
+    margin: 0 auto;
   }
 
   .infoSection {

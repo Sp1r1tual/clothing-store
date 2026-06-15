@@ -26,8 +26,6 @@ interface ProductCardProps {
 export const ProductCard = ({ product, locale }: ProductCardProps) => {
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
-  const secondaryImage = product.images[1]?.url || primaryImage;
-
   const totalStock = product.variants.reduce((acc, v) => acc + v.stock, 0);
   const isOutOfStock = totalStock === 0;
 
@@ -63,18 +61,9 @@ export const ProductCard = ({ product, locale }: ProductCardProps) => {
             src={primaryImage}
             alt={product.images[0]?.altText || name}
             fill
-            className={`${styles.image} ${styles.primaryImage}`}
+            className={styles.image}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
-          {product.images.length > 1 && (
-            <Image
-              src={secondaryImage}
-              alt={product.images[1]?.altText || name}
-              fill
-              className={`${styles.image} ${styles.secondaryImage}`}
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-            />
-          )}
         </div>
 
         {!isOutOfStock && availableSizes.length > 0 && (

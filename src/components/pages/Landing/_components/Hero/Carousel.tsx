@@ -1,9 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import whiteWallTexture from "@/assets/textures/white-wall.avif";
+
+import { useSwipe } from "@/hooks/useSwipe";
+
+import { SlideDots } from "@/components/ui/SlideDots/SlideDots";
 
 import { SLIDE_IMAGES } from "@/common/constants/hero";
 
@@ -11,32 +15,18 @@ import styles from "./Carousel.module.css";
 
 export const HeroCarousel = () => {
   const [activeId, setActiveId] = useState(SLIDE_IMAGES[0].id);
-  const touchStartX = useRef<number | null>(null);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+  const activeIndex = SLIDE_IMAGES.findIndex((s) => s.id === activeId);
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
+  const goNext = () => setActiveId(SLIDE_IMAGES[(activeIndex + 1) % SLIDE_IMAGES.length].id);
 
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        setActiveId((prevId) => {
-          const idx = SLIDE_IMAGES.findIndex((s) => s.id === prevId);
-          return SLIDE_IMAGES[(idx + 1) % SLIDE_IMAGES.length].id;
-        });
-      } else {
-        setActiveId((prevId) => {
-          const idx = SLIDE_IMAGES.findIndex((s) => s.id === prevId);
-          return SLIDE_IMAGES[(idx - 1 + SLIDE_IMAGES.length) % SLIDE_IMAGES.length].id;
-        });
-      }
-    }
-    touchStartX.current = null;
-  };
+  const goPrev = () =>
+    setActiveId(SLIDE_IMAGES[(activeIndex - 1 + SLIDE_IMAGES.length) % SLIDE_IMAGES.length].id);
+
+  const { handleTouchStart, handleTouchEnd } = useSwipe({
+    onSwipeLeft: goNext,
+    onSwipeRight: goPrev,
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -118,15 +108,12 @@ export const HeroCarousel = () => {
       </div>
 
       <div className={styles.dots}>
-        {SLIDE_IMAGES.map((slide, index) => (
-          <button
-            key={slide.id}
-            id={`hero-dot-${slide.id}`}
-            className={`${styles.dot} ${slide.id === activeId ? styles.dotActive : ""}`}
-            onClick={() => setActiveId(slide.id)}
-            aria-label={`Go to slide ${index + 1}: ${slide.alt}`}
-          />
-        ))}
+        <SlideDots
+          count={SLIDE_IMAGES.length}
+          activeIndex={activeIndex}
+          onDotClick={(i) => setActiveId(SLIDE_IMAGES[i].id)}
+          variant="pill"
+        />
       </div>
     </div>
   );

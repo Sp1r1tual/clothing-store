@@ -94,7 +94,6 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      {}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>{t("sections.basic")}</h2>
         <div className={styles.grid2}>
@@ -149,7 +148,6 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
         </div>
       </section>
 
-      {}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>{t("sections.seo")}</h2>
         <div className={styles.grid2}>
@@ -186,7 +184,6 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
         </div>
       </section>
 
-      {}
       <div className={styles.submitRow}>
         <button type="button" className={styles.cancelBtn} onClick={() => router.back()}>
           {t("buttons.cancel")}

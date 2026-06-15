@@ -1,0 +1,95 @@
+.dot {
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease,
+    width 0.3s ease,
+    border-radius 0.3s ease;
+}
+
+.dot:hover {
+  transform: scale(1.2);
+}
+
+.pill {
+  display: flex;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+.pill .dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.pill .dotActive {
+  background-color: #f59e0b;
+  width: 24px;
+  border-radius: 5px;
+}
+
+.overlay {
+  display: flex;
+  gap: 6px;
+}
+
+.overlay .dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.overlay .dotActive {
+  background: #ffffff;
+  width: 18px;
+  border-radius: 3px;
+}
+
+@media (hover: none) {
+  .overlay .dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .overlay .dotActive {
+    width: 20px;
+  }
+}
+
+.s.pill {
+  padding: 5px 10px;
+  gap: 5px;
+}
+
+.s.pill .dot {
+  width: 6px;
+  height: 6px;
+}
+
+.s.pill .dotActive {
+  width: 16px;
+  border-radius: 3px;
+}
+
+.l.pill {
+  padding: 10px 18px;
+  gap: 10px;
+}
+
+.l.pill .dot {
+  width: 12px;
+  height: 12px;
+}
+
+.l.pill .dotActive {
+  width: 30px;
+  border-radius: 6px;
+}

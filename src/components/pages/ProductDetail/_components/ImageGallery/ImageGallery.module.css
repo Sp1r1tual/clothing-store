@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -12,7 +12,13 @@
   border-radius: 12px;
   overflow: hidden;
   background-color: #f5f5f7;
-  cursor: zoom-in;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mainImage {
+  object-fit: cover;
+  transition: opacity 0.25s ease;
 }
 
 .placeholder {
@@ -25,22 +31,89 @@
   font-size: 1.25rem;
 }
 
-.mainImage {
-  object-fit: cover;
+.arrowBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.88);
+  color: #111;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.arrowPrev {
+  left: 12px;
+}
+
+.arrowNext {
+  right: 12px;
+}
+
+.mainImageWrapper:hover .arrowBtn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arrowBtn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.arrowBtn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.dotsContainer {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .thumbnails {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
+  scroll-behavior: smooth;
   scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.thumbnails::-webkit-scrollbar {
+  height: 3px;
+}
+
+.thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbnails::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .thumbnailWrapper {
   position: relative;
-  width: 80px;
-  height: 106px;
+  width: 72px;
+  height: 96px;
   flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
@@ -49,19 +122,28 @@
   background-color: #f5f5f7;
   transition:
     border-color 0.2s ease,
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
   padding: 0;
 }
 
 .thumbnailWrapper:hover {
-  opacity: 0.8;
+  opacity: 0.82;
+  transform: translateY(-2px);
 }
 
 .thumbnailWrapper.active {
   border-color: var(--text-primary);
   opacity: 1;
+  transform: none;
 }
 
 .thumbnail {
   object-fit: cover;
+}
+
+@media (hover: none) {
+  .arrowBtn {
+    display: none;
+  }
 }
