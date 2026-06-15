@@ -14,6 +14,9 @@ import { ProductCard } from "../Catalog/_components/ProductCard/ProductCard";
 import { ImageGallery } from "./_components/ImageGallery/ImageGallery";
 import { SizeSelector } from "./_components/SizeSelector/SizeSelector";
 
+import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
+
 import styles from "./ProductDetail.module.css";
 
 interface ProductDetailProps {
@@ -60,6 +63,9 @@ interface ProductDetailProps {
 export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   const t = useTranslations("ProductDetail");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const openAuthModal = useModalStore((s) => s.openAuthModal);
+
+  const user = useAuthStore((s) => s.user);
 
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const description = locale === "en" ? product.descriptionEn : product.descriptionUk;
@@ -145,7 +151,13 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
                 size="lg"
                 disabled={isOutOfStock || !selectedSize}
                 icon={<ShoppingBag size={20} />}
-                onClick={() => console.log("Add to cart", product.id, selectedSize)}
+                onClick={() => {
+                  if (!user) {
+                    openAuthModal();
+                    return;
+                  }
+                  console.log("Add to cart", product.id, selectedSize);
+                }}
               >
                 {t("add-to-cart")}
               </Button>
@@ -153,7 +165,13 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
                 variant="secondary"
                 size="lg"
                 icon={<Heart size={20} />}
-                onClick={() => console.log("Add to favorites", product.id)}
+                onClick={() => {
+                  if (!user) {
+                    openAuthModal();
+                    return;
+                  }
+                  console.log("Add to favorites", product.id);
+                }}
               >
                 {t("add-to-favorites")}
               </Button>

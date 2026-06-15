@@ -8,10 +8,10 @@ import { Heart, ShoppingBag, User } from "lucide-react";
 
 import { Drawer } from "@/components/ui/Drawer/Drawer";
 import { Logo } from "@/components/ui/Logo/Logo";
-import { GoogleAuthModal } from "@/components/ui/Modal/GoogleAuthModal";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
 
 import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
 
 import { CATALOG_LINKS } from "@/common/constants/navigation";
 
@@ -19,7 +19,7 @@ import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const openAuthModal = useModalStore((s) => s.openAuthModal);
   const pathname = usePathname();
   const t = useTranslations("Navbar");
 
@@ -84,7 +84,7 @@ export const Navbar = () => {
               onClick={(e) => {
                 if (!user) {
                   e.preventDefault();
-                  setIsAuthModalOpen(true);
+                  openAuthModal();
                 } else if (isActive("/profile")) {
                   e.preventDefault();
                 }
@@ -123,12 +123,6 @@ export const Navbar = () => {
           ]}
         />
       </nav>
-
-      <GoogleAuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        redirectPath="/profile"
-      />
     </>
   );
 };

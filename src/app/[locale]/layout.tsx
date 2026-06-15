@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { AuthProvider } from "@/providers/AuthProvider";
 
+import { GlobalAuthModal } from "@/components/ui/Modal/GlobalAuthModal";
 import { Modal } from "@/components/ui/Modal/Modal";
 
 import { getCurrentUser } from "@/common/auth/server";
@@ -67,6 +68,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           <AuthProvider initialUser={initialUser}>
             {children}
             <Modal />
+            <GlobalAuthModal />
           </AuthProvider>
           <ToastContainer position="top-center" autoClose={3000} />
         </NextIntlClientProvider>

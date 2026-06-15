@@ -33,7 +33,7 @@ export const ConfirmChoiceModal = ({
         <p className={styles.description}>{description}</p>
 
         <div className={styles.actions}>
-          <Button variant="ghost" onClick={onClose} className={styles.cancelBtn}>
+          <Button variant="secondary" onClick={onClose} className={styles.cancelBtn}>
             {cancelText}
           </Button>
           <Button
