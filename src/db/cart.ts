@@ -23,9 +23,11 @@ export type CartItemWithProduct = {
 };
 
 async function getOrCreateCart(profileId: string) {
-  const existing = await prisma.cart.findUnique({ where: { profileId } });
-  if (existing) return existing;
-  return prisma.cart.create({ data: { profileId } });
+  return prisma.cart.upsert({
+    where: { profileId },
+    update: {},
+    create: { profileId },
+  });
 }
 
 export async function getCart(profileId: string): Promise<CartItemWithProduct[]> {
@@ -123,9 +125,9 @@ export async function removeCartItem(cartItemId: string) {
 }
 
 export async function clearCart(profileId: string) {
-  const cart = await prisma.cart.findUnique({ where: { profileId } });
-  if (!cart) return;
-  return prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+  return prisma.cartItem.deleteMany({
+    where: { cart: { profileId } },
+  });
 }
 
 export async function getCartItemCount(profileId: string): Promise<number> {

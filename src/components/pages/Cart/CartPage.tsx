@@ -6,7 +6,9 @@ import { toast } from "react-toastify";
 
 import { getAddressAction } from "@/actions/address.actions";
 import { clearCartAction } from "@/actions/cart.actions";
-import { Link } from "@/i18n/navigation";
+import { createOrderAction } from "@/actions/order.actions";
+import { AnimatedCartLoader } from "@/app/[locale]/(main)/cart/_components/AnimatedCartLoader/AnimatedCartLoader";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ShoppingCart, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
@@ -31,6 +33,7 @@ interface CartPageProps {
 
 export const CartPage = ({ locale }: CartPageProps) => {
   const t = useTranslations("Cart");
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const isAuthLoading = useAuthStore((s) => s.isLoading);
   const openAuthModal = useModalStore((s) => s.openAuthModal);
@@ -57,9 +60,17 @@ export const CartPage = ({ locale }: CartPageProps) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  const processCheckout = () => {
-    toast.success(t("checkoutSuccess"));
-    handleClearCart();
+  const processCheckout = async () => {
+    try {
+      setIsCheckingOut(true);
+      const orderId = await createOrderAction();
+      clear();
+      toast.success(t("checkoutSuccess"));
+      router.push(`/profile/orders/${orderId}`);
+    } catch {
+      toast.error(t("checkoutError"));
+      setIsCheckingOut(false);
+    }
   };
 
   const handleCheckout = async () => {
@@ -74,16 +85,20 @@ export const CartPage = ({ locale }: CartPageProps) => {
 
       if (!addr || !addr.carrier || !addr.city || !user.phone) {
         setIsAddressModalOpen(true);
+        setIsCheckingOut(false);
         return;
       }
 
-      processCheckout();
+      await processCheckout();
     } catch {
       toast.error(t("checkoutError"));
-    } finally {
       setIsCheckingOut(false);
     }
   };
+
+  if (isCheckingOut) {
+    return <AnimatedCartLoader text={t("processingOrder")} />;
+  }
 
   if (isLoading) {
     return (
@@ -196,7 +211,7 @@ export const CartPage = ({ locale }: CartPageProps) => {
         onClose={() => setIsAddressModalOpen(false)}
         onSuccess={() => {
           setIsAddressModalOpen(false);
-          processCheckout();
+          void processCheckout();
         }}
       />
     </>

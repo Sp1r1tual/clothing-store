@@ -126,19 +126,21 @@ export async function findCategoryBySlug(slug: string) {
 }
 
 export async function findAllDescendantCategoryIds(parentId: string): Promise<string[]> {
-  const children = await prisma.category.findMany({
-    where: { parentId },
-    select: { id: true },
+  const allCategories = await prisma.category.findMany({
+    select: { id: true, parentId: true },
   });
 
-  const childIds = children.map((c) => c.id);
   const descendantIds: string[] = [];
 
-  for (const childId of childIds) {
-    descendantIds.push(childId);
-    const nested = await findAllDescendantCategoryIds(childId);
-    descendantIds.push(...nested);
+  function collectDescendants(currentParentId: string) {
+    for (const cat of allCategories) {
+      if (cat.parentId === currentParentId) {
+        descendantIds.push(cat.id);
+        collectDescendants(cat.id);
+      }
+    }
   }
 
+  collectDescendants(parentId);
   return descendantIds;
 }

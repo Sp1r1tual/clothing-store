@@ -1,3 +1,5 @@
+import { useLocale } from "next-intl";
+
 import styles from "./PriceDisplay.module.css";
 
 interface PriceDisplayProps {
@@ -13,11 +15,13 @@ export const PriceDisplay = ({
   size = "md",
   className = "",
 }: PriceDisplayProps) => {
+  const locale = useLocale();
+
   const formatPrice = (value: number) => {
-    const formatted = new Intl.NumberFormat("uk-UA", {
+    const formatted = new Intl.NumberFormat(locale === "uk" ? "uk-UA" : "en-US", {
       maximumFractionDigits: 0,
     }).format(value);
-    return `${formatted} грн`;
+    return locale === "uk" ? `${formatted} грн` : `${formatted} UAH`;
   };
 
   const hasDiscount =

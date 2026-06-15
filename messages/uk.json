@@ -179,6 +179,42 @@
         "MEEST": "Meest",
         "COURIER": "Кур'єр"
       }
+    },
+    "orders": {
+      "title": "Деталі замовлення",
+      "backToProfile": "Назад до профілю",
+      "orderNumber": "Замовлення #{id}",
+      "date": "Дата",
+      "status": "Статус",
+      "carrier": "Перевізник",
+      "address": "Адреса",
+      "tracking": "Трекінг",
+      "items": "Товари",
+      "total": "Разом",
+      "shipping": "Доставка",
+      "contactInfo": "Контактні дані",
+      "editContacts": "Редагувати контакти",
+      "contactName": "Ім\u2019я",
+      "contactEmail": "Email",
+      "contactPhone": "Телефон",
+      "saveChanges": "Зберегти зміни",
+      "cancelOrder": "Скасувати замовлення",
+      "cancelConfirmTitle": "Скасування замовлення",
+      "cancelConfirmDesc": "Ви впевнені, що хочете скасувати це замовлення? Цю дію не можна відмінити.",
+      "cancelSuccess": "Замовлення скасовано",
+      "cancelError": "Не вдалося скасувати замовлення",
+      "updateSuccess": "Дані успішно оновлено!",
+      "updateError": "Помилка при оновленні даних",
+      "itemSingular": "товар",
+      "itemPlural": "товарів",
+      "statuses": {
+        "PENDING": "Очікує",
+        "PROCESSING": "Обробляється",
+        "SHIPPED": "У дорозі",
+        "DELIVERED": "Доставлено",
+        "CANCELLED": "Скасовано",
+        "REFUNDED": "Повернено"
+      }
     }
   },
   "AuthCodeError": {
@@ -473,6 +509,7 @@
     "checkout": "Оформити замовлення",
     "checkoutSuccess": "Замовлення успішно оформлено!",
     "checkoutError": "Помилка при оформленні замовлення",
+    "processingOrder": "Оформлюємо замовлення...",
     "checkoutWait": "Зачекайте...",
     "loginRequired": "Увійдіть, щоб переглянути кошик",
     "loginButton": "Увійти",

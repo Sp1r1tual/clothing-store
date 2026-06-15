@@ -1,3 +1,5 @@
+import { getOrdersAction } from "@/actions/order.actions";
+
 import { ProfilePage } from "@/components/pages/Profile/ProfilePage";
 
 import { requireAuth } from "@/common/auth/server";
@@ -10,5 +12,7 @@ export default async function ProfileRoute({ params }: ProfileRouteProps) {
   const { locale } = await params;
   await requireAuth(locale);
 
-  return <ProfilePage />;
+  const orders = await getOrdersAction().catch(() => []);
+
+  return <ProfilePage orders={orders} />;
 }

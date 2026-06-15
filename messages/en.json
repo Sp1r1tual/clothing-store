@@ -179,6 +179,42 @@
         "MEEST": "Meest",
         "COURIER": "Courier"
       }
+    },
+    "orders": {
+      "title": "Order Details",
+      "backToProfile": "Back to Profile",
+      "orderNumber": "Order #{id}",
+      "date": "Date",
+      "status": "Status",
+      "carrier": "Carrier",
+      "address": "Address",
+      "tracking": "Tracking",
+      "items": "Items",
+      "total": "Total",
+      "shipping": "Shipping",
+      "contactInfo": "Contact Info",
+      "editContacts": "Edit Contacts",
+      "contactName": "Name",
+      "contactEmail": "Email",
+      "contactPhone": "Phone",
+      "saveChanges": "Save Changes",
+      "cancelOrder": "Cancel Order",
+      "cancelConfirmTitle": "Cancel Order",
+      "cancelConfirmDesc": "Are you sure you want to cancel this order? This action cannot be undone.",
+      "cancelSuccess": "Order cancelled",
+      "cancelError": "Failed to cancel the order",
+      "updateSuccess": "Details updated successfully!",
+      "updateError": "Failed to update details",
+      "itemSingular": "item",
+      "itemPlural": "items",
+      "statuses": {
+        "PENDING": "Pending",
+        "PROCESSING": "Processing",
+        "SHIPPED": "Shipped",
+        "DELIVERED": "Delivered",
+        "CANCELLED": "Cancelled",
+        "REFUNDED": "Refunded"
+      }
     }
   },
   "AuthCodeError": {
@@ -474,6 +510,7 @@
     "checkout": "Proceed to Checkout",
     "checkoutSuccess": "Order successfully placed!",
     "checkoutError": "Error placing the order",
+    "processingOrder": "Processing your order...",
     "checkoutWait": "Please wait...",
     "loginRequired": "Sign in to view your cart",
     "loginButton": "Sign In",

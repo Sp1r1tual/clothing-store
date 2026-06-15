@@ -1,5 +1,7 @@
 "use client";
 
+import type { OrderData } from "@/db/order";
+
 import { BackButton } from "@/components/ui/BackButton/BackButton";
 
 import { OrdersList } from "./_components/OrdersList/OrdersList";
@@ -9,12 +11,11 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 import styles from "./profile.module.css";
 
-const mockOrders = [
-  { id: "ORD-9842", date: "02.06.2026", total: "2,499 ₴", status: "delivered" },
-  { id: "ORD-9711", date: "15.05.2026", total: "1,850 ₴", status: "delivered" },
-];
+interface ProfilePageProps {
+  orders: OrderData[];
+}
 
-export const ProfilePage = () => {
+export const ProfilePage = ({ orders }: ProfilePageProps) => {
   const { isLoading } = useAuthStore();
 
   if (isLoading) {
@@ -30,7 +31,7 @@ export const ProfilePage = () => {
       <div className={styles.container}>
         <BackButton scrollUp={true} />
         <ProfileHeader />
-        <OrdersList orders={mockOrders} />
+        <OrdersList orders={orders} />
       </div>
     </>
   );
