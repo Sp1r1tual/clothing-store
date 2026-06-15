@@ -2,10 +2,11 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 
+import { getAddressAction } from "@/actions/address.actions";
 import { updateProfileAction } from "@/actions/profile.actions";
 import { Link, useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,8 +22,11 @@ import { PhoneSection } from "../PhoneSection/PhoneSection";
 
 import { useAuthStore } from "@/store/useAuthStore";
 
+import { CARRIER_LOGOS } from "@/common/constants/images/carrier-logos";
 import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 import {
+  CARRIERS,
+  type CarrierType,
   ProfileFormData,
   createProfileSchema,
 } from "@/common/validation/profile/schemas/profile.schema";
@@ -37,6 +41,11 @@ export const ProfileHeader = () => {
   const updateUser = useAuthStore((s) => s.updateUser);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [address, setAddress] = useState<{
+    carrier: CarrierType;
+    city: string;
+    warehouse: string;
+  } | null>(null);
 
   const schema = useMemo(
     () =>
@@ -54,14 +63,47 @@ export const ProfileHeader = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
+    control,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "", phone: "" },
+    defaultValues: {
+      name: user?.name || "",
+      phone: user?.phone || "",
+      carrier: "NOVA_POSHTA",
+      city: "",
+      warehouse: "",
+    },
   });
 
+  const carrier = useWatch({ control, name: "carrier" });
+
+  useEffect(() => {
+    getAddressAction()
+      .then((addr) => {
+        if (addr && CARRIERS.includes(addr.carrier as CarrierType)) {
+          const addrData = {
+            carrier: addr.carrier as CarrierType,
+            city: addr.city,
+            warehouse: addr.warehouse,
+          };
+          setAddress(addrData);
+        } else {
+          setAddress(null);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const startEditing = () => {
-    reset({ name: user?.name || "", phone: user?.phone || "" });
+    reset({
+      name: user?.name || "",
+      phone: user?.phone || "",
+      carrier: address?.carrier || "NOVA_POSHTA",
+      city: address?.city || "",
+      warehouse: address?.warehouse || "",
+    });
     setIsEditing(true);
   };
 
@@ -72,25 +114,34 @@ export const ProfileHeader = () => {
       const trimmedName = data.name.trim();
       const phone = data.phone?.trim() || "";
 
-      const hasNameChanged = trimmedName !== (user.name || "").trim();
-      const hasPhoneChanged = phone !== (user.phone || "");
+      const updatedData = await updateProfileAction(
+        {
+          name: trimmedName,
+          phone,
+          carrier: data.carrier || null,
+          city: data.city || null,
+          warehouse: data.warehouse || null,
+        },
+        locale,
+      );
 
-      if (hasNameChanged || hasPhoneChanged) {
-        const updatedData = await updateProfileAction(
-          {
-            name: trimmedName,
-            phone,
-          },
-          locale,
-        );
+      updateUser({
+        name: updatedData.name || trimmedName,
+        phone: updatedData.phone || undefined,
+      });
 
-        updateUser({
-          name: updatedData.name || trimmedName,
-          phone: updatedData.phone || undefined,
-        });
-        toast.success(t("save") + "!");
+      if (data.carrier && data.city) {
+        const addrData = {
+          carrier: data.carrier as CarrierType,
+          city: data.city,
+          warehouse: data.warehouse || "",
+        };
+        setAddress(addrData);
+      } else {
+        setAddress(null);
       }
 
+      toast.success(t("save") + "!");
       setIsEditing(false);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update profile";
@@ -152,12 +203,66 @@ export const ProfileHeader = () => {
                 />
               </div>
 
+              <div className={styles.formGroup}>
+                <span className={styles.carrierFieldLabel}>{t("address.carrier")}</span>
+                <div className={styles.carrierGroup}>
+                  {CARRIERS.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`${styles.carrierChip} ${carrier === c ? styles.carrierChipActive : ""}`}
+                      onClick={() =>
+                        setValue("carrier", c, { shouldDirty: true, shouldValidate: true })
+                      }
+                      disabled={isSubmitting}
+                    >
+                      <div className={styles.carrierLogoWrapper}>
+                        <Image
+                          src={CARRIER_LOGOS[c]}
+                          alt={c}
+                          fill
+                          sizes="24px"
+                          style={{ objectFit: "contain" }}
+                        />
+                      </div>
+                      <span>{t(`address.carriers.${c}`)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <Input
+                  label={t("address.city")}
+                  placeholder={t("address.cityPlaceholder")}
+                  {...register("city")}
+                  error={errors.city?.message}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <Input
+                  label={t("address.warehouse")}
+                  placeholder={t("address.warehousePlaceholder")}
+                  {...register("warehouse")}
+                  error={errors.warehouse?.message}
+                  disabled={isSubmitting}
+                />
+              </div>
+
               <div className={styles.formActions}>
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={() => {
-                    reset({ name: user.name, phone: user.phone || "" });
+                    reset({
+                      name: user.name,
+                      phone: user.phone || "",
+                      carrier: address?.carrier || "NOVA_POSHTA",
+                      city: address?.city || "",
+                      warehouse: address?.warehouse || "",
+                    });
                     setIsEditing(false);
                   }}
                   disabled={isSubmitting}
@@ -199,6 +304,17 @@ export const ProfileHeader = () => {
                   <span className={styles.label}>{t("emailLabel")}</span> {user.email}
                 </p>
                 <PhoneSection />
+                <div className={styles.addressSection}>
+                  <span className={styles.label}>{t("address.sectionTitle")}:</span>{" "}
+                  {address && address.city ? (
+                    <span className={styles.addressValue}>
+                      {t(`address.carriers.${address.carrier}`)} · {address.city}
+                      {address.warehouse && ` · №${address.warehouse}`}
+                    </span>
+                  ) : (
+                    <span className={styles.addressNotSet}>{t("address.notSet")}</span>
+                  )}
+                </div>
               </div>
               <div className={styles.headerActions}>
                 {user.role === "ADMIN" && (

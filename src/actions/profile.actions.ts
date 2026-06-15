@@ -1,6 +1,8 @@
 "use server";
 
+import { deleteDefaultAddress, upsertDefaultAddress } from "@/db/address";
 import { updateProfile } from "@/db/profile";
+import { type ShippingCarrier } from "@prisma/client";
 
 import { assertAuth } from "@/common/auth/server";
 import { type ProfileFormData } from "@/common/validation/profile/schemas/profile.schema";
@@ -15,10 +17,23 @@ export async function updateProfileAction(data: ProfileFormData, locale: string)
     throw new Error(result.error.issues[0].message);
   }
 
-  const { name, phone } = result.data;
+  const { name, phone, carrier, city, warehouse } = result.data;
 
-  return updateProfile(user.id, {
+  const updatedProfile = await updateProfile(user.id, {
     name,
     phone: phone || null,
   });
+
+  if (carrier && city && warehouse) {
+    await upsertDefaultAddress(user.id, {
+      carrier: carrier as ShippingCarrier,
+      city,
+      warehouse,
+      street: null,
+    });
+  } else {
+    await deleteDefaultAddress(user.id);
+  }
+
+  return updatedProfile;
 }

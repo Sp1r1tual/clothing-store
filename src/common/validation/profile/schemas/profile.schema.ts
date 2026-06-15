@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const CARRIERS = ["NOVA_POSHTA", "UKRPOSHTA", "MEEST"] as const;
+export type CarrierType = (typeof CARRIERS)[number];
+
 export interface ProfileSchemaMessages {
   nameMin: string;
   nameMax: string;
@@ -22,6 +25,10 @@ export const createProfileSchema = (msg: ProfileSchemaMessages) =>
       .regex(/^\+?(?:\d[\s\-()]*){9,15}$/, msg.phoneRegex)
       .optional()
       .or(z.literal("")),
+
+    carrier: z.enum(CARRIERS).optional().nullable().or(z.literal("")),
+    city: z.string().max(100).optional().nullable().or(z.literal("")),
+    warehouse: z.string().max(100).optional().nullable().or(z.literal("")),
   });
 
 export const profileSchema = createProfileSchema({

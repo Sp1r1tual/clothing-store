@@ -168,6 +168,11 @@
     width: 100%;
   }
 
+  .addressSection {
+    justify-content: center;
+    width: 100%;
+  }
+
   .nameContainer {
     justify-content: center;
     flex-wrap: wrap;
@@ -207,4 +212,69 @@
     width: 100%;
     height: 48px;
   }
+}
+
+.addressSection {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 1rem;
+}
+
+.addressValue {
+  color: var(--text-primary);
+}
+
+.addressNotSet {
+  color: var(--text-primary);
+}
+
+.carrierFieldLabel {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.carrierGroup {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.carrierChip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carrierLogoWrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.carrierChip:hover:not(:disabled) {
+  border-color: var(--text-primary);
+}
+
+.carrierChipActive {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--background);
 }

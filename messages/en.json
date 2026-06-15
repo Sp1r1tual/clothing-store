@@ -153,8 +153,32 @@
       "nameMin": "Name must be at least 2 characters",
       "nameMax": "Name cannot exceed 50 characters",
       "nameRegex": "Name can only contain letters, spaces, hyphens and apostrophes",
+      "phoneRequired": "Phone number is required",
       "phoneMax": "Phone number cannot exceed 20 characters",
       "phoneRegex": "Invalid phone number format"
+    },
+    "address": {
+      "sectionTitle": "Delivery Address",
+      "modalDescription": "Please provide a delivery address to complete your order.",
+      "carrier": "Carrier",
+      "city": "City",
+      "cityPlaceholder": "e.g. Kyiv",
+      "warehouse": "Branch / Parcel locker",
+      "warehousePlaceholder": "e.g. 12",
+      "street": "Courier delivery address",
+      "streetPlaceholder": "123 Main St, Apt 5",
+      "notSet": "not set",
+      "edit": "Edit address",
+      "save": "Save address",
+      "cancel": "Cancel",
+      "success": "Address saved!",
+      "error": "Failed to save address",
+      "carriers": {
+        "NOVA_POSHTA": "Nova Poshta",
+        "UKRPOSHTA": "Ukrposhta",
+        "MEEST": "Meest",
+        "COURIER": "Courier"
+      }
     }
   },
   "AuthCodeError": {
@@ -448,6 +472,9 @@
     "discount": "Discount",
     "total": "Total",
     "checkout": "Proceed to Checkout",
+    "checkoutSuccess": "Order successfully placed!",
+    "checkoutError": "Error placing the order",
+    "checkoutWait": "Please wait...",
     "loginRequired": "Sign in to view your cart",
     "loginButton": "Sign In",
     "removeSuccess": "Item removed from cart",

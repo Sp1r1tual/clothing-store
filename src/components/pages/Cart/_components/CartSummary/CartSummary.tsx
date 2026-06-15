@@ -12,9 +12,10 @@ import styles from "./CartSummary.module.css";
 
 interface CartSummaryProps {
   onCheckout?: () => void;
+  isCheckingOut?: boolean;
 }
 
-export const CartSummary = ({ onCheckout }: CartSummaryProps) => {
+export const CartSummary = ({ onCheckout, isCheckingOut }: CartSummaryProps) => {
   const t = useTranslations("Cart");
   const items = useCartStore((s) => s.items);
   const getTotalPrice = useCartStore((s) => s.getTotalPrice);
@@ -59,9 +60,10 @@ export const CartSummary = ({ onCheckout }: CartSummaryProps) => {
         size="lg"
         icon={<ShoppingBag size={18} />}
         onClick={onCheckout}
+        disabled={isCheckingOut}
         className={styles.checkoutBtn}
       >
-        {t("checkout")}
+        {isCheckingOut ? t("checkoutWait") : t("checkout")}
       </Button>
     </div>
   );

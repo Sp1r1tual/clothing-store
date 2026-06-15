@@ -3,13 +3,11 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
-import novaposhtaImg from "@/assets/partners/meest-post.avif";
-import ukrposhtaImg from "@/assets/partners/ukraine-post.avif";
-import meestImg from "@/assets/partners/wewl8khdasszfe7edczk.avif";
-
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
 
 import { useModalStore } from "@/store/useModalStore";
+
+import { CARRIER_LOGOS } from "@/common/constants/images/carrier-logos";
 
 import styles from "./DeliveryPartners.module.css";
 
@@ -22,21 +20,21 @@ export const DeliveryPartners = () => {
       id: "novaposhta",
       name: t("novaPoshta"),
       color: "#e31e24",
-      logo: novaposhtaImg,
+      logo: CARRIER_LOGOS.NOVA_POSHTA,
       info: t("novaPoshtaInfo"),
     },
     {
       id: "ukrposhta",
       name: t("ukrposhta"),
       color: "#ffc107",
-      logo: ukrposhtaImg,
+      logo: CARRIER_LOGOS.UKRPOSHTA,
       info: t("ukrposhtaInfo"),
     },
     {
       id: "meest",
       name: t("meest"),
       color: "#005b9f",
-      logo: meestImg,
+      logo: CARRIER_LOGOS.MEEST,
       info: t("meestInfo"),
     },
   ];

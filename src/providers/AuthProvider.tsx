@@ -105,11 +105,7 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
         void syncUser();
         routerRef.current.refresh();
       } else if (event === "SIGNED_OUT") {
-        logout();
-        useCartStore.setState({ items: [] });
-        useFavoritesStore.setState({ ids: [] });
-        toast.success(tProfileRef.current("logoutSuccess"));
-        routerRef.current.refresh();
+        void syncUser();
       } else if (event === "USER_UPDATED") {
         void syncUser();
       }

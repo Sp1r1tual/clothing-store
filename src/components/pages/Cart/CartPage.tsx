@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { getAddressAction } from "@/actions/address.actions";
 import { clearCartAction } from "@/actions/cart.actions";
 import { Link } from "@/i18n/navigation";
 import { ShoppingCart, Trash2 } from "lucide-react";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/Button/Button";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
 
+import { AddressModal } from "./_components/AddressModal/AddressModal";
 import { CartItem } from "./_components/CartItem/CartItem";
 import { CartItemSkeleton } from "./_components/CartItemSkeleton/CartItemSkeleton";
 import { CartSummary } from "./_components/CartSummary/CartSummary";
@@ -49,6 +51,37 @@ export const CartPage = ({ locale }: CartPageProps) => {
       toast.error("Failed to clear cart");
     } finally {
       setIsClearing(false);
+    }
+  };
+
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const processCheckout = () => {
+    toast.success(t("checkoutSuccess"));
+    handleClearCart();
+  };
+
+  const handleCheckout = async () => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+
+    try {
+      setIsCheckingOut(true);
+      const addr = await getAddressAction();
+
+      if (!addr || !addr.carrier || !addr.city || !user.phone) {
+        setIsAddressModalOpen(true);
+        return;
+      }
+
+      processCheckout();
+    } catch {
+      toast.error(t("checkoutError"));
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -142,7 +175,7 @@ export const CartPage = ({ locale }: CartPageProps) => {
           </div>
 
           <aside className={styles.sidebar}>
-            <CartSummary />
+            <CartSummary onCheckout={handleCheckout} isCheckingOut={isCheckingOut} />
           </aside>
         </div>
       </div>
@@ -156,6 +189,15 @@ export const CartPage = ({ locale }: CartPageProps) => {
         confirmText={t("clearConfirmYes")}
         cancelText={t("clearConfirmNo")}
         isDanger
+      />
+
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        onSuccess={() => {
+          setIsAddressModalOpen(false);
+          processCheckout();
+        }}
       />
     </>
   );
