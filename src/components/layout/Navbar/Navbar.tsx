@@ -11,6 +11,8 @@ import { Logo } from "@/components/ui/Logo/Logo";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
 
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCartStore } from "@/store/useCartStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useModalStore } from "@/store/useModalStore";
 
 import { CATALOG_LINKS } from "@/common/constants/navigation";
@@ -24,6 +26,9 @@ export const Navbar = () => {
   const t = useTranslations("Navbar");
 
   const user = useAuthStore((s) => s.user);
+
+  const cartCount = useCartStore((s) => s.getTotalCount());
+  const favCount = useFavoritesStore((s) => s.getCount());
 
   const close = () => setIsMenuOpen(false);
 
@@ -67,7 +72,12 @@ export const Navbar = () => {
               aria-label={t("favorites")}
               onClick={(e) => isActive("/favorites") && e.preventDefault()}
             >
-              <Heart size={20} />
+              <div className={styles.iconWrapper}>
+                <Heart size={20} />
+                {favCount > 0 && (
+                  <span className={styles.badge}>{favCount > 99 ? "99+" : favCount}</span>
+                )}
+              </div>
             </Link>
             <Link
               href="/cart"
@@ -75,7 +85,12 @@ export const Navbar = () => {
               aria-label={t("cart")}
               onClick={(e) => isActive("/cart") && e.preventDefault()}
             >
-              <ShoppingBag size={20} />
+              <div className={styles.iconWrapper}>
+                <ShoppingBag size={20} />
+                {cartCount > 0 && (
+                  <span className={styles.badge}>{cartCount > 99 ? "99+" : cartCount}</span>
+                )}
+              </div>
             </Link>
             <Link
               href="/profile"

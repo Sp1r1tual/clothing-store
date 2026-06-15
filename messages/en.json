@@ -416,6 +416,8 @@
   "ProductDetail": {
     "add-to-cart": "Add to Cart",
     "add-to-favorites": "Add to Favorites",
+    "remove-from-favorites": "Remove from Favorites",
+    "in-favorites": "In Favorites",
     "size": "Size",
     "color": "Color",
     "details": "Details",
@@ -424,6 +426,47 @@
     "measurements": "Measurements",
     "related": "You May Also Like",
     "out-of-stock": "Out of Stock",
-    "select-size": "Select size"
+    "select-size": "Select size",
+    "added-to-cart": "Added to cart!",
+    "added-to-favorites": "Added to favorites!",
+    "removed-from-favorites": "Removed from favorites",
+    "login-required": "Sign in to add to cart"
+  },
+  "Cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "Add products to your cart to place an order",
+    "goCatalog": "Go to Catalog",
+    "items": "items",
+    "item": "item",
+    "size": "Size",
+    "color": "Color",
+    "quantity": "Quantity",
+    "remove": "Remove",
+    "summary": "Order Summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "loginRequired": "Sign in to view your cart",
+    "loginButton": "Sign In",
+    "removeSuccess": "Item removed from cart",
+    "addedSuccess": "Item added to cart!",
+    "clearCart": "Clear Cart",
+    "clearConfirmTitle": "Clear Cart",
+    "clearConfirmDesc": "Are you sure you want to remove all items from your cart?",
+    "clearConfirmYes": "Clear",
+    "clearConfirmNo": "Cancel"
+  },
+  "Favorites": {
+    "title": "Favorites",
+    "empty": "Your favorites list is empty",
+    "emptyDescription": "Click \u2661 on any product to save it here",
+    "goCatalog": "Go to Catalog",
+    "remove": "Remove from Favorites",
+    "loginRequired": "Sign in to view your favorites",
+    "loginButton": "Sign In",
+    "items": "items",
+    "addToCart": "Add to Cart"
   }
 }

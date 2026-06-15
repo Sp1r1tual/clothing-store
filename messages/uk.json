@@ -415,6 +415,8 @@
   "ProductDetail": {
     "add-to-cart": "В кошик",
     "add-to-favorites": "В обране",
+    "remove-from-favorites": "Видалити з обраного",
+    "in-favorites": "В обраному",
     "size": "Розмір",
     "color": "Колір",
     "details": "Деталі",
@@ -423,6 +425,47 @@
     "measurements": "Заміри",
     "related": "Вам також може сподобатись",
     "out-of-stock": "Немає в наявності",
-    "select-size": "Оберіть розмір"
+    "select-size": "Оберіть розмір",
+    "added-to-cart": "Додано до кошика!",
+    "added-to-favorites": "Додано до обраного!",
+    "removed-from-favorites": "Видалено з обраного",
+    "login-required": "Увійдіть, щоб додати до кошика"
+  },
+  "Cart": {
+    "title": "Кошик",
+    "empty": "Ваш кошик порожній",
+    "emptyDescription": "Додайте товари до кошика, щоб оформити замовлення",
+    "goCatalog": "Перейти до каталогу",
+    "items": "товарів",
+    "item": "товар",
+    "size": "Розмір",
+    "color": "Колір",
+    "quantity": "Кількість",
+    "remove": "Видалити",
+    "summary": "Підсумок замовлення",
+    "subtotal": "Сума товарів",
+    "discount": "Знижка",
+    "total": "Разом",
+    "checkout": "Оформити замовлення",
+    "loginRequired": "Увійдіть, щоб переглянути кошик",
+    "loginButton": "Увійти",
+    "removeSuccess": "Товар видалено з кошика",
+    "addedSuccess": "Товар додано до кошика!",
+    "clearCart": "Очистити кошик",
+    "clearConfirmTitle": "Очистити кошик",
+    "clearConfirmDesc": "Ви впевнені, що хочете видалити всі товари з кошика?",
+    "clearConfirmYes": "Очистити",
+    "clearConfirmNo": "Скасувати"
+  },
+  "Favorites": {
+    "title": "Обране",
+    "empty": "Ваше обране порожнє",
+    "emptyDescription": "Натисніть ♡ на будь-якому товарі, щоб зберегти його тут",
+    "goCatalog": "Перейти до каталогу",
+    "remove": "Видалити з обраного",
+    "loginRequired": "Увійдіть, щоб переглянути обране",
+    "loginButton": "Увійти",
+    "items": "товарів",
+    "addToCart": "В кошик"
   }
 }

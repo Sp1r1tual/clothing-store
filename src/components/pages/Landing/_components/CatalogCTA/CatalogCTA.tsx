@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 
+import { Link } from "@/i18n/navigation";
+
 import { Button } from "@/components/ui/Button/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
 
@@ -14,9 +16,11 @@ export const CatalogCTA = () => {
         <h2 className={styles.title}>{t("title")}</h2>
         <p className={styles.description}>{t("description")}</p>
         <div className={styles.buttonWrapper}>
-          <Button variant="primary" size="lg">
-            {t("button")}
-          </Button>
+          <Link href="/new-arrivals">
+            <Button variant="primary" size="lg">
+              {t("button")}
+            </Button>
+          </Link>
         </div>
       </div>
     </ScrollReveal>

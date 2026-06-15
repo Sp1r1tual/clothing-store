@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import { Link } from "@/i18n/navigation";
 import { Play } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
@@ -24,7 +25,9 @@ export const Hero = () => {
         <p className={styles.description}>{t("description")}</p>
 
         <div className={styles.btnGroup}>
-          <Button variant="primary">{t("ctaCatalog")}</Button>
+          <Link href="/new-arrivals">
+            <Button variant="primary">{t("ctaCatalog")}</Button>
+          </Link>
 
           <Button variant="secondary" icon={<Play size={9} fill="currentColor" />} iconCircle>
             {t("ctaVideo")}

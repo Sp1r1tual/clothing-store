@@ -2,7 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
+import { addToCartAction } from "@/actions/cart.actions";
+import { toggleFavoriteAction } from "@/actions/favorites.actions";
 import { Heart, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge/Badge";
@@ -15,6 +18,8 @@ import { ImageGallery } from "./_components/ImageGallery/ImageGallery";
 import { SizeSelector } from "./_components/SizeSelector/SizeSelector";
 
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCartStore } from "@/store/useCartStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useModalStore } from "@/store/useModalStore";
 
 import styles from "./ProductDetail.module.css";
@@ -37,7 +42,7 @@ interface ProductDetailProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string; stock: number }[];
+    variants: { id: string; size: string; stock: number }[];
     category: {
       slug: string;
       nameUk: string;
@@ -62,10 +67,19 @@ interface ProductDetailProps {
 
 export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   const t = useTranslations("ProductDetail");
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const firstInStockVariant = product.variants.find((v) => v.stock > 0);
+  const [selectedSize, setSelectedSize] = useState<string | null>(
+    firstInStockVariant?.size || null,
+  );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const openAuthModal = useModalStore((s) => s.openAuthModal);
 
   const user = useAuthStore((s) => s.user);
+
+  const { addItem, updateItemId } = useCartStore();
+  const { ids: favoriteIds, toggle: toggleFavoriteStore } = useFavoritesStore();
+  const isFavorited = favoriteIds.includes(product.id);
 
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const description = locale === "en" ? product.descriptionEn : product.descriptionUk;
@@ -104,6 +118,81 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   }
 
   breadcrumbs.push({ label: name });
+
+  const handleAddToCart = async () => {
+    if (!selectedSize) {
+      toast.warning(t("select-size"));
+      return;
+    }
+    if (!user) {
+      toast.info(t("login-required"));
+      openAuthModal();
+      return;
+    }
+
+    setIsAddingToCart(true);
+    const variant = product.variants.find((v) => v.size === selectedSize);
+
+    const tempCartItemId = `temp-${Date.now()}`;
+    addItem({
+      id: tempCartItemId,
+      productId: product.id,
+      variantId: variant?.id || null,
+      quantity: 1,
+      product: {
+        id: product.id,
+        nameUk: product.nameUk,
+        nameEn: product.nameEn,
+        slug: product.slug,
+        price: product.price,
+        discountPrice: product.discountPrice,
+        images: product.images,
+      },
+      variant: variant
+        ? {
+            id: variant.id,
+            size: variant.size,
+            color: null,
+            stock: variant.stock,
+          }
+        : null,
+    });
+
+    try {
+      const dbItem = await addToCartAction(product.id, variant?.id || null, 1);
+      updateItemId(tempCartItemId, dbItem.id);
+
+      toast.success(t("added-to-cart"));
+    } catch {
+      toast.error("Failed to add to cart");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+
+    setIsTogglingFavorite(true);
+    toggleFavoriteStore(product.id);
+
+    try {
+      const { isFavorited: nowFavorited } = await toggleFavoriteAction(product.id);
+      if (nowFavorited) {
+        toast.success(t("added-to-favorites"));
+      } else {
+        toast.info(t("removed-from-favorites"));
+      }
+    } catch {
+      toggleFavoriteStore(product.id);
+      toast.error("Failed to update favorites");
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -149,31 +238,26 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
               <Button
                 fullWidth
                 size="lg"
-                disabled={isOutOfStock || !selectedSize}
+                disabled={isOutOfStock || isAddingToCart}
                 icon={<ShoppingBag size={20} />}
-                onClick={() => {
-                  if (!user) {
-                    openAuthModal();
-                    return;
-                  }
-                  console.log("Add to cart", product.id, selectedSize);
-                }}
+                onClick={handleAddToCart}
               >
                 {t("add-to-cart")}
               </Button>
               <Button
                 variant="secondary"
                 size="lg"
-                icon={<Heart size={20} />}
-                onClick={() => {
-                  if (!user) {
-                    openAuthModal();
-                    return;
-                  }
-                  console.log("Add to favorites", product.id);
-                }}
+                disabled={isTogglingFavorite}
+                icon={
+                  <Heart
+                    size={20}
+                    fill={isFavorited ? "#ef4444" : "none"}
+                    color={isFavorited ? "#ef4444" : "currentColor"}
+                  />
+                }
+                onClick={handleToggleFavorite}
               >
-                {t("add-to-favorites")}
+                {isFavorited ? t("in-favorites") : t("add-to-favorites")}
               </Button>
             </div>
 
