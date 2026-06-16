@@ -94,6 +94,11 @@ export const AddressModal = ({ isOpen, onClose, onSuccess }: AddressModalProps) 
     if (!user) return;
     try {
       setIsSubmitting(true);
+      const addrData = {
+        carrier: data.carrier,
+        city: data.city,
+        warehouse: data.warehouse,
+      };
       if (!user.phone && data.phone) {
         await updateProfileAction(
           {
@@ -105,13 +110,10 @@ export const AddressModal = ({ isOpen, onClose, onSuccess }: AddressModalProps) 
           },
           locale,
         );
-        updateUser({ phone: data.phone });
+        updateUser({ phone: data.phone, address: addrData });
       } else {
-        await saveAddressAction({
-          carrier: data.carrier,
-          city: data.city,
-          warehouse: data.warehouse,
-        });
+        await saveAddressAction(addrData);
+        updateUser({ address: addrData });
       }
       onSuccess();
     } catch (error) {

@@ -7,10 +7,16 @@ type ProfileData = {
   avatarUrl: string | null;
   phone: string | null;
   role: IUser["role"];
+  addresses?: Array<{
+    carrier: string;
+    city: string;
+    warehouse: string;
+  }>;
 } | null;
 
 export function mapSupabaseUserToIUser(user: User, profile: ProfileData): IUser {
   const metadata = user.user_metadata ?? {};
+  const defaultAddr = profile?.addresses?.[0] || null;
 
   return {
     id: user.id,
@@ -20,5 +26,12 @@ export function mapSupabaseUserToIUser(user: User, profile: ProfileData): IUser 
     avatar: profile?.avatarUrl || metadata.avatar_url || undefined,
     phone: profile?.phone || user.phone || metadata.phone || undefined,
     role: profile?.role ?? "CUSTOMER",
+    address: defaultAddr
+      ? {
+          carrier: defaultAddr.carrier,
+          city: defaultAddr.city,
+          warehouse: defaultAddr.warehouse,
+        }
+      : null,
   };
 }

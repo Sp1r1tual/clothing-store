@@ -13,6 +13,14 @@ const profileSelect = {
   avatarUrl: true,
   phone: true,
   role: true,
+  addresses: {
+    where: { isDefault: true },
+    select: {
+      carrier: true,
+      city: true,
+      warehouse: true,
+    },
+  },
 } as const;
 
 type ProfileRecord = {
@@ -21,6 +29,11 @@ type ProfileRecord = {
   avatarUrl: string | null;
   phone: string | null;
   role: "CUSTOMER" | "ADMIN";
+  addresses: Array<{
+    carrier: string;
+    city: string;
+    warehouse: string;
+  }>;
 };
 
 async function fetchProfile(userId: string): Promise<ProfileRecord | null> {

@@ -45,7 +45,7 @@ export const ProfileHeader = () => {
     carrier: CarrierType;
     city: string;
     warehouse: string;
-  } | null>(null);
+  } | null>((user?.address as never) || null);
 
   const schema = useMemo(
     () =>
@@ -89,12 +89,14 @@ export const ProfileHeader = () => {
             warehouse: addr.warehouse,
           };
           setAddress(addrData);
+          updateUser({ address: addrData });
         } else {
           setAddress(null);
+          updateUser({ address: null });
         }
       })
       .catch(() => {});
-  }, []);
+  }, [updateUser]);
 
   const startEditing = () => {
     reset({
@@ -125,21 +127,22 @@ export const ProfileHeader = () => {
         locale,
       );
 
+      const addrData =
+        data.carrier && data.city
+          ? {
+              carrier: data.carrier as CarrierType,
+              city: data.city,
+              warehouse: data.warehouse || "",
+            }
+          : null;
+
       updateUser({
         name: updatedData.name || trimmedName,
         phone: updatedData.phone || undefined,
+        address: addrData,
       });
 
-      if (data.carrier && data.city) {
-        const addrData = {
-          carrier: data.carrier as CarrierType,
-          city: data.city,
-          warehouse: data.warehouse || "",
-        };
-        setAddress(addrData);
-      } else {
-        setAddress(null);
-      }
+      setAddress(addrData);
 
       toast.success(t("save") + "!");
       setIsEditing(false);

@@ -7,4 +7,9 @@ export interface IUser {
   avatar?: string;
   phone?: string;
   role: RoleType;
+  address?: {
+    carrier: string;
+    city: string;
+    warehouse: string;
+  } | null;
 }
