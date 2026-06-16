@@ -17,7 +17,7 @@ interface ProductCardProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string; stock: number }[];
+    variants: { size: string }[];
     category: { slug: string };
   };
   locale: string;
@@ -26,8 +26,7 @@ interface ProductCardProps {
 export const ProductCard = ({ product, locale }: ProductCardProps) => {
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
-  const totalStock = product.variants.reduce((acc, v) => acc + v.stock, 0);
-  const isOutOfStock = totalStock === 0;
+  const isOutOfStock = false;
 
   let discountPercentage = 0;
   if (product.discountPrice && product.discountPrice < product.price) {
@@ -36,7 +35,7 @@ export const ProductCard = ({ product, locale }: ProductCardProps) => {
     );
   }
 
-  const availableSizes = product.variants.filter((v) => v.stock > 0).map((v) => v.size);
+  const availableSizes = product.variants.map((v) => v.size);
 
   return (
     <Link href={`/product/${product.slug}`} className={styles.card}>

@@ -231,13 +231,6 @@ export function ImagesSection({
     },
   }));
 
-  const syncMeta = useCallback(() => {
-    imageFields.forEach((_, idx) => {
-      setValue(`images.${idx}.isPrimary`, idx === 0, { shouldValidate: false });
-      setValue(`images.${idx}.order`, idx, { shouldValidate: false });
-    });
-  }, [imageFields, setValue]);
-
   const handleRemove = useCallback((index: number, fieldId: string) => {
     setImageToDelete({ index, fieldId });
   }, []);
@@ -247,7 +240,6 @@ export function ImagesSection({
       removePendingForField(imageToDelete.fieldId);
       removeImage(imageToDelete.index);
       setImageToDelete(null);
-      setTimeout(syncMeta, 0);
     }
   };
 
@@ -270,7 +262,6 @@ export function ImagesSection({
         });
 
         moveImage(oldIndex, newIndex);
-        setTimeout(syncMeta, 0);
       }
     }
   };

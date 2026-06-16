@@ -112,7 +112,7 @@ export async function createOrderAction(): Promise<string> {
       productNameUk: item.product.nameUk,
       productNameEn: item.product.nameEn,
       productSize: item.variant?.size ?? null,
-      productColor: item.variant?.color ?? null,
+      productColor: item.variant?.colorUk ?? null,
       price: item.product.discountPrice ?? item.product.price,
       quantity: item.quantity,
     })),

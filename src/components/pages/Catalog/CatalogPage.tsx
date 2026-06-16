@@ -41,7 +41,7 @@ interface CatalogPageProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string; stock: number }[];
+    variants: { size: string }[];
     category: { slug: string };
   }[];
   totalCount: number;

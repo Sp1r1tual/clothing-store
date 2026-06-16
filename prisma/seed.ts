@@ -10,26 +10,26 @@ async function main() {
       nameUk: "Чоловіки",
       nameEn: "Men",
       slug: "men",
-      order: 1,
+      order: 0,
     },
     {
       nameUk: "Жінки",
       nameEn: "Women",
       slug: "women",
-      order: 2,
+      order: 1,
     },
     {
       nameUk: "Інше",
       nameEn: "Other",
       slug: "other",
-      order: 3,
+      order: 2,
     },
   ];
 
   for (const category of baseCategories) {
     const created = await prisma.category.upsert({
       where: { slug: category.slug },
-      update: {}, // If it exists, do nothing
+      update: {},
       create: {
         nameUk: category.nameUk,
         nameEn: category.nameEn,

@@ -136,10 +136,8 @@ model ProductVariant {
   productId  String
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   size       String
-  color      String?
-  // IMPORTANT: enforce stock >= 0 via a raw migration CHECK constraint
-  // ALTER TABLE product_variants ADD CONSTRAINT stock_non_negative CHECK (stock >= 0);
-  stock      Int         @default(0)
+  colorUk    String?
+  colorEn    String?
   sku        String?     @unique
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt

@@ -94,16 +94,17 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
           </button>
         </div>
 
-        {(item.variant?.size || item.variant?.color) && (
+        {(item.variant?.size || item.variant?.colorUk || item.variant?.colorEn) && (
           <div className={styles.meta}>
             {item.variant.size && (
               <span className={styles.metaChip}>
                 {t("size")}: <strong>{item.variant.size}</strong>
               </span>
             )}
-            {item.variant.color && (
+            {(locale === "uk" ? item.variant.colorUk : item.variant.colorEn) && (
               <span className={styles.metaChip}>
-                {t("color")}: <strong>{item.variant.color}</strong>
+                {t("color")}:{" "}
+                <strong>{locale === "uk" ? item.variant.colorUk : item.variant.colorEn}</strong>
               </span>
             )}
           </div>

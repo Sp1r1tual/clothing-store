@@ -64,8 +64,8 @@ export async function insertProduct(data: ProductFormData) {
       variants: {
         create: variants.map((v) => ({
           size: v.size,
-          color: v.color || null,
-          stock: v.stock,
+          colorUk: v.colorUk || null,
+          colorEn: v.colorEn || null,
           sku: v.sku || null,
         })),
       },
@@ -157,27 +157,26 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
 
     const incomingVariants = variants.map((v) => ({
       size: v.size,
-      color: v.color || null,
-      stock: v.stock,
+      colorUk: v.colorUk || null,
+      colorEn: v.colorEn || null,
       sku: v.sku || null,
     }));
 
     const variantsToCreate: typeof incomingVariants = [];
-    const variantsToUpdate: { id: string; stock: number; sku: string | null }[] = [];
+    const variantsToUpdate: { id: string; sku: string | null }[] = [];
     const matchedVariantIds = new Set<string>();
 
     for (const incoming of incomingVariants) {
       const match = existingVariants.find(
         (ev) =>
           ev.size.toLowerCase() === incoming.size.toLowerCase() &&
-          (ev.color || "").toLowerCase() === (incoming.color || "").toLowerCase(),
+          (ev.colorUk || "").toLowerCase() === (incoming.colorUk || "").toLowerCase(),
       );
 
       if (match) {
         matchedVariantIds.add(match.id);
         variantsToUpdate.push({
           id: match.id,
-          stock: incoming.stock,
           sku: incoming.sku,
         });
       } else {
@@ -200,8 +199,8 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
         data: variantsToCreate.map((v) => ({
           productId: id,
           size: v.size,
-          color: v.color,
-          stock: v.stock,
+          colorUk: v.colorUk,
+          colorEn: v.colorEn,
           sku: v.sku,
         })),
       });
@@ -211,7 +210,6 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
       await tx.productVariant.update({
         where: { id: update.id },
         data: {
-          stock: update.stock,
           sku: update.sku,
         },
       });
@@ -312,7 +310,7 @@ export async function findPublishedProducts(filters: ProductFilters = {}) {
           take: 2,
         },
         variants: {
-          select: { size: true, stock: true },
+          select: { size: true },
         },
         category: {
           select: { nameUk: true, nameEn: true, slug: true },
@@ -342,7 +340,7 @@ export async function findProductBySlug(slug: string) {
     where: { slug, deletedAt: null, status: "PUBLISHED" },
     include: {
       images: { orderBy: { order: "asc" } },
-      variants: { orderBy: [{ size: "asc" }, { color: "asc" }] },
+      variants: { orderBy: [{ size: "asc" }, { colorUk: "asc" }] },
       category: {
         select: {
           nameUk: true,
@@ -367,7 +365,7 @@ export async function findProductBySlug(slug: string) {
             take: 2,
           },
           variants: {
-            select: { size: true, stock: true },
+            select: { size: true },
           },
           category: {
             select: { slug: true },
@@ -450,7 +448,7 @@ export async function findSaleProducts(filters: Omit<ProductFilters, "categoryId
           take: 2,
         },
         variants: {
-          select: { size: true, stock: true },
+          select: { size: true },
         },
         category: {
           select: { nameUk: true, nameEn: true, slug: true },

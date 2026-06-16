@@ -61,8 +61,8 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     })),
     variants: product.variants.map((v) => ({
       size: v.size,
-      color: v.color || "",
-      stock: v.stock,
+      colorUk: v.colorUk || "",
+      colorEn: v.colorEn || "",
       sku: v.sku || "",
     })),
   };

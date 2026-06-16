@@ -299,6 +299,8 @@
           "cover": "Обкладинка",
           "variantSize": "Розмір *",
           "variantColor": "Колір",
+          "variantColorUk": "Колір (Укр)",
+          "variantColorEn": "Колір (Англ)",
           "variantStock": "Залишок",
           "variantSku": "SKU",
           "seoTitle": "SEO заголовок",
@@ -318,6 +320,8 @@
           "imageAlt": "Опис зображення",
           "variantSize": "XS / S / M / L / XL",
           "variantColor": "Чорний",
+          "variantColorUk": "Наприклад: Чорний",
+          "variantColorEn": "E.g. Black",
           "variantStock": "0",
           "variantSku": "SHIRT-BLK-M",
           "seoTitle": "Title для пошукових систем",
@@ -418,7 +422,8 @@
           "parent": "Батьківська категорія",
           "order": "Порядок",
           "seoTitle": "SEO заголовок",
-          "seoDescription": "SEO опис"
+          "seoDescription": "SEO опис",
+          "createForBoth": "Створити для чоловіків і жінок (слаги отримають суфікси <code>-men</code> / <code>-women</code>)"
         },
         "placeholders": {
           "name": "Наприклад: Футболки",

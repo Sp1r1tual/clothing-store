@@ -40,7 +40,7 @@ export const VariantsSection = ({
         <button
           type="button"
           className={styles.addBtn}
-          onClick={() => appendVariant({ size: "", color: "", stock: 0, sku: "" })}
+          onClick={() => appendVariant({ size: "", colorUk: "", colorEn: "", sku: "" })}
         >
           <Plus size={15} /> {t("buttons.addVariant")}
         </button>
@@ -59,18 +59,16 @@ export const VariantsSection = ({
                 {...register(`variants.${index}.size`)}
               />
               <AdminInput
-                label={t("labels.variantColor")}
-                placeholder={t("placeholders.variantColor")}
-                error={errors.variants?.[index]?.color?.message}
-                {...register(`variants.${index}.color`)}
+                label={t("labels.variantColorUk")}
+                placeholder={t("placeholders.variantColorUk")}
+                error={errors.variants?.[index]?.colorUk?.message}
+                {...register(`variants.${index}.colorUk`)}
               />
               <AdminInput
-                type="number"
-                min="0"
-                label={t("labels.variantStock")}
-                placeholder={t("placeholders.variantStock")}
-                error={errors.variants?.[index]?.stock?.message}
-                {...register(`variants.${index}.stock`, { valueAsNumber: true })}
+                label={t("labels.variantColorEn")}
+                placeholder={t("placeholders.variantColorEn")}
+                error={errors.variants?.[index]?.colorEn?.message}
+                {...register(`variants.${index}.colorEn`)}
               />
               <AdminInput
                 label={t("labels.variantSku")}

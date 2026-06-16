@@ -6,7 +6,6 @@ export interface ProductSchemaMessages {
   imageDuplicateUrl: string;
   imageAltMax: string;
   variantSizeRequired: string;
-  variantStockMin: string;
   productNameRequired: string;
   productNameMax: string;
   productSlugRequired: string;
@@ -30,8 +29,8 @@ export const createProductImageSchema = (msg: ProductSchemaMessages) =>
 export const createProductVariantSchema = (msg: ProductSchemaMessages) =>
   z.object({
     size: z.string().min(1, msg.variantSizeRequired),
-    color: z.string().optional(),
-    stock: z.number().min(0, msg.variantStockMin).default(0),
+    colorUk: z.string().optional(),
+    colorEn: z.string().optional(),
     sku: z.string().optional(),
   });
 
@@ -51,8 +50,22 @@ export const createProductSchema = (msg: ProductSchemaMessages) =>
     careInstructionsEn: z.string().optional(),
     measurementsUk: z.string().optional(),
     measurementsEn: z.string().optional(),
-    price: z.number({ message: msg.productPriceRequired }).positive(msg.productPricePositive),
-    discountPrice: z.number().positive(msg.productDiscountPricePositive).optional().nullable(),
+    price: z.preprocess(
+      (val) =>
+        val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val))
+          ? undefined
+          : Number(val),
+      z.number({ message: msg.productPriceRequired }).positive(msg.productPricePositive),
+    ),
+    discountPrice: z
+      .preprocess(
+        (val) =>
+          val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val))
+            ? null
+            : Number(val),
+        z.number().positive(msg.productDiscountPricePositive).nullable(),
+      )
+      .optional(),
     status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]),
     categoryId: z.string().min(1, msg.productCategoryRequired),
     seoTitleUk: z.string().optional(),
@@ -80,7 +93,6 @@ export const productSchema = createProductSchema({
   imageDuplicateUrl: "Duplicate image URLs are not allowed",
   imageAltMax: "Alt text cannot exceed 125 characters",
   variantSizeRequired: "Size is required",
-  variantStockMin: "Stock cannot be negative",
   productNameRequired: "Name is required",
   productNameMax: "Name is too long",
   productSlugRequired: "Slug is required",

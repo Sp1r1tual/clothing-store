@@ -17,8 +17,8 @@ export interface CartItem {
   variant: {
     id: string;
     size: string;
-    color: string | null;
-    stock: number;
+    colorUk: string | null;
+    colorEn: string | null;
   } | null;
 }
 

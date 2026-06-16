@@ -299,6 +299,8 @@
           "cover": "Cover",
           "variantSize": "Size *",
           "variantColor": "Color",
+          "variantColorUk": "Color (Uk)",
+          "variantColorEn": "Color (En)",
           "variantStock": "Stock",
           "variantSku": "SKU",
           "seoTitle": "SEO Title",
@@ -317,7 +319,9 @@
           "imageUrl": "https://...",
           "imageAlt": "Image description",
           "variantSize": "XS / S / M / L / XL",
-          "variantColor": "Black",
+          "variantColor": "Color",
+          "variantColorUk": "Наприклад: Чорний",
+          "variantColorEn": "E.g. Black",
           "variantStock": "0",
           "variantSku": "SHIRT-BLK-M",
           "seoTitle": "Title for search engines",
@@ -419,7 +423,8 @@
           "parent": "Parent category",
           "order": "Order",
           "seoTitle": "SEO Title",
-          "seoDescription": "SEO Description"
+          "seoDescription": "SEO Description",
+          "createForBoth": "Create for Men & Women (slugs get suffixes <code>-men</code> / <code>-women</code>)"
         },
         "placeholders": {
           "name": "E.g. T-Shirts",

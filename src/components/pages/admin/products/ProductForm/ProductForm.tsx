@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { FormProvider, type Resolver, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -16,12 +16,8 @@ import { DetailsSection } from "./sections/DetailsSection/DetailsSection";
 import { PriceCategorySection } from "./sections/PriceCategorySection/PriceCategorySection";
 import { SeoSection } from "./sections/SeoSection/SeoSection";
 
-import { toSlug } from "@/common/utils/slug";
-import {
-  MAX_IMAGES,
-  type ProductFormData,
-  createProductSchema,
-} from "@/common/validation/product/product.schema";
+import { MAX_IMAGES, type ProductFormData } from "@/common/validation/product/product.schema";
+import { useProductSchema } from "@/common/validation/product/product.schema.client";
 
 import styles from "./ProductForm.module.css";
 
@@ -39,26 +35,7 @@ export const ProductForm = ({ categories, initialData, productId }: ProductFormP
   const t = useTranslations("Admin.products.form");
   const imagesSectionRef = useRef<ImagesSectionHandle>(null);
 
-  const schema = useMemo(
-    () =>
-      createProductSchema({
-        imageUrlRequired: t("validation.imageUrlRequired"),
-        imagesTooMany: t("validation.imagesTooMany"),
-        imageDuplicateUrl: t("validation.imageDuplicateUrl"),
-        imageAltMax: t("validation.imageAltMax"),
-        variantSizeRequired: t("validation.variantSizeRequired"),
-        variantStockMin: t("validation.variantStockMin"),
-        productNameRequired: t("validation.productNameRequired"),
-        productNameMax: t("validation.productNameMax"),
-        productSlugRequired: t("validation.productSlugRequired"),
-        productSlugRegex: t("validation.productSlugRegex"),
-        productPriceRequired: t("validation.productPriceRequired"),
-        productPricePositive: t("validation.productPricePositive"),
-        productDiscountPricePositive: t("validation.productDiscountPricePositive"),
-        productCategoryRequired: t("validation.productCategoryRequired"),
-      }),
-    [t],
-  );
+  const schema = useProductSchema();
 
   const methods = useForm<ProductFormData>({
     resolver: zodResolver(schema) as Resolver<ProductFormData>,
@@ -115,7 +92,7 @@ export const ProductForm = ({ categories, initialData, productId }: ProductFormP
     control,
     handleSubmit,
     setValue,
-    getValues,
+    trigger,
     formState: { isSubmitting },
   } = methods;
 
@@ -132,37 +109,50 @@ export const ProductForm = ({ categories, initialData, productId }: ProductFormP
     remove: removeVariant,
   } = useFieldArray({ control, name: "variants" });
 
-  const submitData = useCallback(async () => {
-    const data = getValues();
-    if (productId) {
-      await updateProduct(productId, data, locale);
-      toast.success(t("messages.updateSuccess"));
-    } else {
-      await createProduct(data, locale);
-      toast.success(t("messages.success"));
-    }
-    router.push("/admin/products");
-  }, [productId, getValues, locale, t, router]);
+  const submitData = useCallback(
+    async (data: ProductFormData) => {
+      if (data.images) {
+        data.images = data.images.map((img, idx) => ({
+          ...img,
+          isPrimary: idx === 0,
+          order: idx,
+        }));
+      }
+      if (productId) {
+        await updateProduct(productId, data, locale);
+        toast.success(t("messages.updateSuccess"));
+      } else {
+        await createProduct(data, locale);
+        toast.success(t("messages.success"));
+      }
+      router.push("/admin/products");
+    },
+    [productId, locale, t, router],
+  );
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      const isValid = await trigger();
+      if (!isValid) return;
+
       try {
         await imagesSectionRef.current?.uploadPendingFiles();
       } catch (err) {
         toast.error(err instanceof Error ? err.message : t("messages.error"));
         return;
       }
+
       handleSubmit(submitData)(e);
     },
-    [handleSubmit, submitData, t],
+    [handleSubmit, submitData, trigger, t],
   );
 
   const handleNameUkChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setValue("nameUk", value);
-      setValue("slug", toSlug(value));
     },
     [setValue],
   );

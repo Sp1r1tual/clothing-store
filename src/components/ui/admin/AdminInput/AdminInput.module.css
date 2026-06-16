@@ -31,6 +31,14 @@
   color: #bbbbbb;
 }
 
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: #111111;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .input:focus {
   border-color: #111111;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);

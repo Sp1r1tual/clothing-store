@@ -17,8 +17,8 @@ export type CartItemWithProduct = {
   variant: {
     id: string;
     size: string;
-    color: string | null;
-    stock: number;
+    colorUk: string | null;
+    colorEn: string | null;
   } | null;
 };
 
@@ -59,8 +59,8 @@ export async function getCart(profileId: string): Promise<CartItemWithProduct[]>
             select: {
               id: true,
               size: true,
-              color: true,
-              stock: true,
+              colorUk: true,
+              colorEn: true,
             },
           },
         },

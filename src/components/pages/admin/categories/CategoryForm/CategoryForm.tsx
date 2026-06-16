@@ -1,8 +1,8 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
-import { type Resolver, useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { Controller, type Resolver, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { createCategory, updateCategory } from "@/actions/category.actions";
@@ -13,7 +13,6 @@ import { AdminInput } from "@/components/ui/admin/AdminInput/AdminInput";
 import { AdminSelect } from "@/components/ui/admin/AdminSelect/AdminSelect";
 import { AdminTextarea } from "@/components/ui/admin/AdminTextarea/AdminTextarea";
 
-import { toSlug } from "@/common/utils/slug";
 import {
   type CategoryFormData,
   createCategorySchema,
@@ -21,7 +20,13 @@ import {
 
 import styles from "./CategoryForm.module.css";
 
-type ParentCategory = { id: string; nameUk: string; nameEn: string; parentId: string | null };
+type ParentCategory = {
+  id: string;
+  nameUk: string;
+  nameEn: string;
+  parentId: string | null;
+  order: number;
+};
 
 interface CategoryFormProps {
   categories: ParentCategory[];
@@ -50,6 +55,7 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(schema) as Resolver<CategoryFormData>,
@@ -67,11 +73,42 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
     },
   });
 
+  const [createForBoth, setCreateForBoth] = useState(false);
+
+  const watchedParentId = useWatch({ control, name: "parentId" });
+  useEffect(() => {
+    if (editId) return;
+    const siblings = categories.filter((c) => {
+      if (!watchedParentId) return c.parentId === null;
+      return c.parentId === watchedParentId;
+    });
+    const nextOrder = siblings.length > 0 ? Math.max(...siblings.map((c) => c.order)) + 1 : 0;
+    setValue("order", nextOrder);
+  }, [watchedParentId, categories, editId, setValue]);
+
+  const menCategory = categories.find(
+    (c) => c.parentId === null && c.nameEn.toLowerCase() === "men",
+  );
+  const womenCategory = categories.find(
+    (c) => c.parentId === null && c.nameEn.toLowerCase() === "women",
+  );
+
+  const canCreateForBoth = !editId && !!menCategory && !!womenCategory;
+
   const onSubmit = async (data: CategoryFormData) => {
     try {
       if (editId) {
         await updateCategory(editId, data, locale);
         toast.success(t("messages.updateSuccess"));
+      } else if (createForBoth && canCreateForBoth) {
+        await Promise.all([
+          createCategory({ ...data, parentId: menCategory!.id, slug: `${data.slug}-men` }, locale),
+          createCategory(
+            { ...data, parentId: womenCategory!.id, slug: `${data.slug}-women` },
+            locale,
+          ),
+        ]);
+        toast.success(t("messages.createSuccess"));
       } else {
         await createCategory(data, locale);
         toast.success(t("messages.createSuccess"));
@@ -85,9 +122,6 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
   const handleNameUkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setValue("nameUk", value);
-    if (!editId) {
-      setValue("slug", toSlug(value));
-    }
   };
 
   const parentOptions = categories.filter((c) => c.id !== editId);
@@ -136,14 +170,23 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
             ))}
           </AdminSelect>
 
-          <AdminInput
-            id="cat-order"
-            label={t("labels.order")}
-            type="number"
-            min={0}
-            placeholder="0"
-            error={errors.order?.message}
-            {...register("order")}
+          <Controller
+            name="order"
+            control={control}
+            render={({ field }) => (
+              <AdminInput
+                id="cat-order"
+                label={t("labels.order")}
+                type="number"
+                min={0}
+                placeholder="0"
+                error={errors.order?.message}
+                value={field.value ?? 0}
+                onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                onBlur={field.onBlur}
+                ref={field.ref}
+              />
+            )}
           />
         </div>
       </section>
@@ -183,6 +226,25 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
           />
         </div>
       </section>
+
+      {canCreateForBoth && (
+        <div className={styles.checkboxRow}>
+          <label className={styles.checkboxLabel}>
+            <input
+              id="cat-create-for-both"
+              type="checkbox"
+              className={styles.checkbox}
+              checked={createForBoth}
+              onChange={(e) => setCreateForBoth(e.target.checked)}
+            />
+            <span>
+              {t.rich("labels.createForBoth", {
+                code: (chunks) => <code>{chunks}</code>,
+              })}
+            </span>
+          </label>
+        </div>
+      )}
 
       <div className={styles.submitRow}>
         <button type="button" className={styles.cancelBtn} onClick={() => router.back()}>

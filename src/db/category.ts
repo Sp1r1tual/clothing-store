@@ -38,7 +38,7 @@ export async function findCategoryById(id: string) {
 
 export async function findCategoriesForSelect() {
   return prisma.category.findMany({
-    select: { id: true, nameUk: true, nameEn: true, parentId: true },
+    select: { id: true, nameUk: true, nameEn: true, parentId: true, order: true },
     orderBy: [{ order: "asc" }, { nameUk: "asc" }],
   });
 }

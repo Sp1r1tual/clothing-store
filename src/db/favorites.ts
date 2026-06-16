@@ -12,7 +12,7 @@ export type FavoriteProduct = {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string; stock: number }[];
+    variants: { size: string }[];
     category: { slug: string };
   };
 };
@@ -37,7 +37,7 @@ export async function getFavorites(profileId: string): Promise<FavoriteProduct[]
             take: 2,
           },
           variants: {
-            select: { size: true, stock: true },
+            select: { size: true },
           },
           category: {
             select: { slug: true },

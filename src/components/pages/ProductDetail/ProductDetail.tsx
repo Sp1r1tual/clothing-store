@@ -42,7 +42,7 @@ interface ProductDetailProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { id: string; size: string; stock: number }[];
+    variants: { id: string; size: string }[];
     category: {
       slug: string;
       nameUk: string;
@@ -58,7 +58,7 @@ interface ProductDetailProps {
       discountPrice: number | null;
       isFeatured: boolean;
       images: { url: string; altText: string | null }[];
-      variants: { size: string; stock: number }[];
+      variants: { size: string }[];
       category: { slug: string };
     }[];
   };
@@ -67,9 +67,8 @@ interface ProductDetailProps {
 
 export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   const t = useTranslations("ProductDetail");
-  const firstInStockVariant = product.variants.find((v) => v.stock > 0);
   const [selectedSize, setSelectedSize] = useState<string | null>(
-    firstInStockVariant?.size || null,
+    product.variants[0]?.size || null,
   );
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
@@ -87,11 +86,7 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   const care = locale === "en" ? product.careInstructionsEn : product.careInstructionsUk;
   const measurements = locale === "en" ? product.measurementsEn : product.measurementsUk;
 
-  const totalStock = product.variants.reduce(
-    (acc: number, v: { stock: number }) => acc + v.stock,
-    0,
-  );
-  const isOutOfStock = totalStock === 0;
+  const isOutOfStock = false;
 
   let discountPercentage = 0;
   if (product.discountPrice && product.discountPrice < product.price) {
@@ -152,8 +147,8 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
         ? {
             id: variant.id,
             size: variant.size,
-            color: null,
-            stock: variant.stock,
+            colorUk: null,
+            colorEn: null,
           }
         : null,
     });

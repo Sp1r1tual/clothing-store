@@ -11,7 +11,6 @@ export async function getProductSchema(locale: string) {
     imageDuplicateUrl: t("validation.imageDuplicateUrl"),
     imageAltMax: t("validation.imageAltMax"),
     variantSizeRequired: t("validation.variantSizeRequired"),
-    variantStockMin: t("validation.variantStockMin"),
     productNameRequired: t("validation.productNameRequired"),
     productNameMax: t("validation.productNameMax"),
     productSlugRequired: t("validation.productSlugRequired"),

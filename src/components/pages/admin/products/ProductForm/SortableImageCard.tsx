@@ -109,9 +109,6 @@ export const SortableImageCard = memo(function SortableImageCard({
         )}
         {isPending && <div className={styles.pendingBadge}>{t("hints.pendingUpload")}</div>}
       </div>
-
-      <input type="hidden" {...register(`images.${index}.isPrimary`)} />
-      <input type="hidden" {...register(`images.${index}.order`)} />
     </div>
   );
 });
