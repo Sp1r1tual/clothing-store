@@ -182,7 +182,7 @@ export const AddressSection = () => {
                   {displayCarrier && <strong>{displayCarrier}</strong>}
                   {displayCarrier && " · "}
                   {saved.city}
-                  {saved.warehouse && ` · №${saved.warehouse}`}
+                  {saved.warehouse && ` · ${saved.warehouse}`}
                 </span>
               ) : (
                 <span className={styles.notSet}>{t("notSet")}</span>

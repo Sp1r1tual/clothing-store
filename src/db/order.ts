@@ -249,6 +249,133 @@ export async function cancelOrder(orderId: string, profileId: string): Promise<O
   return mapOrder(updated);
 }
 
+export type AdminOrderData = OrderData & {
+  profileId: string;
+  profile: {
+    name: string | null;
+    email: string | null;
+    phone: string | null;
+  };
+};
+
+export async function getAllOrdersAdmin(): Promise<AdminOrderData[]> {
+  const orders = await prisma.order.findMany({
+    select: {
+      id: true,
+      status: true,
+      totalAmount: true,
+      contactName: true,
+      contactEmail: true,
+      contactPhone: true,
+      carrier: true,
+      shippingAddress: true,
+      trackingNumber: true,
+      note: true,
+      discountAmount: true,
+      profileId: true,
+      profile: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      createdAt: true,
+      updatedAt: true,
+      items: { select: orderItemSelect },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return orders.map((o) => ({
+    ...mapOrder(o),
+    profileId: o.profileId,
+    profile: o.profile,
+  }));
+}
+
+export async function getOrderByIdAdmin(orderId: string): Promise<AdminOrderData | null> {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId },
+    select: {
+      id: true,
+      status: true,
+      totalAmount: true,
+      contactName: true,
+      contactEmail: true,
+      contactPhone: true,
+      carrier: true,
+      shippingAddress: true,
+      trackingNumber: true,
+      note: true,
+      discountAmount: true,
+      profileId: true,
+      profile: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      createdAt: true,
+      updatedAt: true,
+      items: { select: orderItemSelect },
+    },
+  });
+
+  if (!order) return null;
+
+  return {
+    ...mapOrder(order),
+    profileId: order.profileId,
+    profile: order.profile,
+  };
+}
+
+export async function updateOrderStatusAdmin(
+  orderId: string,
+  status: string,
+  trackingNumber?: string | null,
+): Promise<AdminOrderData> {
+  const updated = await prisma.order.update({
+    where: { id: orderId },
+    data: {
+      status: status as import("@prisma/client").OrderStatus,
+      ...(trackingNumber !== undefined ? { trackingNumber } : {}),
+    },
+    select: {
+      id: true,
+      status: true,
+      totalAmount: true,
+      contactName: true,
+      contactEmail: true,
+      contactPhone: true,
+      carrier: true,
+      shippingAddress: true,
+      trackingNumber: true,
+      note: true,
+      discountAmount: true,
+      profileId: true,
+      profile: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
+      createdAt: true,
+      updatedAt: true,
+      items: { select: orderItemSelect },
+    },
+  });
+
+  return {
+    ...mapOrder(updated),
+    profileId: updated.profileId,
+    profile: updated.profile,
+  };
+}
+
 export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
   const totalAmount = input.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

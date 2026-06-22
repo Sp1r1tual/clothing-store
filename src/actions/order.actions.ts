@@ -97,7 +97,7 @@ export async function createOrderAction(): Promise<string> {
     throw new Error("Shipping address is required to place an order");
   }
 
-  const shippingAddress = `${address.city}, warehouse ${address.warehouse}`;
+  const shippingAddress = `${address.city}, ${address.warehouse}`;
 
   const order = await createOrder({
     profileId: user.id,

@@ -163,8 +163,8 @@
       "carrier": "Carrier",
       "city": "City",
       "cityPlaceholder": "e.g. Kyiv",
-      "warehouse": "Branch / Parcel locker",
-      "warehousePlaceholder": "e.g. 12",
+      "warehouse": "Address or branch",
+      "warehousePlaceholder": "e.g. 12 Baker St or Branch #5",
       "street": "Courier delivery address",
       "streetPlaceholder": "123 Main St, Apt 5",
       "notSet": "not set",
@@ -205,6 +205,8 @@
       "cancelError": "Failed to cancel the order",
       "updateSuccess": "Details updated successfully!",
       "updateError": "Failed to update details",
+      "trackingCopied": "Tracking copied!",
+      "copyTracking": "Copy tracking",
       "itemSingular": "item",
       "itemPlural": "items",
       "statuses": {
@@ -227,7 +229,8 @@
       "title": "Admin Panel",
       "nav": {
         "products": "Products",
-        "categories": "Categories"
+        "categories": "Categories",
+        "orders": "Orders"
       },
       "backToSite": "To site"
     },
@@ -449,6 +452,73 @@
           "slugRequired": "Slug is required",
           "slugRegex": "Only lowercase letters, numbers, and hyphens"
         }
+      }
+    },
+    "orders": {
+      "title": "Orders",
+      "subtitle": "{count} orders",
+      "metaTitle": "Orders – Admin Panel",
+      "detailMetaTitle": "Order #{id} – Admin Panel",
+      "empty": "No orders yet.",
+      "filterAll": "All statuses",
+      "backToOrders": "Back to Orders",
+      "orderNumber": "Order #{id}",
+      "customer": "Customer",
+      "table": {
+        "th": {
+          "order": "Order",
+          "customer": "Customer",
+          "total": "Total",
+          "status": "Status",
+          "date": "Date",
+          "actions": ""
+        }
+      },
+      "detail": {
+        "orderInfo": "Order Information",
+        "contactInfo": "Contact Info",
+        "shippingInfo": "Shipping",
+        "items": "Order Items",
+        "statusSection": "Status Management",
+        "currentStatus": "Current Status",
+        "changeStatus": "Change Status",
+        "trackingNumber": "Tracking Number",
+        "trackingPlaceholder": "e.g. 20400000000000",
+        "saveTracking": "Save Tracking",
+        "saveStatus": "Save Changes",
+        "statusUpdated": "Status updated!",
+        "statusError": "Failed to update status",
+        "trackingUpdated": "Tracking number saved!",
+        "trackingError": "Failed to save tracking number",
+        "date": "Order Date",
+        "total": "Order Total",
+        "carrier": "Carrier",
+        "address": "Delivery Address",
+        "tracking": "Tracking",
+        "noTracking": "not set",
+        "contactName": "Name",
+        "contactEmail": "Email",
+        "contactPhone": "Phone",
+        "itemName": "Product",
+        "itemSize": "Size",
+        "itemColor": "Color",
+        "itemQty": "Qty",
+        "itemPrice": "Price"
+      },
+      "statuses": {
+        "PENDING": "Pending",
+        "PROCESSING": "Processing",
+        "SHIPPED": "Shipped",
+        "DELIVERED": "Delivered",
+        "CANCELLED": "Cancelled",
+        "REFUNDED": "Refunded"
+      },
+      "carriers": {
+        "NOVA_POSHTA": "Nova Poshta",
+        "UKRPOSHTA": "Ukrposhta",
+        "MEEST": "Meest",
+        "COURIER": "Courier",
+        "SELF_PICKUP": "Self Pickup"
       }
     }
   },

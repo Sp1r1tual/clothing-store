@@ -10,7 +10,7 @@ import { cancelOrderAction, updateOrderContactAction } from "@/actions/order.act
 import type { OrderData } from "@/db/order";
 import { Link } from "@/i18n/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, ChevronLeft, Clock, Package, RefreshCw, Truck, X } from "lucide-react";
+import { CheckCircle, ChevronLeft, Clock, Copy, Package, RefreshCw, Truck, X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
@@ -114,6 +114,23 @@ export const OrderDetailPage = ({ order: initialOrder }: OrderDetailPageProps) =
           <h1 className={styles.title}>
             {t("orders.orderNumber", { id: order.id.slice(0, 8).toUpperCase() })}
           </h1>
+          {order.trackingNumber && (
+            <div className={styles.headerTracking}>
+              <span className={styles.trackingLabel}>{t("orders.tracking")}:</span>
+              <span className={styles.trackingValue}>{order.trackingNumber}</span>
+              <button
+                type="button"
+                className={styles.copyBtn}
+                onClick={() => {
+                  navigator.clipboard.writeText(order.trackingNumber!);
+                  toast.success(t("orders.trackingCopied"));
+                }}
+                title={t("orders.copyTracking")}
+              >
+                <Copy size={16} />
+              </button>
+            </div>
+          )}
           <p className={styles.date}>{formatDate(order.createdAt, locale, true)}</p>
         </div>
         <span className={`${styles.statusBadge} ${STATUS_CLASS[order.status] ?? ""}`}>
@@ -255,12 +272,6 @@ export const OrderDetailPage = ({ order: initialOrder }: OrderDetailPageProps) =
                   <span className={styles.infoValue}>{order.carrier.replace("_", " ")}</span>
                   <span className={styles.infoLabel}>{t("orders.address")}</span>
                   <span className={styles.infoValue}>{order.shippingAddress}</span>
-                  {order.trackingNumber && (
-                    <>
-                      <span className={styles.infoLabel}>{t("orders.tracking")}</span>
-                      <span className={styles.infoValue}>{order.trackingNumber}</span>
-                    </>
-                  )}
                 </motion.div>
               )}
             </AnimatePresence>

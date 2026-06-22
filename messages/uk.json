@@ -163,8 +163,8 @@
       "carrier": "Поштовий оператор",
       "city": "Місто",
       "cityPlaceholder": "Наприклад: Київ",
-      "warehouse": "Відділення / поштомат",
-      "warehousePlaceholder": "Наприклад: 12",
+      "warehouse": "Адреса або відділення",
+      "warehousePlaceholder": "Наприклад: вул. Шевченка 12 або Відділення №5",
       "street": "Адреса доставки кур'єром",
       "streetPlaceholder": "вул. Хрещатик, 1, кв. 5",
       "notSet": "не вказано",
@@ -205,6 +205,8 @@
       "cancelError": "Не вдалося скасувати замовлення",
       "updateSuccess": "Дані успішно оновлено!",
       "updateError": "Помилка при оновленні даних",
+      "trackingCopied": "Трекінг скопійовано!",
+      "copyTracking": "Скопіювати трекінг",
       "itemSingular": "товар",
       "itemPlural": "товарів",
       "statuses": {
@@ -227,7 +229,8 @@
       "title": "Адмін-панель",
       "nav": {
         "products": "Товари",
-        "categories": "Категорії"
+        "categories": "Категорії",
+        "orders": "Замовлення"
       },
       "backToSite": "На сайт"
     },
@@ -448,6 +451,73 @@
           "slugRequired": "Slug обов'язковий",
           "slugRegex": "Лише малі літери, цифри та дефіси"
         }
+      }
+    },
+    "orders": {
+      "title": "Замовлення",
+      "subtitle": "{count} замовлень",
+      "metaTitle": "Замовлення – Адмін-панель",
+      "detailMetaTitle": "Замовлення #{id} – Адмін-панель",
+      "empty": "Замовлень ще немає.",
+      "filterAll": "Всі статуси",
+      "backToOrders": "До замовлень",
+      "orderNumber": "Замовлення #{id}",
+      "customer": "Клієнт",
+      "table": {
+        "th": {
+          "order": "Замовлення",
+          "customer": "Клієнт",
+          "total": "Сума",
+          "status": "Статус",
+          "date": "Дата",
+          "actions": ""
+        }
+      },
+      "detail": {
+        "orderInfo": "Інформація про замовлення",
+        "contactInfo": "Контактні дані",
+        "shippingInfo": "Доставка",
+        "items": "Товари у замовленні",
+        "statusSection": "Управління статусом",
+        "currentStatus": "Поточний статус",
+        "changeStatus": "Змінити статус",
+        "trackingNumber": "Номер відстеження",
+        "trackingPlaceholder": "Наприклад: 20400000000000",
+        "saveTracking": "Зберегти трекінг",
+        "saveStatus": "Зберегти зміни",
+        "statusUpdated": "Статус оновлено!",
+        "statusError": "Помилка при оновленні статусу",
+        "trackingUpdated": "Номер відстеження збережено!",
+        "trackingError": "Помилка при збереженні трекінгу",
+        "date": "Дата замовлення",
+        "total": "Сума замовлення",
+        "carrier": "Перевізник",
+        "address": "Адреса доставки",
+        "tracking": "Трекінг",
+        "noTracking": "не вказано",
+        "contactName": "Ім'я",
+        "contactEmail": "Email",
+        "contactPhone": "Телефон",
+        "itemName": "Товар",
+        "itemSize": "Розмір",
+        "itemColor": "Колір",
+        "itemQty": "Кількість",
+        "itemPrice": "Ціна"
+      },
+      "statuses": {
+        "PENDING": "Очікує",
+        "PROCESSING": "Обробляється",
+        "SHIPPED": "У дорозі",
+        "DELIVERED": "Доставлено",
+        "CANCELLED": "Скасовано",
+        "REFUNDED": "Повернено"
+      },
+      "carriers": {
+        "NOVA_POSHTA": "Нова Пошта",
+        "UKRPOSHTA": "Укрпошта",
+        "MEEST": "Meest",
+        "COURIER": "Кур'єр",
+        "SELF_PICKUP": "Самовивіз"
       }
     }
   },

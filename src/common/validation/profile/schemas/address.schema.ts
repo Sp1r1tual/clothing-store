@@ -17,9 +17,8 @@ export const addressSchema = z.object({
   warehouse: z
     .string()
     .trim()
-    .min(1, "Branch/Warehouse number is required")
-    .max(50, "Branch/Warehouse cannot exceed 50 characters")
-    .regex(/^[a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ\s\-/№#]+$/, "Invalid format for branch/warehouse"),
+    .min(1, "Address or branch is required")
+    .max(100, "Address or branch cannot exceed 100 characters"),
 });
 
 export type AddressFormData = z.infer<typeof addressSchema>;

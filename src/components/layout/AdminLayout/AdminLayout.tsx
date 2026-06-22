@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { ReactNode, useState } from "react";
 
-import { LayoutDashboard, LogOut, Menu, Package, Tag } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, Package, ShoppingBag, Tag } from "lucide-react";
 
 import { Drawer, DrawerLinkItem } from "@/components/ui/Drawer/Drawer";
 
@@ -16,6 +16,7 @@ interface AdminLayoutProps {
 const NAV_ITEMS = [
   { href: "/admin/products", translationKey: "nav.products" as const, icon: Package },
   { href: "/admin/categories", translationKey: "nav.categories" as const, icon: Tag },
+  { href: "/admin/orders", translationKey: "nav.orders" as const, icon: ShoppingBag },
 ];
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {

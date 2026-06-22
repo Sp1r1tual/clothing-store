@@ -312,7 +312,7 @@ export const ProfileHeader = () => {
                   {address && address.city ? (
                     <span className={styles.addressValue}>
                       {t(`address.carriers.${address.carrier}`)} · {address.city}
-                      {address.warehouse && ` · №${address.warehouse}`}
+                      {address.warehouse && ` · ${address.warehouse}`}
                     </span>
                   ) : (
                     <span className={styles.addressNotSet}>{t("address.notSet")}</span>
