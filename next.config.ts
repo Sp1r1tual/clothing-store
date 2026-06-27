@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   async headers() {
     const cspHeader = `
       default-src 'self';
+      connect-src 'self' https://vzzjcgycihmvgklaahyv.supabase.co;
       script-src 'self' 'unsafe-eval' 'unsafe-inline';
       style-src 'self' 'unsafe-inline';
       img-src 'self' blob: data: https://lh3.googleusercontent.com https://images.unsplash.com https://vzzjcgycihmvgklaahyv.supabase.co;

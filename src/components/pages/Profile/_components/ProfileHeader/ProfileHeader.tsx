@@ -159,11 +159,16 @@ export const ProfileHeader = () => {
       if (error) {
         throw error;
       }
-
-      router.push("/");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to log out";
-      toast.error(message);
+      console.error("SignOut error, attempting local sign out:", error);
+      try {
+        const supabase = getSupabaseBrowser();
+        await supabase.auth.signOut({ scope: "local" });
+      } catch (localError) {
+        console.error("Local sign out failed:", localError);
+      }
+    } finally {
+      router.push("/");
     }
   };
 

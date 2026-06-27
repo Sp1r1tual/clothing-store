@@ -29,6 +29,9 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
+    if (request.headers.has("next-action")) {
+      return response;
+    }
     const loginUrl = new URL(`/${locale}`, request.url);
     loginUrl.searchParams.set("next", path);
     return NextResponse.redirect(loginUrl);
