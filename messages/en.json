@@ -647,5 +647,12 @@
     "updateQuantity": "Failed to update quantity",
     "removeItem": "Failed to remove item",
     "clearCart": "Failed to clear cart"
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "Oops! The page you are looking for doesn't exist or has been moved.",
+    "home": "Back to Home",
+    "catalog": "Go to Catalog",
+    "support": "Contact Support"
   }
 }
