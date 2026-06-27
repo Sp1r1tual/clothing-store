@@ -2,11 +2,11 @@
 
 import { useTranslations } from "next-intl";
 
-import { ProductCard } from "@/components/pages/Catalog/_components/ProductCard/ProductCard";
-import { ProductGrid } from "@/components/pages/Catalog/_components/ProductGrid/ProductGrid";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { Pagination } from "@/components/ui/Pagination/Pagination";
+import { ProductCard } from "@/components/ui/ProductCard/ProductCard";
+import { ProductGrid } from "@/components/ui/ProductGrid/ProductGrid";
 
 import styles from "./SearchPage.module.css";
 

@@ -1,7 +1,7 @@
 .bar {
   width: 100%;
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .bar::after {
@@ -9,10 +9,11 @@
   position: absolute;
   top: 0;
   right: 0;
-  bottom: 0;
-  width: 40px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  bottom: 8px;
+  width: 56px;
+  background: linear-gradient(to right, transparent, var(--background));
   pointer-events: none;
+  z-index: 2;
 }
 
 .scrollArea {

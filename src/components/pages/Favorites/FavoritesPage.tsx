@@ -8,9 +8,9 @@ import type { FavoriteProduct } from "@/db/favorites";
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
 
-import { ProductCard } from "@/components/pages/Catalog/_components/ProductCard/ProductCard";
 import { Button } from "@/components/ui/Button/Button";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
+import { ProductCard } from "@/components/ui/ProductCard/ProductCard";
 import { ProductCardSkeleton } from "@/components/ui/ProductCardSkeleton/ProductCardSkeleton";
 
 import { useAuthStore } from "@/store/useAuthStore";

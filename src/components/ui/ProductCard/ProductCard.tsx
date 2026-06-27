@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 import { Link } from "@/i18n/navigation";
+import { Heart, Share2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge/Badge";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
@@ -20,7 +24,7 @@ interface ProductCardProps {
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
     variants: { size: string }[];
-    category: { slug: string };
+    category: { slug: string; nameUk?: string; nameEn?: string };
   };
   locale: string;
   priority?: boolean;
@@ -30,10 +34,31 @@ export const ProductCard = ({ product, locale, priority = false }: ProductCardPr
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
   const isOutOfStock = false;
+  const [favorited, setFavorited] = useState(false);
 
   const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
-
   const availableSizes = product.variants.map((v) => v.size);
+
+  const categoryName =
+    locale === "en"
+      ? (product.category.nameEn ?? product.category.slug)
+      : (product.category.nameUk ?? product.category.slug);
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFavorited((prev) => !prev);
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({ title: name, url: window.location.origin + `/product/${product.slug}` });
+    } else {
+      navigator.clipboard.writeText(window.location.origin + `/product/${product.slug}`);
+    }
+  };
 
   return (
     <Link href={`/product/${product.slug}`} className={styles.card}>
@@ -51,6 +76,19 @@ export const ProductCard = ({ product, locale, priority = false }: ProductCardPr
           {!isOutOfStock && product.isFeatured && discountPercentage === 0 && (
             <Badge variant="featured" label={locale === "en" ? "Featured" : "Топ"} />
           )}
+        </div>
+
+        <div className={styles.quickActions}>
+          <button
+            className={`${styles.actionBtn} ${favorited ? styles.favorited : ""}`}
+            onClick={handleFavorite}
+            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Heart size={15} fill={favorited ? "currentColor" : "none"} />
+          </button>
+          <button className={styles.actionBtn} onClick={handleShare} aria-label="Share product">
+            <Share2 size={15} />
+          </button>
         </div>
 
         <div className={styles.imageWrapper}>
@@ -77,6 +115,7 @@ export const ProductCard = ({ product, locale, priority = false }: ProductCardPr
       </div>
 
       <div className={styles.info}>
+        {categoryName && <p className={styles.categoryLabel}>{categoryName}</p>}
         <h3 className={styles.name} title={name}>
           {name}
         </h3>

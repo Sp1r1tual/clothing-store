@@ -163,11 +163,58 @@ export const CategoryForm = ({ categories, editId, defaultValues }: CategoryForm
             {...register("parentId")}
           >
             <option value="">{t("placeholders.noParent")}</option>
-            {parentOptions.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {locale === "uk" ? cat.nameUk : cat.nameEn}
-              </option>
-            ))}
+            {(() => {
+              type CategoryNode = ParentCategory & { children: CategoryNode[] };
+
+              const categoryMap = new Map<string, CategoryNode>();
+              parentOptions.forEach((cat) => {
+                categoryMap.set(cat.id, { ...cat, children: [] });
+              });
+
+              const roots: CategoryNode[] = [];
+              categoryMap.forEach((node) => {
+                if (node.parentId && categoryMap.has(node.parentId)) {
+                  categoryMap.get(node.parentId)!.children.push(node);
+                } else {
+                  roots.push(node);
+                }
+              });
+
+              const sortNodes = (nodes: CategoryNode[]) => {
+                nodes.sort((a, b) => {
+                  if (a.order !== b.order) return a.order - b.order;
+                  const nameA = locale === "uk" ? a.nameUk : a.nameEn;
+                  const nameB = locale === "uk" ? b.nameUk : b.nameEn;
+                  return nameA.localeCompare(nameB);
+                });
+                nodes.forEach((node) => sortNodes(node.children));
+              };
+              sortNodes(roots);
+
+              const renderOptions = (nodes: CategoryNode[], depth = 0): React.ReactNode[] => {
+                return nodes.flatMap((node) => {
+                  const indent = "\u00A0\u00A0".repeat(depth);
+                  const prefix = depth > 0 ? "↳ " : "";
+                  const label = locale === "uk" ? node.nameUk : node.nameEn;
+
+                  const currentOption = (
+                    <option key={node.id} value={node.id}>
+                      {indent}
+                      {prefix}
+                      {label}
+                    </option>
+                  );
+
+                  if (node.children.length > 0) {
+                    return [currentOption, ...renderOptions(node.children, depth + 1)];
+                  }
+
+                  return [currentOption];
+                });
+              };
+
+              return renderOptions(roots);
+            })()}
           </AdminSelect>
 
           <Controller

@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+
+import { Link } from "@/i18n/navigation";
 
 import { Button } from "@/components/ui/Button/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
@@ -11,24 +12,24 @@ import styles from "./PopularCategories.module.css";
 
 const CATEGORIES = [
   {
-    id: "hoodies",
-    href: "/catalog?category=hoodies",
-    image: "/categories/hoodies.png",
+    id: "shoes",
+    href: "/search?q=shoes",
+    image: "/categories/shoes.webp",
   },
   {
-    id: "tshirts",
-    href: "/catalog?category=tshirts",
-    image: "/categories/tshirts.png",
+    id: "outerwear",
+    href: "/search?q=outerwear",
+    image: "/categories/outerwear.webp",
   },
   {
     id: "pants",
-    href: "/catalog?category=pants",
-    image: "/categories/pants.png",
+    href: "/search?q=pants",
+    image: "/categories/pants-new.webp",
   },
   {
-    id: "jackets",
-    href: "/catalog?category=jackets",
-    image: "/categories/jackets.png",
+    id: "accessories",
+    href: "/accessories",
+    image: "/categories/accessories.webp",
   },
 ];
 

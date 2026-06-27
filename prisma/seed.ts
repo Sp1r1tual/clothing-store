@@ -19,10 +19,16 @@ async function main() {
       order: 1,
     },
     {
-      nameUk: "Інше",
-      nameEn: "Other",
-      slug: "other",
+      nameUk: "Унісекс",
+      nameEn: "Unisex",
+      slug: "unisex",
       order: 2,
+    },
+    {
+      nameUk: "Аксесуари",
+      nameEn: "Accessories",
+      slug: "accessories",
+      order: 3,
     },
   ];
 
@@ -37,7 +43,37 @@ async function main() {
         order: category.order,
       },
     });
-    console.log(`Upserted category: ${created.nameUk} / ${created.nameEn} (${created.slug})`);
+    console.log(`Upserted root category: ${created.nameUk} / ${created.nameEn} (${created.slug})`);
+  }
+
+  const parents = ["men", "women", "unisex"];
+  const subCategoriesData = [
+    { nameUk: "Взуття", nameEn: "Shoes", slugSuffix: "shoes", order: 0 },
+    { nameUk: "Верхній одяг", nameEn: "Outerwear", slugSuffix: "outerwear", order: 1 },
+    { nameUk: "Штани", nameEn: "Pants", slugSuffix: "pants", order: 2 },
+  ];
+
+  for (const parentSlug of parents) {
+    const parentCategory = await prisma.category.findUnique({ where: { slug: parentSlug } });
+    if (parentCategory) {
+      for (const sub of subCategoriesData) {
+        const subSlug = `${parentSlug}-${sub.slugSuffix}`;
+        const shoesSub = await prisma.category.upsert({
+          where: { slug: subSlug },
+          update: {},
+          create: {
+            nameUk: sub.nameUk,
+            nameEn: sub.nameEn,
+            slug: subSlug,
+            order: sub.order,
+            parentId: parentCategory.id,
+          },
+        });
+        console.log(
+          `Upserted subcategory: ${shoesSub.nameUk} (${shoesSub.slug}) under ${parentSlug}`,
+        );
+      }
+    }
   }
 
   console.log("Seeding finished.");

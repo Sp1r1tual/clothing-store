@@ -66,7 +66,9 @@ export async function deleteCategory(id: string) {
     console.error("Failed to delete category:", error);
     if (error instanceof Error) {
       if (error.message === "CANNOT_DELETE_BASE_CATEGORY") {
-        throw new Error("Cannot delete base categories like 'men', 'women', or 'other'.");
+        throw new Error(
+          "Cannot delete built-in categories (men, women, unisex, accessories, men-shoes, women-shoes, unisex-shoes, men-outerwear, women-outerwear, unisex-outerwear, men-pants, women-pants, unisex-pants).",
+        );
       }
       if (error.message === "HAS_CHILDREN") {
         throw new Error("Cannot delete a category that has subcategories.");

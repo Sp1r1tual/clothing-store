@@ -25,9 +25,6 @@ export const PriceCategorySection = ({ categories }: PriceCategorySectionProps) 
     formState: { errors },
   } = useFormContext<ProductFormData>();
 
-  const parentCategories = categories.filter((c) => !c.parentId);
-  const childCategories = categories.filter((c) => c.parentId);
-
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>{t("sections.priceCategory")}</h2>
@@ -59,21 +56,57 @@ export const PriceCategorySection = ({ categories }: PriceCategorySectionProps) 
           {...register("categoryId")}
         >
           <option value="">{t("placeholders.selectCategory")}</option>
-          {parentCategories.map((cat) => (
-            <optgroup key={cat.id} label={locale === "uk" ? cat.nameUk : cat.nameEn}>
-              {childCategories
-                .filter((c) => c.parentId === cat.id)
-                .map((child) => (
-                  <option key={child.id} value={child.id}>
-                    {locale === "uk" ? child.nameUk : child.nameEn}
+          {(() => {
+            type CategoryNode = Category & { children: CategoryNode[] };
+
+            const categoryMap = new Map<string, CategoryNode>();
+            categories.forEach((cat) => {
+              categoryMap.set(cat.id, { ...cat, children: [] });
+            });
+
+            const roots: CategoryNode[] = [];
+            categoryMap.forEach((node) => {
+              if (node.parentId && categoryMap.has(node.parentId)) {
+                categoryMap.get(node.parentId)!.children.push(node);
+              } else {
+                roots.push(node);
+              }
+            });
+
+            const sortNodes = (nodes: CategoryNode[]) => {
+              nodes.sort((a, b) => {
+                const nameA = locale === "uk" ? a.nameUk : a.nameEn;
+                const nameB = locale === "uk" ? b.nameUk : b.nameEn;
+                return nameA.localeCompare(nameB);
+              });
+              nodes.forEach((node) => sortNodes(node.children));
+            };
+            sortNodes(roots);
+
+            const renderOptions = (nodes: CategoryNode[], depth = 0): React.ReactNode[] => {
+              return nodes.flatMap((node) => {
+                const indent = "\u00A0\u00A0".repeat(depth);
+                const prefix = depth > 0 ? "↳ " : "";
+                const label = locale === "uk" ? node.nameUk : node.nameEn;
+
+                const currentOption = (
+                  <option key={node.id} value={node.id}>
+                    {indent}
+                    {prefix}
+                    {label}
                   </option>
-                ))}
-              <option value={cat.id}>
-                {locale === "uk" ? cat.nameUk : cat.nameEn} (
-                {locale === "uk" ? "загальна" : "general"})
-              </option>
-            </optgroup>
-          ))}
+                );
+
+                if (node.children.length > 0) {
+                  return [currentOption, ...renderOptions(node.children, depth + 1)];
+                }
+
+                return [currentOption];
+              });
+            };
+
+            return renderOptions(roots);
+          })()}
         </AdminSelect>
       </div>
 

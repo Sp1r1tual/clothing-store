@@ -11,12 +11,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
 import { Button } from "@/components/ui/Button/Button";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { Pagination } from "@/components/ui/Pagination/Pagination";
+import { ProductCard } from "@/components/ui/ProductCard/ProductCard";
+import { ProductGrid } from "@/components/ui/ProductGrid/ProductGrid";
+import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 import { Select } from "@/components/ui/Select/Select";
 
 import { ActiveFilters } from "./_components/ActiveFilters/ActiveFilters";
 import { FilterSidebar } from "./_components/FilterSidebar/FilterSidebar";
-import { ProductCard } from "./_components/ProductCard/ProductCard";
-import { ProductGrid } from "./_components/ProductGrid/ProductGrid";
 import { SubcategoryBar } from "./_components/SubcategoryBar/SubcategoryBar";
 
 import styles from "./CatalogPage.module.css";
@@ -42,7 +43,7 @@ interface CatalogPageProps {
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
     variants: { size: string }[];
-    category: { slug: string };
+    category: { slug: string; nameUk?: string; nameEn?: string };
   }[];
   totalCount: number;
   totalPages: number;
@@ -102,7 +103,10 @@ export const CatalogPage = ({
 
         <div className={styles.header}>
           <div className={styles.headerText}>
-            <h1 className={styles.title}>{title}</h1>
+            <div className={styles.titleWrapper}>
+              <h1 className={styles.title}>{title}</h1>
+              {totalCount > 0 && <span className={styles.countBadge}>{totalCount}</span>}
+            </div>
             {description && <p className={styles.description}>{description}</p>}
           </div>
 
@@ -172,6 +176,7 @@ export const CatalogPage = ({
           </div>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

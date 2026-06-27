@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
+import { ProductCard } from "@/components/ui/ProductCard/ProductCard";
 
-import { ProductCard } from "../Catalog/_components/ProductCard/ProductCard";
 import { ImageGallery } from "./_components/ImageGallery/ImageGallery";
 import { ProductActions } from "./_components/ProductActions/ProductActions";
 

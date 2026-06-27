@@ -3,7 +3,16 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .mobileActions {
@@ -11,16 +20,20 @@
   margin-bottom: 16px;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
 .filterSection {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filterSection:first-child {
+  padding-top: 0;
+}
+
+.filterSection:last-child {
+  border-bottom: none;
 }
 
 .mobileOnlySort {
@@ -28,8 +41,10 @@
 }
 
 .sectionTitle {
-  font-size: 0.9375rem;
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   margin: 0;
   color: var(--text-primary);
 }
@@ -37,18 +52,19 @@
 .priceInputs {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .priceSeparator {
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .sliderContainer {
   position: relative;
-  height: 6px;
+  height: 4px;
   width: 100%;
-  margin: 10px 0 16px 0;
+  margin: 12px 0 18px 0;
 }
 
 .sliderTrack {
@@ -57,7 +73,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 3px;
+  border-radius: 2px;
   background-color: var(--border-color);
 }
 
@@ -65,14 +81,14 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  border-radius: 3px;
+  border-radius: 2px;
   background-color: var(--text-primary);
 }
 
 .rangeInput {
   position: absolute;
   width: 100%;
-  height: 6px;
+  height: 4px;
   top: 0;
   left: 0;
   background: none;
@@ -92,15 +108,14 @@
   cursor: pointer;
   pointer-events: auto;
   -webkit-appearance: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
   transition:
-    transform 0.1s,
-    background-color 0.1s;
+    transform 0.15s,
+    background-color 0.15s;
 }
 
 .rangeInput::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  background-color: #f3f4f6;
+  transform: scale(1.2);
 }
 
 .rangeInput::-moz-range-thumb {
@@ -111,15 +126,7 @@
   border: 2px solid var(--text-primary);
   cursor: pointer;
   pointer-events: auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition:
-    transform 0.1s,
-    background-color 0.1s;
-}
-
-.rangeInput::-moz-range-thumb:hover {
-  transform: scale(1.15);
-  background-color: #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
 }
 
 .sizeGrid {
@@ -129,33 +136,37 @@
 }
 
 .sizeButton {
-  height: 40px;
-  border: 1px solid var(--border-color);
+  height: 38px;
+  border: 1.5px solid var(--border-color);
   background: transparent;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.1s;
 }
 
 .sizeButton:hover {
-  border-color: #cccccc;
-  background-color: #f9f9f9;
+  border-color: var(--text-primary);
+  transform: scale(1.03);
 }
 
 .sizeButton.active {
   background-color: var(--text-primary);
-  color: #ffffff;
+  color: var(--background);
   border-color: var(--text-primary);
 }
 
 .drawerInner {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 8px 8px;
+  gap: 0;
+  padding: 0 4px;
 }
 
 .drawerFooter {

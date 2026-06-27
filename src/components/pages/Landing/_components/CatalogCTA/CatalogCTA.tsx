@@ -16,7 +16,7 @@ export const CatalogCTA = () => {
         <h2 className={styles.title}>{t("title")}</h2>
         <p className={styles.description}>{t("description")}</p>
         <div className={styles.buttonWrapper}>
-          <Link href="/new-arrivals">
+          <Link href="/catalog">
             <Button variant="primary" size="lg">
               {t("button")}
             </Button>

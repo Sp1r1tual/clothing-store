@@ -8,6 +8,8 @@ import { deleteCategory } from "@/actions/category.actions";
 import { Link, useRouter } from "@/i18n/navigation";
 import { FolderOpen, Pencil, Trash2 } from "lucide-react";
 
+import { BUILT_IN_SLUGS } from "@/common/constants/categories";
+
 import styles from "./CategoriesTable.module.css";
 
 type Category = {
@@ -91,7 +93,7 @@ export const CategoriesTable = ({ categories }: CategoriesTableProps) => {
             if (hasChildren) deleteTitle = t("deleteHasChildren");
             else if (hasProducts) deleteTitle = t("deleteHasProducts");
 
-            const isBuiltIn = ["men", "women", "other"].includes(cat.slug);
+            const isBuiltIn = BUILT_IN_SLUGS.includes(cat.slug);
 
             return (
               <tr key={cat.id} className={styles.tr}>

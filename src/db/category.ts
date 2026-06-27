@@ -1,5 +1,6 @@
 import { prisma } from "@/libs/prisma";
 
+import { BUILT_IN_SLUGS } from "@/common/constants/categories";
 import type { CategoryFormData } from "@/common/validation/category/category.schema";
 
 export async function findAllCategories() {
@@ -88,7 +89,7 @@ export async function deleteCategory(id: string) {
   });
 
   if (!category) throw new Error("NOT_FOUND");
-  if (["men", "women", "other"].includes(category.slug)) {
+  if (BUILT_IN_SLUGS.includes(category.slug)) {
     throw new Error("CANNOT_DELETE_BASE_CATEGORY");
   }
   if (category._count.children > 0) throw new Error("HAS_CHILDREN");

@@ -23,7 +23,7 @@ export const Hero = () => {
         <p className={styles.description}>{t("description")}</p>
 
         <div className={styles.btnGroup}>
-          <Link href="/new-arrivals">
+          <Link href="/catalog">
             <Button variant="primary">{t("ctaCatalog")}</Button>
           </Link>
 

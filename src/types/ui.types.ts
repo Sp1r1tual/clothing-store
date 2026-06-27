@@ -29,7 +29,7 @@ export interface Subcategory {
   _count?: { products: number };
 }
 
-export type CategoryId = "hoodies" | "tshirts" | "pants" | "jackets";
+export type CategoryId = "shoes" | "outerwear" | "pants" | "accessories";
 
 export type ContactFormData = {
   contactName: string;

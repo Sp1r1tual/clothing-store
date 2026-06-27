@@ -39,12 +39,14 @@ export const SubcategoryBar = ({ subcategories, locale }: SubcategoryBarProps) =
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  if (subcategories.length === 0) return null;
+  const visibleSubcategories = subcategories.filter((sub) => sub._count?.products !== 0);
+
+  if (visibleSubcategories.length === 0) return null;
 
   return (
     <div className={styles.bar}>
       <div className={styles.scrollArea}>
-        {subcategories.map((sub) => {
+        {visibleSubcategories.map((sub) => {
           const name = locale === "en" ? sub.nameEn : sub.nameUk;
           const isActive = currentSubcategory === sub.slug;
 

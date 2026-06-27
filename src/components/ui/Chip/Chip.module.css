@@ -64,14 +64,6 @@
   cursor: pointer;
 }
 
-.clickable:hover {
-  transform: translateY(-1px);
-}
-
-.clickable:active {
-  transform: translateY(0);
-}
-
 .default.clickable:hover:not(.active) {
   background-color: #ebebed;
 }

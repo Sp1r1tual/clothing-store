@@ -13,8 +13,9 @@
   "Navbar": {
     "men": "Men",
     "women": "Women",
+    "unisex": "Unisex",
     "new-arrivals": "New Arrivals",
-    "other": "Other",
+    "accessories": "Accessories",
     "sale": "Sale",
     "searchPlaceholder": "Search",
     "searchShowAll": "Show all results →",
@@ -60,6 +61,13 @@
       "title": "Nothing found",
       "description": "No products matched your query \"{query}\""
     }
+  },
+  "CatalogPage": {
+    "title": "Catalog",
+    "metaTitle": "Catalog | X-Weevo",
+    "metaDescription": "Discover our full collection of stylish and trendy clothes.",
+    "description": "Explore all our categories and find your perfect style.",
+    "viewCollection": "View collection"
   },
   "Features": {
     "freeDeliveryTitle": "Free delivery",
@@ -112,10 +120,10 @@
     "title": "Popular Categories",
     "viewAll": "All Categories",
     "viewCategory": "View",
-    "hoodies": "Hoodies & Sweatshirts",
-    "tshirts": "T-Shirts & Polo",
+    "shoes": "Shoes & Footwear",
+    "outerwear": "Outerwear & Jackets",
     "pants": "Pants & Jeans",
-    "jackets": "Jackets & Outerwear"
+    "accessories": "Accessories"
   },
   "Privacy": {
     "title": "Privacy Policy",

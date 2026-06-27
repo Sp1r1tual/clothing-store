@@ -1,0 +1,15 @@
+export const BUILT_IN_SLUGS = [
+  "men",
+  "women",
+  "unisex",
+  "accessories",
+  "men-shoes",
+  "women-shoes",
+  "unisex-shoes",
+  "men-outerwear",
+  "women-outerwear",
+  "unisex-outerwear",
+  "men-pants",
+  "women-pants",
+  "unisex-pants",
+];
