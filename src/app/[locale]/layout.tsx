@@ -52,13 +52,6 @@ export async function generateMetadata({
       title: t("title"),
       description: t("description"),
     },
-    alternates: {
-      canonical: `${baseUrl}/${locale}`,
-      languages: {
-        uk: `${baseUrl}/uk`,
-        en: `${baseUrl}/en`,
-      },
-    },
   };
 }
 

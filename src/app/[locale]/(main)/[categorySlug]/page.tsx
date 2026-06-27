@@ -5,6 +5,8 @@ import { findAvailableSizes, findPriceRange, findPublishedProducts } from "@/db/
 
 import { CatalogPage } from "@/components/pages/Catalog/CatalogPage";
 
+import { getSeoAlternates } from "@/common/utils/seo";
+
 interface CategoryRouteProps {
   params: Promise<{ locale: string; categorySlug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -30,6 +32,7 @@ export async function generateMetadata({
       title,
       description: description || undefined,
     },
+    alternates: getSeoAlternates(locale, `/${categorySlug}`),
   };
 }
 

@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 
 import { Landing } from "@/components/pages/Landing/Landing";
 
+import { getSeoAlternates } from "@/common/utils/seo";
+
 interface LandingRouteProps {
   params: Promise<{ locale: string }>;
 }
@@ -13,6 +15,7 @@ export async function generateMetadata({ params }: LandingRouteProps) {
   return {
     title: t("title"),
     description: t("description"),
+    alternates: getSeoAlternates(locale, ""),
   };
 }
 

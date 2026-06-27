@@ -4,6 +4,8 @@ import { findProductBySlug } from "@/db/product";
 
 import { ProductDetail } from "@/components/pages/ProductDetail/ProductDetail";
 
+import { getSeoAlternates } from "@/common/utils/seo";
+
 interface ProductRouteProps {
   params: Promise<{ locale: string; slug: string }>;
 }
@@ -36,6 +38,7 @@ export async function generateMetadata({ params }: ProductRouteProps) {
       description: description || undefined,
       images: primaryImage ? [primaryImage] : [],
     },
+    alternates: getSeoAlternates(locale, `/product/${slug}`),
   };
 }
 
