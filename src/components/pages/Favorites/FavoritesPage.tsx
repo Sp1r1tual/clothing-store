@@ -113,7 +113,12 @@ export const FavoritesPage = ({ initialFavorites, locale }: FavoritesPageProps) 
       <div className={styles.grid}>
         {visibleFavorites.map(({ product }, index) => (
           <div key={product.id} className={styles.cardWrapper}>
-            <ProductCard product={product} locale={locale} priority={index < 4} />
+            <ProductCard
+              product={product}
+              locale={locale}
+              priority={index < 4}
+              hideFavoriteButton={true}
+            />
             <button
               className={styles.removeBtn}
               onClick={(e) => handleRemove(product.id, e)}

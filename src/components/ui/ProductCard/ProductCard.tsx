@@ -34,9 +34,15 @@ interface ProductCardProps {
   };
   locale: string;
   priority?: boolean;
+  hideFavoriteButton?: boolean;
 }
 
-export const ProductCard = ({ product, locale, priority = false }: ProductCardProps) => {
+export const ProductCard = ({
+  product,
+  locale,
+  priority = false,
+  hideFavoriteButton = false,
+}: ProductCardProps) => {
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
   const isOutOfStock = product.variants.every((v) => v.stock === 0);
@@ -104,14 +110,16 @@ export const ProductCard = ({ product, locale, priority = false }: ProductCardPr
           )}
         </div>
 
-        <div className={styles.quickActions}>
-          <button
-            className={`${styles.actionBtn} ${favorited ? styles.favorited : ""}`}
-            onClick={handleFavorite}
-            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
-          >
-            <Heart size={15} fill={favorited ? "currentColor" : "none"} />
-          </button>
+        <div className={`${styles.quickActions} ${hideFavoriteButton ? styles.shifted : ""}`}>
+          {!hideFavoriteButton && (
+            <button
+              className={`${styles.actionBtn} ${favorited ? styles.favorited : ""}`}
+              onClick={handleFavorite}
+              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart size={15} fill={favorited ? "currentColor" : "none"} />
+            </button>
+          )}
           <button className={styles.actionBtn} onClick={handleShare} aria-label="Share product">
             <Share2 size={15} />
           </button>
