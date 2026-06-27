@@ -7,15 +7,9 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 
 import { Chip } from "@/components/ui/Chip/Chip";
 
-import styles from "./SubcategoryBar.module.css";
+import { Subcategory } from "@/types/ui.types";
 
-interface Subcategory {
-  id: string;
-  slug: string;
-  nameUk: string;
-  nameEn: string;
-  _count?: { products: number };
-}
+import styles from "./SubcategoryBar.module.css";
 
 interface SubcategoryBarProps {
   subcategories: Subcategory[];

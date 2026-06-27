@@ -2,12 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import styles from "./Select.module.css";
+import { SelectOption } from "@/types/ui.types";
 
-interface SelectOption {
-  label: string;
-  value: string;
-}
+import styles from "./Select.module.css";
 
 interface SelectProps {
   options: SelectOption[];

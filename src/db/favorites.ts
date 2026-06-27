@@ -1,21 +1,8 @@
 import { prisma } from "@/libs/prisma";
 
-export type FavoriteProduct = {
-  id: string;
-  favoriteId: string;
-  product: {
-    id: string;
-    nameUk: string;
-    nameEn: string;
-    slug: string;
-    price: number;
-    discountPrice: number | null;
-    isFeatured: boolean;
-    images: { url: string; altText: string | null }[];
-    variants: { size: string }[];
-    category: { slug: string };
-  };
-};
+import { FavoriteProduct } from "@/types/favorites.types";
+
+export * from "@/types/favorites.types";
 
 export async function getFavorites(profileId: string): Promise<FavoriteProduct[]> {
   const favorites = await prisma.favorite.findMany({
@@ -86,8 +73,4 @@ export async function isFavorited(profileId: string, productId: string): Promise
     where: { profileId_productId: { profileId, productId } },
   });
   return fav !== null;
-}
-
-export async function getFavoriteCount(profileId: string): Promise<number> {
-  return prisma.favorite.count({ where: { profileId } });
 }

@@ -1,12 +1,8 @@
 import { prisma } from "@/libs/prisma";
-import type { ShippingCarrier } from "@prisma/client";
 
-export type AddressData = {
-  carrier: ShippingCarrier;
-  city: string;
-  street: string | null;
-  warehouse: string;
-};
+import { AddressData } from "@/types/address.types";
+
+export * from "@/types/address.types";
 
 export async function getDefaultAddress(profileId: string): Promise<AddressData | null> {
   const addr = await prisma.address.findFirst({

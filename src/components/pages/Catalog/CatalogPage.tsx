@@ -156,8 +156,13 @@ export const CatalogPage = ({
             ) : (
               <>
                 <ProductGrid>
-                  {products.map((product) => (
-                    <ProductCard key={product.id} product={product} locale={locale} />
+                  {products.map((product, index) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      locale={locale}
+                      priority={index < 4}
+                    />
                   ))}
                 </ProductGrid>
 

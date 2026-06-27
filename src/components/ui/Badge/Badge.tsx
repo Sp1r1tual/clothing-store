@@ -1,7 +1,6 @@
-import styles from "./Badge.module.css";
+import { BadgeSize, BadgeVariant } from "@/types/ui.types";
 
-type BadgeVariant = "sale" | "new" | "featured" | "outOfStock" | "default";
-type BadgeSize = "sm" | "md";
+import styles from "./Badge.module.css";
 
 interface BadgeProps {
   label: string;

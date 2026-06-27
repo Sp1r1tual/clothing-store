@@ -7,11 +7,13 @@ import styles from "./SectionDots.module.css";
 
 const SECTIONS = [
   { id: "hero", key: "hero" },
-  { id: "about", key: "about" },
   { id: "categories", key: "categories" },
+  { id: "about", key: "about" },
   { id: "delivery", key: "delivery" },
   { id: "catalog-cta", key: "catalog-cta" },
 ];
+
+const HIDE_OFFSET_PX = 350;
 
 export const SectionDots = () => {
   const t = useTranslations("SectionDots");
@@ -19,23 +21,20 @@ export const SectionDots = () => {
   const [hideDots, setHideDots] = useState(false);
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.35 },
+    );
 
     SECTIONS.forEach(({ id }) => {
       const el = document.getElementById(id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveId(id);
-          }
-        },
-        { threshold: 0.35 },
-      );
-
-      observer.observe(el);
-      observers.push(observer);
+      if (el) observer.observe(el);
     });
 
     const handleScroll = () => {
@@ -43,14 +42,14 @@ export const SectionDots = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      setHideDots(scrollY + windowHeight >= documentHeight - 350);
+      setHideDots(scrollY + windowHeight >= documentHeight - HIDE_OFFSET_PX);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => {
-      observers.forEach((obs) => obs.disconnect());
+      observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);

@@ -23,11 +23,4 @@ export const createCategorySchema = (msg: CategorySchemaMessages) =>
     seoDescriptionEn: z.string().optional(),
   });
 
-export const categorySchema = createCategorySchema({
-  nameRequired: "Name is required",
-  nameMax: "Name is too long",
-  slugRequired: "Slug is required",
-  slugRegex: "Slug can only contain lowercase letters, numbers, and hyphens",
-});
-
-export type CategoryFormData = z.infer<typeof categorySchema>;
+export type CategoryFormData = z.infer<ReturnType<typeof createCategorySchema>>;

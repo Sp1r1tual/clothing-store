@@ -1,57 +1,13 @@
 import { prisma } from "@/libs/prisma";
-import type { ShippingCarrier } from "@prisma/client";
 
-export type CreateOrderInput = {
-  profileId: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  carrier: ShippingCarrier;
-  shippingAddress: string;
-  items: Array<{
-    productId: string | null;
-    variantId: string | null;
-    productNameUk: string;
-    productNameEn: string;
-    productSize: string | null;
-    productColor: string | null;
-    price: number;
-    quantity: number;
-  }>;
-};
+import {
+  AdminOrderData,
+  CreateOrderInput,
+  OrderData,
+  UpdateOrderContactData,
+} from "@/types/order.types";
 
-export type OrderItemData = {
-  id: string;
-  productId: string | null;
-  variantId: string | null;
-  productNameUk: string;
-  productNameEn: string;
-  productSize: string | null;
-  productColor: string | null;
-  price: number;
-  quantity: number;
-  product: {
-    slug: string;
-    images: { url: string; altText: string | null }[];
-  } | null;
-};
-
-export type OrderData = {
-  id: string;
-  status: string;
-  totalAmount: number;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  carrier: string;
-  shippingAddress: string;
-  trackingNumber: string | null;
-  note: string | null;
-  discountAmount: number | null;
-  createdAt: Date;
-  updatedAt: Date;
-  items: OrderItemData[];
-};
+export * from "@/types/order.types";
 
 const orderItemSelect = {
   id: true,
@@ -71,6 +27,35 @@ const orderItemSelect = {
         select: { url: true, altText: true },
         take: 1,
       },
+    },
+  },
+} as const;
+
+const baseOrderSelect = {
+  id: true,
+  status: true,
+  totalAmount: true,
+  contactName: true,
+  contactEmail: true,
+  contactPhone: true,
+  carrier: true,
+  shippingAddress: true,
+  trackingNumber: true,
+  note: true,
+  discountAmount: true,
+  createdAt: true,
+  updatedAt: true,
+  items: { select: orderItemSelect },
+} as const;
+
+const adminOrderSelect = {
+  ...baseOrderSelect,
+  profileId: true,
+  profile: {
+    select: {
+      name: true,
+      email: true,
+      phone: true,
     },
   },
 } as const;
@@ -116,22 +101,7 @@ function mapOrder(order: {
 export async function getOrdersByProfileId(profileId: string): Promise<OrderData[]> {
   const orders = await prisma.order.findMany({
     where: { profileId },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: baseOrderSelect,
     orderBy: { createdAt: "desc" },
   });
 
@@ -141,34 +111,12 @@ export async function getOrdersByProfileId(profileId: string): Promise<OrderData
 export async function getOrderById(orderId: string, profileId: string): Promise<OrderData | null> {
   const order = await prisma.order.findFirst({
     where: { id: orderId, profileId },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: baseOrderSelect,
   });
 
   if (!order) return null;
   return mapOrder(order);
 }
-
-export type UpdateOrderContactData = {
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  shippingAddress: string;
-};
 
 export async function updateOrderContact(
   orderId: string,
@@ -193,22 +141,7 @@ export async function updateOrderContact(
       contactPhone: data.contactPhone,
       shippingAddress: data.shippingAddress,
     },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: baseOrderSelect,
   });
 
   return mapOrder(updated);
@@ -228,62 +161,15 @@ export async function cancelOrder(orderId: string, profileId: string): Promise<O
   const updated = await prisma.order.update({
     where: { id: orderId },
     data: { status: "CANCELLED" },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: baseOrderSelect,
   });
 
   return mapOrder(updated);
 }
 
-export type AdminOrderData = OrderData & {
-  profileId: string;
-  profile: {
-    name: string | null;
-    email: string | null;
-    phone: string | null;
-  };
-};
-
 export async function getAllOrdersAdmin(): Promise<AdminOrderData[]> {
   const orders = await prisma.order.findMany({
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      profileId: true,
-      profile: {
-        select: {
-          name: true,
-          email: true,
-          phone: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: adminOrderSelect,
     orderBy: { createdAt: "desc" },
   });
 
@@ -297,30 +183,7 @@ export async function getAllOrdersAdmin(): Promise<AdminOrderData[]> {
 export async function getOrderByIdAdmin(orderId: string): Promise<AdminOrderData | null> {
   const order = await prisma.order.findFirst({
     where: { id: orderId },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      profileId: true,
-      profile: {
-        select: {
-          name: true,
-          email: true,
-          phone: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: adminOrderSelect,
   });
 
   if (!order) return null;
@@ -343,30 +206,7 @@ export async function updateOrderStatusAdmin(
       status: status as import("@prisma/client").OrderStatus,
       ...(trackingNumber !== undefined ? { trackingNumber } : {}),
     },
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      contactName: true,
-      contactEmail: true,
-      contactPhone: true,
-      carrier: true,
-      shippingAddress: true,
-      trackingNumber: true,
-      note: true,
-      discountAmount: true,
-      profileId: true,
-      profile: {
-        select: {
-          name: true,
-          email: true,
-          phone: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-      items: { select: orderItemSelect },
-    },
+    select: adminOrderSelect,
   });
 
   return {
@@ -377,7 +217,44 @@ export async function updateOrderStatusAdmin(
 }
 
 export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
-  const totalAmount = input.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const productIds = input.items
+    .map((item) => item.productId)
+    .filter((id): id is string => id !== null);
+
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, price: true, discountPrice: true },
+  });
+
+  const productMap = new Map(products.map((p) => [p.id, p]));
+
+  let calculatedTotalAmount = 0;
+
+  const validItems = input.items.map((item) => {
+    if (!item.productId) {
+      throw new Error("Product ID is required for all items");
+    }
+
+    const dbProduct = productMap.get(item.productId);
+    if (!dbProduct) {
+      throw new Error(`Product with id ${item.productId} not found`);
+    }
+
+    const actualPrice =
+      dbProduct.discountPrice !== null ? Number(dbProduct.discountPrice) : Number(dbProduct.price);
+    calculatedTotalAmount += actualPrice * item.quantity;
+
+    return {
+      productId: item.productId,
+      variantId: item.variantId,
+      productNameUk: item.productNameUk,
+      productNameEn: item.productNameEn,
+      productSize: item.productSize,
+      productColor: item.productColor,
+      price: actualPrice,
+      quantity: item.quantity,
+    };
+  });
 
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
@@ -388,36 +265,12 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
         contactPhone: input.contactPhone,
         carrier: input.carrier,
         shippingAddress: input.shippingAddress,
-        totalAmount,
+        totalAmount: calculatedTotalAmount,
         items: {
-          create: input.items.map((item) => ({
-            productId: item.productId,
-            variantId: item.variantId,
-            productNameUk: item.productNameUk,
-            productNameEn: item.productNameEn,
-            productSize: item.productSize,
-            productColor: item.productColor,
-            price: item.price,
-            quantity: item.quantity,
-          })),
+          create: validItems,
         },
       },
-      select: {
-        id: true,
-        status: true,
-        totalAmount: true,
-        contactName: true,
-        contactEmail: true,
-        contactPhone: true,
-        carrier: true,
-        shippingAddress: true,
-        trackingNumber: true,
-        note: true,
-        discountAmount: true,
-        createdAt: true,
-        updatedAt: true,
-        items: { select: orderItemSelect },
-      },
+      select: baseOrderSelect,
     });
 
     return created;

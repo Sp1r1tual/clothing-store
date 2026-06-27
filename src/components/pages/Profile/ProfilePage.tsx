@@ -3,6 +3,7 @@
 import type { OrderData } from "@/db/order";
 
 import { BackButton } from "@/components/ui/BackButton/BackButton";
+import { ProfilePageSkeleton } from "@/components/ui/ProfilePageSkeleton/ProfilePageSkeleton";
 
 import { OrdersList } from "./_components/OrdersList/OrdersList";
 import { ProfileHeader } from "./_components/ProfileHeader/ProfileHeader";
@@ -19,11 +20,7 @@ export const ProfilePage = ({ orders }: ProfilePageProps) => {
   const { isLoading } = useAuthStore();
 
   if (isLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner} />
-      </div>
-    );
+    return <ProfilePageSkeleton />;
   }
 
   return (

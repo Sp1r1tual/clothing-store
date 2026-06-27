@@ -6,14 +6,9 @@ import { X } from "lucide-react";
 
 import { Overlay } from "@/components/ui/Overlay/Overlay";
 
-import styles from "./Drawer.module.css";
+import { DrawerLinkItem } from "@/types/ui.types";
 
-export interface DrawerLinkItem {
-  href: string;
-  label: string;
-  icon?: React.ElementType;
-  isDanger?: boolean;
-}
+import styles from "./Drawer.module.css";
 
 export interface DrawerProps {
   isOpen: boolean;
@@ -49,9 +44,13 @@ export const Drawer = ({
     const isActive = pathname === link.href;
     const Icon = link.icon;
 
-    let linkClass = styles.drawerLink;
-    if (isActive) linkClass += ` ${styles.drawerLinkActive}`;
-    if (link.isDanger) linkClass += ` ${styles.drawerLinkDanger}`;
+    const linkClass = [
+      styles.drawerLink,
+      isActive && styles.drawerLinkActive,
+      link.isDanger && styles.drawerLinkDanger,
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     return (
       <Link key={link.href} href={link.href} className={linkClass} onClick={onClose}>
@@ -69,11 +68,11 @@ export const Drawer = ({
 
           <motion.div
             className={`${styles.drawer} ${styles[theme]} ${styles[direction]}`}
-            style={{ backgroundColor: backgroundColor || undefined }}
+            style={{ backgroundColor, willChange: "transform" }}
             initial={{ x: initialX }}
             animate={{ x: 0 }}
             exit={{ x: initialX }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+            transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
           >
             <div className={styles.drawerHeader}>
               <div className={styles.drawerTitle}>

@@ -24,13 +24,16 @@
     "returns": "Returns",
     "faq": "FAQ",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Use"
+    "terms": "Terms of Use",
+    "openMenu": "Open menu"
   },
   "Footer": {
     "description": "Stylish and premium clothing for your unique look. Only the best brands and latest arrivals.",
     "catalog": "Catalog",
     "customers": "Customers",
     "contacts": "Contacts",
+    "tel": "Tel",
+    "email": "Email",
     "workTime": "Mon-Sun: 09:00 - 20:00",
     "copyright": "All rights reserved.",
     "devLink": "Order website development"

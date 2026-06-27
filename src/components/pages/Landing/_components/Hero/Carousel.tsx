@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import whiteWallTexture from "@/assets/textures/white-wall.avif";
+import { Link } from "@/i18n/navigation";
 
 import { useSwipe } from "@/hooks/useSwipe";
 
@@ -87,24 +87,30 @@ export const HeroCarousel = () => {
       </svg>
 
       <div className={styles.carouselWrapper}>
-        {SLIDE_IMAGES.map((slide) => (
-          <div
-            key={slide.id}
-            id={`hero-slide-${slide.id}`}
-            className={`${styles.slide} ${slide.id === activeId ? styles.slideActive : ""}`}
-          >
-            <Image
-              id={`hero-img-${slide.id}`}
-              src={slide.src}
-              alt={slide.alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className={styles.modelImage}
-              style={{ objectFit: "contain", objectPosition: "bottom center" }}
-              priority={slide.id === SLIDE_IMAGES[0].id}
+        {SLIDE_IMAGES.map((slide) => {
+          const isActive = slide.id === activeId;
+          return (
+            <Link
+              href="/new-arrivals"
+              key={slide.id}
+              id={`hero-slide-${slide.id}`}
+              className={`${styles.slide} ${styles.modelImage}`}
+              style={{
+                opacity: isActive ? 1 : 0,
+                pointerEvents: isActive ? "auto" : "none",
+                zIndex: isActive ? 5 : 1,
+                display: "block",
+                backgroundImage: `url(${slide.src})`,
+                backgroundSize: "contain",
+                backgroundPosition: "bottom center",
+                backgroundRepeat: "no-repeat",
+                cursor: isActive ? "pointer" : "default",
+              }}
+              aria-label={slide.alt}
+              tabIndex={isActive ? 0 : -1}
             />
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className={styles.dots}>

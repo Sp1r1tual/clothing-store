@@ -31,12 +31,4 @@ export const createProfileSchema = (msg: ProfileSchemaMessages) =>
     warehouse: z.string().max(100).optional().nullable().or(z.literal("")),
   });
 
-export const profileSchema = createProfileSchema({
-  nameMin: "Name must contain at least 2 characters",
-  nameMax: "Name cannot exceed 32 characters",
-  nameRegex: "Name can only contain letters, spaces, hyphens, and apostrophes",
-  phoneMax: "Phone number cannot exceed 20 characters",
-  phoneRegex: "Invalid phone number format (e.g. +380...)",
-});
-
-export type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileFormData = z.infer<ReturnType<typeof createProfileSchema>>;

@@ -1,16 +1,14 @@
 .wrapper {
-  position: absolute;
-  top: 300px;
+  position: fixed;
   bottom: 2rem;
   right: 1.5rem;
   width: 44px;
+  height: 44px;
   pointer-events: none;
   z-index: 498;
 }
 
 .button {
-  position: sticky;
-  top: calc(100vh - 3.5rem);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -51,8 +49,5 @@
   .wrapper {
     right: 1rem;
     bottom: 1.5rem;
-  }
-  .button {
-    top: calc(100vh - 5rem);
   }
 }

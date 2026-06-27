@@ -1,26 +1,14 @@
-"use client";
-
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { toast } from "react-toastify";
-
-import { addToCartAction } from "@/actions/cart.actions";
-import { toggleFavoriteAction } from "@/actions/favorites.actions";
-import { Heart, ShoppingBag } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/Badge/Badge";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
-import { Button } from "@/components/ui/Button/Button";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
 
 import { ProductCard } from "../Catalog/_components/ProductCard/ProductCard";
 import { ImageGallery } from "./_components/ImageGallery/ImageGallery";
-import { SizeSelector } from "./_components/SizeSelector/SizeSelector";
+import { ProductActions } from "./_components/ProductActions/ProductActions";
 
-import { useAuthStore } from "@/store/useAuthStore";
-import { useCartStore } from "@/store/useCartStore";
-import { useFavoritesStore } from "@/store/useFavoritesStore";
-import { useModalStore } from "@/store/useModalStore";
+import { calculateDiscountPercentage } from "@/common/utils/product";
 
 import styles from "./ProductDetail.module.css";
 
@@ -65,20 +53,8 @@ interface ProductDetailProps {
   locale: string;
 }
 
-export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
-  const t = useTranslations("ProductDetail");
-  const [selectedSize, setSelectedSize] = useState<string | null>(
-    product.variants[0]?.size || null,
-  );
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
-  const openAuthModal = useModalStore((s) => s.openAuthModal);
-
-  const user = useAuthStore((s) => s.user);
-
-  const { addItem, updateItemId } = useCartStore();
-  const { ids: favoriteIds, toggle: toggleFavoriteStore } = useFavoritesStore();
-  const isFavorited = favoriteIds.includes(product.id);
+export const ProductDetail = async ({ product, locale }: ProductDetailProps) => {
+  const t = await getTranslations({ locale, namespace: "ProductDetail" });
 
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const description = locale === "en" ? product.descriptionEn : product.descriptionUk;
@@ -88,12 +64,7 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
 
   const isOutOfStock = false;
 
-  let discountPercentage = 0;
-  if (product.discountPrice && product.discountPrice < product.price) {
-    discountPercentage = Math.round(
-      ((product.price - product.discountPrice) / product.price) * 100,
-    );
-  }
+  const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
 
   const breadcrumbs: { label: string; href?: string }[] = [
     { label: locale === "en" ? "Home" : "Головна", href: "/" },
@@ -113,81 +84,6 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
   }
 
   breadcrumbs.push({ label: name });
-
-  const handleAddToCart = async () => {
-    if (!selectedSize) {
-      toast.warning(t("select-size"));
-      return;
-    }
-    if (!user) {
-      toast.info(t("login-required"));
-      openAuthModal();
-      return;
-    }
-
-    setIsAddingToCart(true);
-    const variant = product.variants.find((v) => v.size === selectedSize);
-
-    const tempCartItemId = `temp-${Date.now()}`;
-    addItem({
-      id: tempCartItemId,
-      productId: product.id,
-      variantId: variant?.id || null,
-      quantity: 1,
-      product: {
-        id: product.id,
-        nameUk: product.nameUk,
-        nameEn: product.nameEn,
-        slug: product.slug,
-        price: product.price,
-        discountPrice: product.discountPrice,
-        images: product.images,
-      },
-      variant: variant
-        ? {
-            id: variant.id,
-            size: variant.size,
-            colorUk: null,
-            colorEn: null,
-          }
-        : null,
-    });
-
-    try {
-      const dbItem = await addToCartAction(product.id, variant?.id || null, 1);
-      updateItemId(tempCartItemId, dbItem.id);
-
-      toast.success(t("added-to-cart"));
-    } catch {
-      toast.error("Failed to add to cart");
-    } finally {
-      setIsAddingToCart(false);
-    }
-  };
-
-  const handleToggleFavorite = async () => {
-    if (!user) {
-      openAuthModal();
-      return;
-    }
-
-    setIsTogglingFavorite(true);
-    toggleFavoriteStore(product.id);
-
-    try {
-      const { isFavorited: nowFavorited } = await toggleFavoriteAction(product.id);
-      if (nowFavorited) {
-        toast.success(t("added-to-favorites"));
-      } else {
-        toast.info(t("removed-from-favorites"));
-      }
-    } catch {
-      toggleFavoriteStore(product.id);
-      toast.error("Failed to update favorites");
-    } finally {
-      setIsTogglingFavorite(false);
-    }
-  };
 
   return (
     <div className={styles.container}>
@@ -218,42 +114,8 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
             <div className={styles.optionsSection}>
               <div className={styles.optionHeader}>
                 <span className={styles.optionLabel}>{t("size")}</span>
-                {!selectedSize && !isOutOfStock && (
-                  <span className={styles.optionError}>{t("select-size")}</span>
-                )}
               </div>
-              <SizeSelector
-                variants={product.variants}
-                selectedSize={selectedSize}
-                onSelect={setSelectedSize}
-              />
-            </div>
-
-            <div className={styles.actions}>
-              <Button
-                fullWidth
-                size="lg"
-                disabled={isOutOfStock || isAddingToCart}
-                icon={<ShoppingBag size={20} />}
-                onClick={handleAddToCart}
-              >
-                {t("add-to-cart")}
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                disabled={isTogglingFavorite}
-                icon={
-                  <Heart
-                    size={20}
-                    fill={isFavorited ? "#ef4444" : "none"}
-                    color={isFavorited ? "#ef4444" : "currentColor"}
-                  />
-                }
-                onClick={handleToggleFavorite}
-              >
-                {isFavorited ? t("in-favorites") : t("add-to-favorites")}
-              </Button>
+              <ProductActions product={product} discountPercentage={discountPercentage} />
             </div>
 
             <div className={styles.detailsSection}>
@@ -292,8 +154,13 @@ export const ProductDetail = ({ product, locale }: ProductDetailProps) => {
           <div className={styles.relatedSection}>
             <h2 className={styles.relatedTitle}>{t("related")}</h2>
             <div className={styles.relatedGrid}>
-              {product.relatedProducts.map((related) => (
-                <ProductCard key={related.id} product={related} locale={locale} />
+              {product.relatedProducts.map((related, index) => (
+                <ProductCard
+                  key={related.id}
+                  product={related}
+                  locale={locale}
+                  priority={index < 4}
+                />
               ))}
             </div>
           </div>

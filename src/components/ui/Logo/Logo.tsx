@@ -8,7 +8,11 @@ interface LogoProps {
 
 export const Logo = ({ className }: LogoProps) => {
   return (
-    <Link href="/" className={`${styles.logoLink} ${className || ""}`}>
+    <Link
+      href="/"
+      className={`${styles.logoLink} ${className || ""}`}
+      aria-label="X-Weevo — на головну"
+    >
       <span className={styles.logoBlack}>X-</span>
       <span className={styles.logoOrange}>WEEVO</span>
     </Link>

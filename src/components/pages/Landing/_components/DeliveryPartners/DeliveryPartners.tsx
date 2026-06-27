@@ -48,7 +48,7 @@ export const DeliveryPartners = () => {
 
       <div className={styles.grid}>
         {partners.map((partner) => (
-          <div
+          <button
             key={partner.id}
             className={styles.card}
             style={{ "--partner-accent": partner.color } as React.CSSProperties}
@@ -83,7 +83,7 @@ export const DeliveryPartners = () => {
               </div>
             </div>
             <span className={styles.partnerName}>{partner.name}</span>
-          </div>
+          </button>
         ))}
       </div>
     </ScrollReveal>

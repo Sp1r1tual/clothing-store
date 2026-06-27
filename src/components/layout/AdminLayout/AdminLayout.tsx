@@ -5,7 +5,9 @@ import { ReactNode, useState } from "react";
 
 import { LayoutDashboard, LogOut, Menu, Package, ShoppingBag, Tag } from "lucide-react";
 
-import { Drawer, DrawerLinkItem } from "@/components/ui/Drawer/Drawer";
+import { Drawer } from "@/components/ui/Drawer/Drawer";
+
+import { DrawerLinkItem } from "@/types/ui.types";
 
 import styles from "./AdminLayout.module.css";
 

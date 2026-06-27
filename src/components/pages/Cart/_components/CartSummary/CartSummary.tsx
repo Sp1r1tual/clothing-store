@@ -1,12 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { ShoppingBag } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
 
 import { useCartStore } from "@/store/useCartStore";
+
+import { formatPrice } from "@/common/utils/format";
 
 import styles from "./CartSummary.module.css";
 
@@ -17,6 +19,7 @@ interface CartSummaryProps {
 
 export const CartSummary = ({ onCheckout, isCheckingOut }: CartSummaryProps) => {
   const t = useTranslations("Cart");
+  const locale = useLocale();
   const items = useCartStore((s) => s.items);
   const getTotalPrice = useCartStore((s) => s.getTotalPrice);
 
@@ -24,12 +27,7 @@ export const CartSummary = ({ onCheckout, isCheckingOut }: CartSummaryProps) => 
   const total = getTotalPrice();
   const discount = subtotal - total;
 
-  const fmt = (n: number) =>
-    new Intl.NumberFormat("uk-UA", {
-      style: "currency",
-      currency: "UAH",
-      maximumFractionDigits: 0,
-    }).format(n);
+  const fmt = (n: number) => formatPrice(n, locale);
 
   return (
     <div className={styles.summary}>

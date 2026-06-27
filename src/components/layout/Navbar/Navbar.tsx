@@ -111,7 +111,7 @@ export const Navbar = () => {
             <button
               className={styles.hamburger}
               onClick={() => setIsMenuOpen(true)}
-              aria-label="Open menu"
+              aria-label={t("openMenu")}
             >
               <span className={styles.bar}></span>
               <span className={styles.bar}></span>

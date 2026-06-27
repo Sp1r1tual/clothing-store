@@ -9,6 +9,18 @@ interface SaleRouteProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Catalog" });
+  const tLayout = await getTranslations({ locale, namespace: "Layout" });
+
+  const title = t("sale");
+  return {
+    title,
+    description: tLayout("description"),
+  };
+}
+
 export default async function SaleRoute({ params, searchParams }: SaleRouteProps) {
   const { locale } = await params;
   const sp = await searchParams;

@@ -142,3 +142,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `yarn prisma:migrate`  | Run Prisma migrations to update DB schema   |
 | `yarn prisma:generate` | Generate the Prisma client for type safety  |
 | `yarn prisma:studio`   | Open Prisma Studio database UI              |
+
+---
+
+## License
+
+This project is licensed under the License – see the [LICENCE](./LICENCE) file for details.

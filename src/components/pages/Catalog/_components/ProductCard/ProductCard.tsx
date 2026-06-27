@@ -5,6 +5,8 @@ import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
 
+import { calculateDiscountPercentage } from "@/common/utils/product";
+
 import styles from "./ProductCard.module.css";
 
 interface ProductCardProps {
@@ -21,19 +23,15 @@ interface ProductCardProps {
     category: { slug: string };
   };
   locale: string;
+  priority?: boolean;
 }
 
-export const ProductCard = ({ product, locale }: ProductCardProps) => {
+export const ProductCard = ({ product, locale, priority = false }: ProductCardProps) => {
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
   const isOutOfStock = false;
 
-  let discountPercentage = 0;
-  if (product.discountPrice && product.discountPrice < product.price) {
-    discountPercentage = Math.round(
-      ((product.price - product.discountPrice) / product.price) * 100,
-    );
-  }
+  const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
 
   const availableSizes = product.variants.map((v) => v.size);
 
@@ -60,6 +58,7 @@ export const ProductCard = ({ product, locale }: ProductCardProps) => {
             src={primaryImage}
             alt={product.images[0]?.altText || name}
             fill
+            priority={priority}
             className={styles.image}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />

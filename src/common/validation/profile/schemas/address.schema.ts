@@ -29,7 +29,7 @@ export interface AddressModalSchemaMessages {
   phoneRegex: string;
 }
 
-export const createAddressModalSchema = (hasPhone: boolean, msg: AddressModalSchemaMessages) => {
+const createAddressModalSchema = (hasPhone: boolean, msg: AddressModalSchemaMessages) => {
   if (hasPhone) return addressSchema;
 
   return addressSchema.extend({

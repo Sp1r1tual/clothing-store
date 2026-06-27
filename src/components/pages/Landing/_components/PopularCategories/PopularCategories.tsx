@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
 
+import { CategoryId } from "@/types/ui.types";
+
 import styles from "./PopularCategories.module.css";
 
 const CATEGORIES = [
@@ -29,8 +31,6 @@ const CATEGORIES = [
     image: "/categories/jackets.png",
   },
 ];
-
-type CategoryId = "hoodies" | "tshirts" | "pants" | "jackets";
 
 export const PopularCategories = () => {
   const t = useTranslations("PopularCategories");

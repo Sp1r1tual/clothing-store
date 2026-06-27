@@ -12,8 +12,10 @@ import { prisma } from "@/libs/prisma";
 import type { ShippingCarrier } from "@prisma/client";
 import { z } from "zod";
 
+import { actionRateLimit } from "@/common/auth/rate-limit";
 import { assertAuth } from "@/common/auth/server";
 import { revalidateLocalizedPath } from "@/common/utils/revalidate";
+import { updateOrderContactSchema } from "@/common/validation/order/order.schema";
 
 export async function getOrdersAction() {
   const user = await assertAuth();
@@ -23,7 +25,7 @@ export async function getOrdersAction() {
 export async function getOrderAction(orderId: string) {
   const user = await assertAuth();
 
-  if (!z.uuid().safeParse(orderId).success) {
+  if (!z.string().uuid().safeParse(orderId).success) {
     throw new Error("Invalid order ID");
   }
 
@@ -41,11 +43,18 @@ export async function updateOrderContactAction(
 ) {
   const user = await assertAuth();
 
+  await actionRateLimit.check(30, `updateOrderContact:${user.id}`);
+
   if (!z.uuid().safeParse(orderId).success) {
     throw new Error("Invalid order ID");
   }
 
-  const result = await updateOrderContact(orderId, user.id, data);
+  const resultParse = updateOrderContactSchema.safeParse(data);
+  if (!resultParse.success) {
+    throw new Error("Invalid contact data");
+  }
+
+  const result = await updateOrderContact(orderId, user.id, resultParse.data);
   revalidateLocalizedPath(`/profile/orders/${orderId}`);
   revalidateLocalizedPath("/profile");
   return result;
@@ -54,7 +63,9 @@ export async function updateOrderContactAction(
 export async function cancelOrderAction(orderId: string) {
   const user = await assertAuth();
 
-  if (!z.uuid().safeParse(orderId).success) {
+  await actionRateLimit.check(10, `cancelOrder:${user.id}`);
+
+  if (!z.string().uuid().safeParse(orderId).success) {
     throw new Error("Invalid order ID");
   }
 
@@ -66,6 +77,8 @@ export async function cancelOrderAction(orderId: string) {
 
 export async function createOrderAction(): Promise<string> {
   const user = await assertAuth();
+
+  await actionRateLimit.check(5, `createOrder:${user.id}`);
 
   const [cartItems, profile] = await Promise.all([
     getCart(user.id),
@@ -113,7 +126,6 @@ export async function createOrderAction(): Promise<string> {
       productNameEn: item.product.nameEn,
       productSize: item.variant?.size ?? null,
       productColor: item.variant?.colorUk ?? null,
-      price: item.product.discountPrice ?? item.product.price,
       quantity: item.quantity,
     })),
   });

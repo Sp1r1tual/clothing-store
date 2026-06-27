@@ -9,6 +9,18 @@ interface NewArrivalsRouteProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Catalog" });
+  const tLayout = await getTranslations({ locale, namespace: "Layout" });
+
+  const title = t("newArrivals");
+  return {
+    title,
+    description: tLayout("description"),
+  };
+}
+
 export default async function NewArrivalsRoute({ params, searchParams }: NewArrivalsRouteProps) {
   const { locale } = await params;
   const sp = await searchParams;

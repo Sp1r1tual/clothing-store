@@ -1,13 +1,27 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import styles from "@/components/pages/Privacy/privacy.module.css";
 import { BackButton } from "@/components/ui/BackButton/BackButton";
 import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 
-export default function TermsPage() {
-  const t = useTranslations("Terms");
+interface TermsRouteProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: TermsRouteProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Terms" });
+
+  return {
+    title: `${t("title")} | X-Weevo`,
+    description: t("section1Content"),
+    robots: { index: true, follow: true },
+  };
+}
+
+export default async function TermsPage({ params }: TermsRouteProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Terms" });
 
   return (
     <>

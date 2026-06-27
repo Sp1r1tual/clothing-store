@@ -18,7 +18,7 @@ export interface ProductSchemaMessages {
 
 export const MAX_IMAGES = 10;
 
-export const createProductImageSchema = (msg: ProductSchemaMessages) =>
+const createProductImageSchema = (msg: ProductSchemaMessages) =>
   z.object({
     url: z.string().min(1, msg.imageUrlRequired),
     altText: z.string().max(125, msg.imageAltMax).optional(),
@@ -26,7 +26,7 @@ export const createProductImageSchema = (msg: ProductSchemaMessages) =>
     order: z.number().default(0),
   });
 
-export const createProductVariantSchema = (msg: ProductSchemaMessages) =>
+const createProductVariantSchema = (msg: ProductSchemaMessages) =>
   z.object({
     size: z.string().min(1, msg.variantSizeRequired),
     colorUk: z.string().optional(),
@@ -87,20 +87,4 @@ export const createProductSchema = (msg: ProductSchemaMessages) =>
     variants: z.array(createProductVariantSchema(msg)).default([]),
   });
 
-export const productSchema = createProductSchema({
-  imageUrlRequired: "Image URL is required",
-  imagesTooMany: "Maximum 10 images per product",
-  imageDuplicateUrl: "Duplicate image URLs are not allowed",
-  imageAltMax: "Alt text cannot exceed 125 characters",
-  variantSizeRequired: "Size is required",
-  productNameRequired: "Name is required",
-  productNameMax: "Name is too long",
-  productSlugRequired: "Slug is required",
-  productSlugRegex: "Slug can only contain lowercase letters, numbers, and hyphens",
-  productPriceRequired: "Price is required",
-  productPricePositive: "Price must be greater than 0",
-  productDiscountPricePositive: "Discounted price must be greater than 0",
-  productCategoryRequired: "Category is required",
-});
-
-export type ProductFormData = z.infer<typeof productSchema>;
+export type ProductFormData = z.infer<ReturnType<typeof createProductSchema>>;

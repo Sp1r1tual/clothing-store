@@ -1,6 +1,6 @@
 import { routing } from "@/i18n/navigation";
 
-export const AUTH_REQUIRED_ROUTES = ["/profile", "/admin"] as const;
+const AUTH_REQUIRED_ROUTES = ["/profile", "/admin"] as const;
 
 export function parseLocalizedPathname(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);

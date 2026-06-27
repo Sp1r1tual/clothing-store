@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { AuthProvider } from "@/providers/AuthProvider";
+import { SkeletonProvider } from "@/providers/SkeletonProvider";
 
 import { GlobalAuthModal } from "@/components/ui/Modal/GlobalAuthModal";
 import { Modal } from "@/components/ui/Modal/Modal";
@@ -30,9 +31,34 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Layout" });
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
   return {
-    title: t("title"),
+    metadataBase: new URL(baseUrl),
+    title: {
+      default: t("title"),
+      template: `%s | X-Weevo`,
+    },
     description: t("description"),
+    openGraph: {
+      type: "website",
+      siteName: "X-Weevo",
+      locale: locale === "uk" ? "uk_UA" : "en_US",
+      title: t("title"),
+      description: t("description"),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        uk: `${baseUrl}/uk`,
+        en: `${baseUrl}/en`,
+      },
+    },
   };
 }
 
@@ -65,12 +91,14 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
         />
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider initialUser={initialUser}>
-            {children}
-            <Modal />
-            <GlobalAuthModal />
-          </AuthProvider>
-          <ToastContainer position="top-center" autoClose={3000} />
+          <SkeletonProvider>
+            <AuthProvider initialUser={initialUser}>
+              {children}
+              <Modal />
+              <GlobalAuthModal />
+            </AuthProvider>
+            <ToastContainer position="top-center" autoClose={3000} />
+          </SkeletonProvider>
         </NextIntlClientProvider>
       </body>
     </html>

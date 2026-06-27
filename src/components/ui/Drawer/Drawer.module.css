@@ -12,6 +12,9 @@
   flex-direction: column;
   overflow-y: auto;
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .drawer.dark {

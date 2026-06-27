@@ -1,26 +1,8 @@
 import { prisma } from "@/libs/prisma";
 
-export type CartItemWithProduct = {
-  id: string;
-  quantity: number;
-  productId: string;
-  variantId: string | null;
-  product: {
-    id: string;
-    nameUk: string;
-    nameEn: string;
-    slug: string;
-    price: number;
-    discountPrice: number | null;
-    images: { url: string; altText: string | null }[];
-  };
-  variant: {
-    id: string;
-    size: string;
-    colorUk: string | null;
-    colorEn: string | null;
-  } | null;
-};
+import { CartItemWithProduct } from "@/types/cart.types";
+
+export * from "@/types/cart.types";
 
 async function getOrCreateCart(profileId: string) {
   return prisma.cart.upsert({
@@ -110,7 +92,20 @@ export async function addToCart(
   });
 }
 
-export async function updateCartItemQuantity(cartItemId: string, quantity: number) {
+export async function updateCartItemQuantity(
+  profileId: string,
+  cartItemId: string,
+  quantity: number,
+) {
+  const item = await prisma.cartItem.findUnique({
+    where: { id: cartItemId },
+    include: { cart: true },
+  });
+
+  if (!item || item.cart.profileId !== profileId) {
+    throw new Error("Unauthorized to update this cart item");
+  }
+
   if (quantity <= 0) {
     return prisma.cartItem.delete({ where: { id: cartItemId } });
   }
@@ -120,7 +115,16 @@ export async function updateCartItemQuantity(cartItemId: string, quantity: numbe
   });
 }
 
-export async function removeCartItem(cartItemId: string) {
+export async function removeCartItem(profileId: string, cartItemId: string) {
+  const item = await prisma.cartItem.findUnique({
+    where: { id: cartItemId },
+    include: { cart: true },
+  });
+
+  if (!item || item.cart.profileId !== profileId) {
+    throw new Error("Unauthorized to remove this cart item");
+  }
+
   return prisma.cartItem.delete({ where: { id: cartItemId } });
 }
 
@@ -128,13 +132,4 @@ export async function clearCart(profileId: string) {
   return prisma.cartItem.deleteMany({
     where: { cart: { profileId } },
   });
-}
-
-export async function getCartItemCount(profileId: string): Promise<number> {
-  const cart = await prisma.cart.findUnique({
-    where: { profileId },
-    select: { items: { select: { quantity: true } } },
-  });
-  if (!cart) return 0;
-  return cart.items.reduce((sum, item) => sum + item.quantity, 0);
 }

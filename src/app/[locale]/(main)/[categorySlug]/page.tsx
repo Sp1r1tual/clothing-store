@@ -10,6 +10,29 @@ interface CategoryRouteProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; categorySlug: string }>;
+}) {
+  const { locale, categorySlug } = await params;
+  const category = await findCategoryBySlug(categorySlug);
+
+  if (!category) return {};
+
+  const title = locale === "en" ? category.nameEn : category.nameUk;
+  const description = locale === "en" ? category.seoDescriptionEn : category.seoDescriptionUk;
+
+  return {
+    title,
+    description: description || undefined,
+    openGraph: {
+      title,
+      description: description || undefined,
+    },
+  };
+}
+
 export default async function CategoryRoute({ params, searchParams }: CategoryRouteProps) {
   const { locale, categorySlug } = await params;
   const sp = await searchParams;

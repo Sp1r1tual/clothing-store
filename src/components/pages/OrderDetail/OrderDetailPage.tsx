@@ -18,18 +18,13 @@ import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
 
 import { formatDate, formatPrice } from "@/common/utils/format";
 
+import { ContactFormData } from "@/types/ui.types";
+
 import styles from "./OrderDetailPage.module.css";
 
 interface OrderDetailPageProps {
   order: OrderData;
 }
-
-type ContactFormData = {
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  shippingAddress: string;
-};
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
   PENDING: <Clock size={16} />,

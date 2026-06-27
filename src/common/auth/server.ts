@@ -58,7 +58,7 @@ async function resolveSession() {
   return { user, profile };
 }
 
-export async function getAuthUser() {
+async function getAuthUser() {
   const session = await resolveSession();
   return session?.user ?? null;
 }

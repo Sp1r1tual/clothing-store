@@ -3,6 +3,29 @@ import { Prisma } from "@prisma/client";
 
 import type { ProductFormData } from "@/common/validation/product/product.schema";
 
+import { ProductFilters } from "@/types/product.types";
+
+const productCardSelect = {
+  id: true,
+  nameUk: true,
+  nameEn: true,
+  slug: true,
+  price: true,
+  discountPrice: true,
+  isFeatured: true,
+  images: {
+    select: { url: true, altText: true },
+    orderBy: { order: "asc" },
+    take: 2,
+  },
+  variants: {
+    select: { size: true },
+  },
+  category: {
+    select: { nameUk: true, nameEn: true, slug: true },
+  },
+} as const;
+
 export async function findProducts() {
   const products = await prisma.product.findMany({
     where: { deletedAt: null },
@@ -219,15 +242,7 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
   });
 }
 
-export interface ProductFilters {
-  categoryIds?: string[];
-  minPrice?: number;
-  maxPrice?: number;
-  sizes?: string[];
-  sortBy?: "price-asc" | "price-desc" | "newest" | "popular";
-  page?: number;
-  limit?: number;
-}
+export * from "@/types/product.types";
 
 export async function findPublishedProducts(filters: ProductFilters = {}) {
   const {
@@ -296,26 +311,7 @@ export async function findPublishedProducts(filters: ProductFilters = {}) {
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
       where,
-      select: {
-        id: true,
-        nameUk: true,
-        nameEn: true,
-        slug: true,
-        price: true,
-        discountPrice: true,
-        isFeatured: true,
-        images: {
-          select: { url: true, altText: true },
-          orderBy: { order: "asc" },
-          take: 2,
-        },
-        variants: {
-          select: { size: true },
-        },
-        category: {
-          select: { nameUk: true, nameEn: true, slug: true },
-        },
-      },
+      select: productCardSelect,
       orderBy,
       skip,
       take: limit,
@@ -351,26 +347,7 @@ export async function findProductBySlug(slug: string) {
       },
       relatedProducts: {
         where: { deletedAt: null, status: "PUBLISHED" },
-        select: {
-          id: true,
-          nameUk: true,
-          nameEn: true,
-          slug: true,
-          price: true,
-          discountPrice: true,
-          isFeatured: true,
-          images: {
-            select: { url: true, altText: true },
-            orderBy: { order: "asc" },
-            take: 2,
-          },
-          variants: {
-            select: { size: true },
-          },
-          category: {
-            select: { slug: true },
-          },
-        },
+        select: productCardSelect,
         take: 8,
       },
     },
@@ -434,26 +411,7 @@ export async function findSaleProducts(filters: Omit<ProductFilters, "categoryId
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
       where,
-      select: {
-        id: true,
-        nameUk: true,
-        nameEn: true,
-        slug: true,
-        price: true,
-        discountPrice: true,
-        isFeatured: true,
-        images: {
-          select: { url: true, altText: true },
-          orderBy: { order: "asc" },
-          take: 2,
-        },
-        variants: {
-          select: { size: true },
-        },
-        category: {
-          select: { nameUk: true, nameEn: true, slug: true },
-        },
-      },
+      select: productCardSelect,
       orderBy,
       skip,
       take: limit,

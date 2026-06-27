@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 
 import { Logo } from "@/components/ui/Logo/Logo";
 
+import { CONTACTS } from "@/common/constants/contacts";
 import { CATALOG_LINKS, CUSTOMER_LINKS } from "@/common/constants/navigation";
 
 import styles from "./Footer.module.css";
@@ -63,15 +64,15 @@ export const Footer = () => {
             <h4 className={styles.columnTitle}>{tFooter("contacts")}</h4>
             <ul className={styles.linksList}>
               <li className={styles.contactItem}>
-                Email:{" "}
-                <a href="mailto:x.weevo@gmail.com" className={styles.contactLink}>
-                  x.weevo@gmail.com
+                {tFooter("email")}:{" "}
+                <a href={`mailto:${CONTACTS.EMAIL}`} className={styles.contactLink}>
+                  {CONTACTS.EMAIL}
                 </a>
               </li>
               <li className={styles.contactItem}>
-                Тел:{" "}
-                <a href="tel:+380931878784" className={styles.contactLink}>
-                  +38 (093) 187-87-84
+                {tFooter("tel")}:{" "}
+                <a href={`tel:${CONTACTS.PHONE.CLEAN}`} className={styles.contactLink}>
+                  {CONTACTS.PHONE.FORMATTED}
                 </a>
               </li>
               <li className={styles.contactItem}>{tFooter("workTime")}</li>
@@ -86,7 +87,7 @@ export const Footer = () => {
             &copy; {currentYear} X-WEEVO. {tFooter("copyright")}
           </p>
           <a
-            href="https://t.me/Sp1r1tual5"
+            href={CONTACTS.DEVELOPER.LINK}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.developerLink}

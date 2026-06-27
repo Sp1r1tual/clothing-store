@@ -15,8 +15,8 @@ export const Landing = () => {
       <ScrollTo />
       <ScrollToTop />
       <Hero />
-      <AboutBrand />
       <PopularCategories />
+      <AboutBrand />
       <DeliveryPartners />
       <CatalogCTA />
     </>

@@ -1,0 +1,13 @@
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.badges {
+  margin-bottom: 1rem;
+}
+
+.sizeSelector {
+  margin-bottom: 1.5rem;
+}
