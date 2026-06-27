@@ -30,7 +30,7 @@ interface ProductDetailProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { id: string; size: string }[];
+    variants: { id: string; size: string; stock: number }[];
     category: {
       slug: string;
       nameUk: string;
@@ -46,7 +46,7 @@ interface ProductDetailProps {
       discountPrice: number | null;
       isFeatured: boolean;
       images: { url: string; altText: string | null }[];
-      variants: { size: string }[];
+      variants: { size: string; stock: number }[];
       category: { slug: string };
     }[];
   };
@@ -62,13 +62,11 @@ export const ProductDetail = async ({ product, locale }: ProductDetailProps) => 
   const care = locale === "en" ? product.careInstructionsEn : product.careInstructionsUk;
   const measurements = locale === "en" ? product.measurementsEn : product.measurementsUk;
 
-  const isOutOfStock = false;
+  const isOutOfStock = product.variants.every((v) => v.stock === 0);
 
   const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
 
-  const breadcrumbs: { label: string; href?: string }[] = [
-    { label: locale === "en" ? "Home" : "Головна", href: "/" },
-  ];
+  const breadcrumbs: { label: string; href?: string }[] = [{ label: t("home"), href: "/" }];
 
   if (product.category) {
     if (product.category.parent) {

@@ -183,7 +183,7 @@ export const ProfileHeader = () => {
               onSubmit={handleSubmit(onSubmit)}
               className={styles.editForm}
             >
-              <h2 className={styles.editFormTitle}>{t("editProfile") || "Edit Profile"}</h2>
+              <h2 className={styles.editFormTitle}>{t("editProfile")}</h2>
 
               <div className={styles.formGroup}>
                 <Input
@@ -329,7 +329,7 @@ export const ProfileHeader = () => {
                   </Link>
                 )}
                 <Button variant="secondary" className={styles.profileBtn} onClick={startEditing}>
-                  {t("editProfile") || "Edit Profile"}
+                  {t("editProfile")}
                 </Button>
                 <Button
                   variant="danger"

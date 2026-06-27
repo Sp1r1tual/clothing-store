@@ -26,6 +26,7 @@ interface FavoritesPageProps {
 
 export const FavoritesPage = ({ initialFavorites, locale }: FavoritesPageProps) => {
   const t = useTranslations("Favorites");
+  const tErr = useTranslations("Errors");
   const user = useAuthStore((s) => s.user);
   const isLoading = useAuthStore((s) => s.isLoading);
   const openAuthModal = useModalStore((s) => s.openAuthModal);
@@ -44,7 +45,7 @@ export const FavoritesPage = ({ initialFavorites, locale }: FavoritesPageProps) 
       await toggleFavoriteAction(productId);
     } catch {
       toggle(productId);
-      toast.error("Failed to remove favorite");
+      toast.error(tErr("removeFavorite"));
     }
   };
 

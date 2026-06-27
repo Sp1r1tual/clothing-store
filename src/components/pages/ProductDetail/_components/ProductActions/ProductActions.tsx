@@ -29,13 +29,14 @@ interface ProductActionsProps {
     price: number;
     discountPrice: number | null;
     images: { url: string; altText: string | null }[];
-    variants: { id: string; size: string }[];
+    variants: { id: string; size: string; stock: number }[];
   };
   discountPercentage: number;
 }
 
 export const ProductActions = ({ product, discountPercentage }: ProductActionsProps) => {
   const t = useTranslations("ProductDetail");
+  const tErr = useTranslations("Errors");
   const [selectedSize, setSelectedSize] = useState<string | null>(
     product.variants[0]?.size || null,
   );
@@ -44,7 +45,7 @@ export const ProductActions = ({ product, discountPercentage }: ProductActionsPr
 
   const openAuthModal = useModalStore((s) => s.openAuthModal);
   const user = useAuthStore((s) => s.user);
-  const { addItem, updateItemId } = useCartStore();
+  const { addItem, updateItemId, removeItem } = useCartStore();
   const { ids: favoriteIds, toggle: toggleFavoriteStore } = useFavoritesStore();
   const isFavorited = favoriteIds.includes(product.id);
 
@@ -94,7 +95,8 @@ export const ProductActions = ({ product, discountPercentage }: ProductActionsPr
       updateItemId(tempCartItemId, dbItem.id);
       toast.success(t("added-to-cart"));
     } catch {
-      toast.error("Failed to add to cart");
+      removeItem(tempCartItemId);
+      toast.error(tErr("addToCart"));
     } finally {
       setIsAddingToCart(false);
     }
@@ -118,7 +120,7 @@ export const ProductActions = ({ product, discountPercentage }: ProductActionsPr
       }
     } catch {
       toggleFavoriteStore(product.id);
-      toast.error("Failed to update favorites");
+      toast.error(tErr("updateFavorites"));
     } finally {
       setIsTogglingFavorite(false);
     }

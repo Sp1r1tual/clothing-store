@@ -21,7 +21,7 @@ interface SearchPageProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string }[];
+    variants: { size: string; stock: number }[];
     category: { slug: string };
   }[];
   totalCount: number;
@@ -40,10 +40,7 @@ export const SearchPage = ({
 }: SearchPageProps) => {
   const t = useTranslations("SearchPage");
 
-  const breadcrumbs = [
-    { label: locale === "en" ? "Home" : "Головна", href: "/" },
-    { label: t("title") },
-  ];
+  const breadcrumbs = [{ label: t("home"), href: "/" }, { label: t("title") }];
 
   return (
     <div className={styles.container}>

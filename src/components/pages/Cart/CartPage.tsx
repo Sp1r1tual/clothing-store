@@ -33,6 +33,7 @@ interface CartPageProps {
 
 export const CartPage = ({ locale }: CartPageProps) => {
   const t = useTranslations("Cart");
+  const tErr = useTranslations("Errors");
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const isAuthLoading = useAuthStore((s) => s.isLoading);
@@ -51,7 +52,7 @@ export const CartPage = ({ locale }: CartPageProps) => {
     try {
       await clearCartAction();
     } catch {
-      toast.error("Failed to clear cart");
+      toast.error(tErr("clearCart"));
     } finally {
       setIsClearing(false);
     }

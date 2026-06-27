@@ -1,9 +1,24 @@
 import { prisma } from "@/libs/prisma";
 import { Prisma } from "@prisma/client";
 
+import { ITEMS_PER_PAGE } from "@/common/constants/pagination";
 import type { ProductFormData } from "@/common/validation/product/product.schema";
 
 import { ProductFilters } from "@/types/product.types";
+
+function buildProductOrderBy(sortBy?: string): Record<string, "asc" | "desc"> {
+  switch (sortBy) {
+    case "price-asc":
+      return { price: "asc" };
+    case "price-desc":
+      return { price: "desc" };
+    case "popular":
+      return { isFeatured: "desc" };
+    case "newest":
+    default:
+      return { publishedAt: "desc" };
+  }
+}
 
 const productCardSelect = {
   id: true,
@@ -19,7 +34,7 @@ const productCardSelect = {
     take: 2,
   },
   variants: {
-    select: { size: true },
+    select: { size: true, stock: true },
   },
   category: {
     select: { nameUk: true, nameEn: true, slug: true },
@@ -44,6 +59,10 @@ export async function findProducts() {
         where: { isPrimary: true },
         select: { url: true },
         take: 1,
+      },
+      variants: {
+        select: { size: true, stock: true },
+        orderBy: { size: "asc" },
       },
     },
     orderBy: { createdAt: "desc" },
@@ -90,6 +109,7 @@ export async function insertProduct(data: ProductFormData) {
           colorUk: v.colorUk || null,
           colorEn: v.colorEn || null,
           sku: v.sku || null,
+          stock: v.stock,
         })),
       },
     },
@@ -183,10 +203,11 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
       colorUk: v.colorUk || null,
       colorEn: v.colorEn || null,
       sku: v.sku || null,
+      stock: v.stock,
     }));
 
     const variantsToCreate: typeof incomingVariants = [];
-    const variantsToUpdate: { id: string; sku: string | null }[] = [];
+    const variantsToUpdate: { id: string; sku: string | null; stock: number }[] = [];
     const matchedVariantIds = new Set<string>();
 
     for (const incoming of incomingVariants) {
@@ -201,6 +222,7 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
         variantsToUpdate.push({
           id: match.id,
           sku: incoming.sku,
+          stock: incoming.stock,
         });
       } else {
         variantsToCreate.push(incoming);
@@ -225,6 +247,7 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
           colorUk: v.colorUk,
           colorEn: v.colorEn,
           sku: v.sku,
+          stock: v.stock,
         })),
       });
     }
@@ -234,6 +257,7 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
         where: { id: update.id },
         data: {
           sku: update.sku,
+          stock: update.stock,
         },
       });
     }
@@ -252,7 +276,7 @@ export async function findPublishedProducts(filters: ProductFilters = {}) {
     sizes,
     sortBy = "newest",
     page = 1,
-    limit = 12,
+    limit = ITEMS_PER_PAGE,
   } = filters;
 
   const where: Prisma.ProductWhereInput = {
@@ -288,23 +312,7 @@ export async function findPublishedProducts(filters: ProductFilters = {}) {
     where.variants = { some: { size: { in: sizes } } };
   }
 
-  type ProductOrderBy = Record<string, "asc" | "desc">;
-  let orderBy: ProductOrderBy;
-  switch (sortBy) {
-    case "price-asc":
-      orderBy = { price: "asc" };
-      break;
-    case "price-desc":
-      orderBy = { price: "desc" };
-      break;
-    case "popular":
-      orderBy = { isFeatured: "desc" };
-      break;
-    case "newest":
-    default:
-      orderBy = { publishedAt: "desc" };
-      break;
-  }
+  const orderBy = buildProductOrderBy(sortBy);
 
   const skip = (page - 1) * limit;
 
@@ -368,7 +376,14 @@ export async function findProductBySlug(slug: string) {
 }
 
 export async function findSaleProducts(filters: Omit<ProductFilters, "categoryIds"> = {}) {
-  const { minPrice, maxPrice, sizes, sortBy = "newest", page = 1, limit = 12 } = filters;
+  const {
+    minPrice,
+    maxPrice,
+    sizes,
+    sortBy = "newest",
+    page = 1,
+    limit = ITEMS_PER_PAGE,
+  } = filters;
 
   const where: Prisma.ProductWhereInput = {
     deletedAt: null,
@@ -388,23 +403,7 @@ export async function findSaleProducts(filters: Omit<ProductFilters, "categoryId
     where.variants = { some: { size: { in: sizes } } };
   }
 
-  type ProductOrderBy = Record<string, "asc" | "desc">;
-  let orderBy: ProductOrderBy;
-  switch (sortBy) {
-    case "price-asc":
-      orderBy = { price: "asc" };
-      break;
-    case "price-desc":
-      orderBy = { price: "desc" };
-      break;
-    case "popular":
-      orderBy = { isFeatured: "desc" };
-      break;
-    case "newest":
-    default:
-      orderBy = { publishedAt: "desc" };
-      break;
-  }
+  const orderBy = buildProductOrderBy(sortBy);
 
   const skip = (page - 1) * limit;
 
@@ -454,7 +453,7 @@ export async function findAvailableSizes(categoryIds?: string[]) {
 
 export async function searchProducts(
   query: string,
-  { page = 1, limit = 12 }: { page?: number; limit?: number } = {},
+  { page = 1, limit = ITEMS_PER_PAGE }: { page?: number; limit?: number } = {},
 ) {
   const where: Prisma.ProductWhereInput = {
     deletedAt: null,

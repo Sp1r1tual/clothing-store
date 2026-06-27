@@ -64,6 +64,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       colorUk: v.colorUk || "",
       colorEn: v.colorEn || "",
       sku: v.sku || "",
+      stock: v.stock,
     })),
   };
 

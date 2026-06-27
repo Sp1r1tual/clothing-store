@@ -47,6 +47,7 @@
     }
   },
   "SearchPage": {
+    "home": "Головна",
     "title": "Пошук",
     "metaTitle": "Пошук | X-Weevo",
     "metaDescription": "Пошук товарів у нашому магазині одягу",
@@ -283,6 +284,7 @@
           "product": "Товар",
           "category": "Категорія",
           "price": "Ціна",
+          "stock": "Залишки",
           "status": "Статус",
           "date": "Дата"
         },
@@ -395,6 +397,7 @@
           "imageDuplicateUrl": "Однакові зображення не допускаються",
           "imageAltMax": "Alt-текст не може перевищувати 125 символів",
           "variantSizeRequired": "Розмір обов'язковий",
+          "variantStockInvalid": "Залишок не може бути від'ємним",
           "variantStockMin": "Залишок не може бути від'ємним",
           "productNameRequired": "Назва обов'язкова",
           "productNameMax": "Назва занадто довга",
@@ -576,6 +579,7 @@
     "showing": "Показано {start}-{end} з {total} товарів"
   },
   "ProductDetail": {
+    "home": "Головна",
     "add-to-cart": "В кошик",
     "add-to-favorites": "В обране",
     "remove-from-favorites": "Видалити з обраного",
@@ -634,5 +638,13 @@
     "loginButton": "Увійти",
     "items": "товарів",
     "addToCart": "В кошик"
+  },
+  "Errors": {
+    "addToCart": "Помилка при додаванні в кошик",
+    "updateFavorites": "Помилка при оновленні обраного",
+    "removeFavorite": "Помилка при видаленні з обраного",
+    "updateQuantity": "Помилка при оновленні кількості",
+    "removeItem": "Помилка при видаленні товару",
+    "clearCart": "Помилка при очищенні кошика"
   }
 }

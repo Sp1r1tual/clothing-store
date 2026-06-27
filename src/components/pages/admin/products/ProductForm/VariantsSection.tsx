@@ -40,7 +40,7 @@ export const VariantsSection = ({
         <button
           type="button"
           className={styles.addBtn}
-          onClick={() => appendVariant({ size: "", colorUk: "", colorEn: "", sku: "" })}
+          onClick={() => appendVariant({ size: "", colorUk: "", colorEn: "", sku: "", stock: 0 })}
         >
           <Plus size={15} /> {t("buttons.addVariant")}
         </button>
@@ -75,6 +75,13 @@ export const VariantsSection = ({
                 placeholder={t("placeholders.variantSku")}
                 error={errors.variants?.[index]?.sku?.message}
                 {...register(`variants.${index}.sku`)}
+              />
+              <AdminInput
+                label={t("labels.variantStock")}
+                placeholder={t("placeholders.variantStock")}
+                type="number"
+                error={errors.variants?.[index]?.stock?.message}
+                {...register(`variants.${index}.stock`)}
               />
             </div>
             <button type="button" className={styles.removeBtn} onClick={() => removeVariant(index)}>

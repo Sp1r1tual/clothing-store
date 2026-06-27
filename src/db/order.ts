@@ -150,7 +150,7 @@ export async function updateOrderContact(
 export async function cancelOrder(orderId: string, profileId: string): Promise<OrderData> {
   const order = await prisma.order.findFirst({
     where: { id: orderId, profileId },
-    select: { status: true },
+    select: { status: true, items: { select: { variantId: true, quantity: true } } },
   });
 
   if (!order) throw new Error("Order not found");
@@ -158,10 +158,23 @@ export async function cancelOrder(orderId: string, profileId: string): Promise<O
     throw new Error("Cannot cancel order in current status");
   }
 
-  const updated = await prisma.order.update({
-    where: { id: orderId },
-    data: { status: "CANCELLED" },
-    select: baseOrderSelect,
+  const updated = await prisma.$transaction(async (tx) => {
+    const cancelled = await tx.order.update({
+      where: { id: orderId },
+      data: { status: "CANCELLED" },
+      select: baseOrderSelect,
+    });
+
+    for (const item of order.items) {
+      if (item.variantId) {
+        await tx.productVariant.update({
+          where: { id: item.variantId },
+          data: { stock: { increment: item.quantity } },
+        });
+      }
+    }
+
+    return cancelled;
   });
 
   return mapOrder(updated);
@@ -194,19 +207,50 @@ export async function getOrderByIdAdmin(orderId: string): Promise<AdminOrderData
     profile: order.profile,
   };
 }
-
 export async function updateOrderStatusAdmin(
   orderId: string,
   status: string,
   trackingNumber?: string | null,
 ): Promise<AdminOrderData> {
-  const updated = await prisma.order.update({
+  const order = await prisma.order.findUnique({
     where: { id: orderId },
-    data: {
-      status: status as import("@prisma/client").OrderStatus,
-      ...(trackingNumber !== undefined ? { trackingNumber } : {}),
-    },
-    select: adminOrderSelect,
+    select: { status: true, items: { select: { variantId: true, quantity: true } } },
+  });
+
+  if (!order) throw new Error("Order not found");
+
+  const updated = await prisma.$transaction(async (tx) => {
+    const updatedOrder = await tx.order.update({
+      where: { id: orderId },
+      data: {
+        status: status as import("@prisma/client").OrderStatus,
+        ...(trackingNumber !== undefined ? { trackingNumber } : {}),
+      },
+      select: adminOrderSelect,
+    });
+
+    if (order.status !== "CANCELLED" && status === "CANCELLED") {
+      for (const item of order.items) {
+        if (item.variantId) {
+          await tx.productVariant.update({
+            where: { id: item.variantId },
+            data: { stock: { increment: item.quantity } },
+          });
+        }
+      }
+    } else if (order.status === "CANCELLED" && status !== "CANCELLED") {
+      // If it was cancelled (stock returned) and now it's un-cancelled, deduct stock again
+      for (const item of order.items) {
+        if (item.variantId) {
+          await tx.productVariant.update({
+            where: { id: item.variantId },
+            data: { stock: { decrement: item.quantity } },
+          });
+        }
+      }
+    }
+
+    return updatedOrder;
   });
 
   return {
@@ -222,7 +266,7 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
     .filter((id): id is string => id !== null);
 
   const products = await prisma.product.findMany({
-    where: { id: { in: productIds } },
+    where: { id: { in: productIds }, status: "PUBLISHED", deletedAt: null },
     select: { id: true, price: true, discountPrice: true },
   });
 
@@ -257,6 +301,25 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
   });
 
   const order = await prisma.$transaction(async (tx) => {
+    for (const item of validItems) {
+      if (item.variantId) {
+        const variant = await tx.productVariant.findUnique({
+          where: { id: item.variantId },
+          select: { stock: true },
+        });
+
+        if (!variant) throw new Error(`Variant not found for item ${item.productNameEn}`);
+        if (variant.stock < item.quantity) {
+          throw new Error(`Not enough stock for ${item.productNameEn} (Size: ${item.productSize})`);
+        }
+
+        await tx.productVariant.update({
+          where: { id: item.variantId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+    }
+
     const created = await tx.order.create({
       data: {
         profileId: input.profileId,

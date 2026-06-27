@@ -20,6 +20,8 @@ import { ActiveFilters } from "./_components/ActiveFilters/ActiveFilters";
 import { FilterSidebar } from "./_components/FilterSidebar/FilterSidebar";
 import { SubcategoryBar } from "./_components/SubcategoryBar/SubcategoryBar";
 
+import { ITEMS_PER_PAGE } from "@/common/constants/pagination";
+
 import styles from "./CatalogPage.module.css";
 
 interface CatalogPageProps {
@@ -42,7 +44,7 @@ interface CatalogPageProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string }[];
+    variants: { size: string; stock: number }[];
     category: { slug: string; nameUk?: string; nameEn?: string };
   }[];
   totalCount: number;
@@ -114,8 +116,8 @@ export const CatalogPage = ({
             <span className={styles.productCount}>
               {products.length > 0
                 ? t("showing", {
-                    start: (currentPage - 1) * 12 + 1,
-                    end: Math.min(currentPage * 12, totalCount),
+                    start: (currentPage - 1) * ITEMS_PER_PAGE + 1,
+                    end: Math.min(currentPage * ITEMS_PER_PAGE, totalCount),
                     total: totalCount,
                   })
                 : ""}

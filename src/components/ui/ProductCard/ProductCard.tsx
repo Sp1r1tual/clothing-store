@@ -1,13 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useState } from "react";
+import { toast } from "react-toastify";
 
+import { toggleFavoriteAction } from "@/actions/favorites.actions";
 import { Link } from "@/i18n/navigation";
 import { Heart, Share2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge/Badge";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
+
+import { useAuthStore } from "@/store/useAuthStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useModalStore } from "@/store/useModalStore";
 
 import { calculateDiscountPercentage } from "@/common/utils/product";
 
@@ -23,7 +29,7 @@ interface ProductCardProps {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string }[];
+    variants: { size: string; stock: number }[];
     category: { slug: string; nameUk?: string; nameEn?: string };
   };
   locale: string;
@@ -33,30 +39,50 @@ interface ProductCardProps {
 export const ProductCard = ({ product, locale, priority = false }: ProductCardProps) => {
   const name = locale === "en" ? product.nameEn : product.nameUk;
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
-  const isOutOfStock = false;
-  const [favorited, setFavorited] = useState(false);
+  const isOutOfStock = product.variants.every((v) => v.stock === 0);
+
+  const tErr = useTranslations("Errors");
+  const user = useAuthStore((s) => s.user);
+  const openAuthModal = useModalStore((s) => s.openAuthModal);
+  const favoriteIds = useFavoritesStore((s) => s.ids);
+  const { toggle } = useFavoritesStore();
+
+  const favorited = favoriteIds.includes(product.id);
 
   const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
-  const availableSizes = product.variants.map((v) => v.size);
+  const availableSizes = product.variants.filter((v) => v.stock > 0).map((v) => v.size);
 
   const categoryName =
     locale === "en"
       ? (product.category.nameEn ?? product.category.slug)
       : (product.category.nameUk ?? product.category.slug);
 
-  const handleFavorite = (e: React.MouseEvent) => {
+  const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setFavorited((prev) => !prev);
+
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+
+    toggle(product.id);
+    try {
+      await toggleFavoriteAction(product.id);
+    } catch {
+      toggle(product.id);
+      toast.error(tErr("updateFavorites"));
+    }
   };
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    const url = `${window.location.origin}/${locale}/product/${product.slug}`;
     if (navigator.share) {
-      navigator.share({ title: name, url: window.location.origin + `/product/${product.slug}` });
+      navigator.share({ title: name, url });
     } else {
-      navigator.clipboard.writeText(window.location.origin + `/product/${product.slug}`);
+      navigator.clipboard.writeText(url);
     }
   };
 

@@ -26,6 +26,7 @@ type Product = {
   createdAt: Date;
   category: { nameUk: string; nameEn: string };
   images: { url: string }[];
+  variants: { size: string; stock: number }[];
 };
 
 interface ProductsTableProps {
@@ -77,6 +78,7 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
             <th className={styles.th}>{t("th.product")}</th>
             <th className={styles.th}>{t("th.category")}</th>
             <th className={styles.th}>{t("th.price")}</th>
+            <th className={styles.th}>{t("th.stock")}</th>
             <th className={styles.th}>{t("th.status")}</th>
             <th className={styles.th}>{t("th.date")}</th>
             <th className={styles.th}></th>
@@ -139,6 +141,22 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                       ₴
                     </span>
                   )}
+                </td>
+                <td className={styles.td}>
+                  <div className={styles.stockList}>
+                    {product.variants.length === 0 ? (
+                      <span className={styles.stockNone}>—</span>
+                    ) : (
+                      product.variants.map((v) => (
+                        <span
+                          key={v.size}
+                          className={`${styles.stockChip} ${v.stock === 0 ? styles.stockChipEmpty : v.stock <= 3 ? styles.stockChipLow : styles.stockChipOk}`}
+                        >
+                          {v.size}: {v.stock}
+                        </span>
+                      ))
+                    )}
+                  </div>
                 </td>
                 <td className={styles.td}>
                   <span className={`${styles.statusBadge} ${styles[status.className]}`}>

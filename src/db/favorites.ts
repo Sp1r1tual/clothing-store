@@ -24,7 +24,7 @@ export async function getFavorites(profileId: string): Promise<FavoriteProduct[]
             take: 2,
           },
           variants: {
-            select: { size: true },
+            select: { size: true, stock: true },
           },
           category: {
             select: { slug: true },

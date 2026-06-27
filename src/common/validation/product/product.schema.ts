@@ -6,6 +6,7 @@ export interface ProductSchemaMessages {
   imageDuplicateUrl: string;
   imageAltMax: string;
   variantSizeRequired: string;
+  variantStockInvalid: string;
   productNameRequired: string;
   productNameMax: string;
   productSlugRequired: string;
@@ -32,6 +33,10 @@ const createProductVariantSchema = (msg: ProductSchemaMessages) =>
     colorUk: z.string().optional(),
     colorEn: z.string().optional(),
     sku: z.string().optional(),
+    stock: z.preprocess(
+      (val) => (val === "" || val === null || val === undefined ? 0 : Number(val)),
+      z.number().min(0, msg.variantStockInvalid),
+    ),
   });
 
 export const createProductSchema = (msg: ProductSchemaMessages) =>

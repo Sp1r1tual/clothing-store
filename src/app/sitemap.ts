@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const LOCALES = ["uk", "en"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["/", "/new-arrivals", "/sale", "/privacy", "/terms"];
+  const staticRoutes = ["/", "/catalog", "/search", "/new-arrivals", "/sale", "/privacy", "/terms"];
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.flatMap((route) =>
     LOCALES.map((locale) => ({

@@ -3,7 +3,7 @@
 import styles from "./SizeSelector.module.css";
 
 interface SizeSelectorProps {
-  variants: { size: string }[];
+  variants: { size: string; stock: number }[];
   selectedSize: string | null;
   onSelect: (size: string) => void;
 }
@@ -13,6 +13,7 @@ export const SizeSelector = ({ variants, selectedSize, onSelect }: SizeSelectorP
     <div className={styles.container}>
       {variants.map((variant) => {
         const isSelected = selectedSize === variant.size;
+        const isOutOfStock = variant.stock === 0;
 
         return (
           <button
@@ -20,9 +21,13 @@ export const SizeSelector = ({ variants, selectedSize, onSelect }: SizeSelectorP
             className={`
               ${styles.sizeBtn} 
               ${isSelected ? styles.selected : ""}
+              ${isOutOfStock ? styles.outOfStock : ""}
             `}
-            onClick={() => onSelect(variant.size)}
+            onClick={() => {
+              if (!isOutOfStock) onSelect(variant.size);
+            }}
             aria-pressed={isSelected}
+            disabled={isOutOfStock}
           >
             {variant.size}
           </button>

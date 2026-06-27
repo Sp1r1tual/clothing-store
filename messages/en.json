@@ -47,6 +47,7 @@
     }
   },
   "SearchPage": {
+    "home": "Home",
     "title": "Search",
     "metaTitle": "Search | X-Weevo",
     "metaDescription": "Search for products in our clothing store",
@@ -283,6 +284,7 @@
           "product": "Product",
           "category": "Category",
           "price": "Price",
+          "stock": "Stock",
           "status": "Status",
           "date": "Date"
         },
@@ -395,6 +397,7 @@
           "imageDuplicateUrl": "Duplicate images are not allowed",
           "imageAltMax": "Alt text cannot exceed 125 characters",
           "variantSizeRequired": "Size is required",
+          "variantStockInvalid": "Stock cannot be negative",
           "variantStockMin": "Stock cannot be negative",
           "productNameRequired": "Name is required",
           "productNameMax": "Name is too long",
@@ -577,6 +580,7 @@
     "showing": "Showing {start}-{end} of {total} products"
   },
   "ProductDetail": {
+    "home": "Home",
     "add-to-cart": "Add to Cart",
     "add-to-favorites": "Add to Favorites",
     "remove-from-favorites": "Remove from Favorites",
@@ -635,5 +639,13 @@
     "loginButton": "Sign In",
     "items": "items",
     "addToCart": "Add to Cart"
+  },
+  "Errors": {
+    "addToCart": "Failed to add to cart",
+    "updateFavorites": "Failed to update favorites",
+    "removeFavorite": "Failed to remove favorite",
+    "updateQuantity": "Failed to update quantity",
+    "removeItem": "Failed to remove item",
+    "clearCart": "Failed to clear cart"
   }
 }

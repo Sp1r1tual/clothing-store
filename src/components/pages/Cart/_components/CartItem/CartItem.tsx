@@ -23,6 +23,7 @@ interface CartItemProps {
 
 export const CartItem = ({ item, locale }: CartItemProps) => {
   const t = useTranslations("Cart");
+  const tErr = useTranslations("Errors");
   const { removeItem, updateQuantity } = useCartStore();
   const [isPendingRemove, startRemoveTransition] = useTransition();
   const [isPendingQty, startQtyTransition] = useTransition();
@@ -44,7 +45,7 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
       } catch {
         setLocalQty(item.quantity);
         updateQuantity(item.id, item.quantity);
-        toast.error("Failed to update quantity");
+        toast.error(tErr("updateQuantity"));
       }
     });
   };
@@ -56,7 +57,7 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
         await removeCartItemAction(item.id);
         toast.success(t("removeSuccess"));
       } catch {
-        toast.error("Failed to remove item");
+        toast.error(tErr("removeItem"));
       }
     });
   };

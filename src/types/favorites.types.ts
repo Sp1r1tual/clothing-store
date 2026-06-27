@@ -10,7 +10,7 @@ export type FavoriteProduct = {
     discountPrice: number | null;
     isFeatured: boolean;
     images: { url: string; altText: string | null }[];
-    variants: { size: string }[];
+    variants: { size: string; stock: number }[];
     category: { slug: string };
   };
 };

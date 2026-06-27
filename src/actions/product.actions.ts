@@ -45,7 +45,9 @@ export async function updateProduct(id: string, data: ProductFormData, locale: s
     return product;
   } catch (error) {
     console.error("Failed to update product:", error);
-    throw new Error("Failed to update product due to an internal error");
+    throw error instanceof Error
+      ? error
+      : new Error("Failed to update product due to an internal error");
   }
 }
 

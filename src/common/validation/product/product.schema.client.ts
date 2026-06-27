@@ -14,6 +14,7 @@ export function useProductSchema() {
         imageDuplicateUrl: t("validation.imageDuplicateUrl"),
         imageAltMax: t("validation.imageAltMax"),
         variantSizeRequired: t("validation.variantSizeRequired"),
+        variantStockInvalid: t("validation.variantStockInvalid"),
         productNameRequired: t("validation.productNameRequired"),
         productNameMax: t("validation.productNameMax"),
         productSlugRequired: t("validation.productSlugRequired"),
