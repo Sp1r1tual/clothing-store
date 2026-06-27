@@ -7,11 +7,15 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { getCart } from "@/db/cart";
+import { getFavoriteIds } from "@/db/favorites";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { SkeletonProvider } from "@/providers/SkeletonProvider";
 
 import { GlobalAuthModal } from "@/components/ui/Modal/GlobalAuthModal";
 import { Modal } from "@/components/ui/Modal/Modal";
+
+import type { CartItem } from "@/store/useCartStore";
 
 import { getCurrentUser } from "@/common/auth/server";
 import { geistMono, geistSans } from "@/common/fonts/fonts";
@@ -65,6 +69,20 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   const [messages, initialUser] = await Promise.all([getMessages(), getCurrentUser()]);
 
+  let initialCart: CartItem[] = [];
+  let initialFavorites: string[] = [];
+
+  if (initialUser) {
+    try {
+      [initialCart, initialFavorites] = await Promise.all([
+        getCart(initialUser.id),
+        getFavoriteIds(initialUser.id),
+      ]);
+    } catch (e) {
+      console.error("Failed to fetch initial user data", e);
+    }
+  }
+
   return (
     <html
       lang={locale}
@@ -85,7 +103,11 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
         />
         <NextIntlClientProvider messages={messages}>
           <SkeletonProvider>
-            <AuthProvider initialUser={initialUser}>
+            <AuthProvider
+              initialUser={initialUser}
+              initialCart={initialCart}
+              initialFavorites={initialFavorites}
+            >
               {children}
               <Modal />
               <GlobalAuthModal />

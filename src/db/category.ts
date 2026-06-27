@@ -1,3 +1,4 @@
+import { categoryCache, invalidateCategoryCache } from "@/libs/cache";
 import { prisma } from "@/libs/prisma";
 
 import { BUILT_IN_SLUGS } from "@/common/constants/categories";
@@ -20,6 +21,15 @@ export async function findAllCategories() {
 }
 
 export async function findCategoryById(id: string) {
+  const cacheKey = `category:id:${id}`;
+  const cached = categoryCache.get(cacheKey);
+  if (cached) return cached as Awaited<ReturnType<typeof _findCategoryById>>;
+  const result = await _findCategoryById(id);
+  if (result) categoryCache.set(cacheKey, result);
+  return result;
+}
+
+async function _findCategoryById(id: string) {
   return prisma.category.findUnique({
     where: { id },
     select: {
@@ -45,6 +55,7 @@ export async function findCategoriesForSelect() {
 }
 
 export async function insertCategory(data: CategoryFormData) {
+  invalidateCategoryCache();
   return prisma.category.create({
     data: {
       nameUk: data.nameUk,
@@ -62,6 +73,7 @@ export async function insertCategory(data: CategoryFormData) {
 }
 
 export async function updateCategory(id: string, data: CategoryFormData) {
+  invalidateCategoryCache();
   return prisma.category.update({
     where: { id },
     data: {
@@ -95,10 +107,20 @@ export async function deleteCategory(id: string) {
   if (category._count.children > 0) throw new Error("HAS_CHILDREN");
   if (category._count.products > 0) throw new Error("HAS_PRODUCTS");
 
+  invalidateCategoryCache();
   return prisma.category.delete({ where: { id } });
 }
 
 export async function findCategoryBySlug(slug: string) {
+  const cacheKey = `category:slug:${slug}`;
+  const cached = categoryCache.get(cacheKey);
+  if (cached) return cached as Awaited<ReturnType<typeof _findCategoryBySlug>>;
+  const result = await _findCategoryBySlug(slug);
+  if (result) categoryCache.set(cacheKey, result);
+  return result;
+}
+
+async function _findCategoryBySlug(slug: string) {
   return prisma.category.findUnique({
     where: { slug },
     select: {
@@ -127,6 +149,10 @@ export async function findCategoryBySlug(slug: string) {
 }
 
 export async function findAllDescendantCategoryIds(parentId: string): Promise<string[]> {
+  const cacheKey = `category:descendants:${parentId}`;
+  const cached = categoryCache.get(cacheKey);
+  if (cached) return cached as string[];
+
   const allCategories = await prisma.category.findMany({
     select: { id: true, parentId: true },
   });
@@ -143,5 +169,6 @@ export async function findAllDescendantCategoryIds(parentId: string): Promise<st
   }
 
   collectDescendants(parentId);
+  categoryCache.set(cacheKey, descendantIds);
   return descendantIds;
 }

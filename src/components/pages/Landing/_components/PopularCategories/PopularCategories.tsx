@@ -13,17 +13,17 @@ import styles from "./PopularCategories.module.css";
 const CATEGORIES = [
   {
     id: "shoes",
-    href: "/search?q=shoes",
+    href: "/unisex-shoes",
     image: "/categories/shoes.webp",
   },
   {
     id: "outerwear",
-    href: "/search?q=outerwear",
+    href: "/unisex-outerwear",
     image: "/categories/outerwear.webp",
   },
   {
     id: "pants",
-    href: "/search?q=pants",
+    href: "/unisex-pants",
     image: "/categories/pants-new.webp",
   },
   {

@@ -1,0 +1,45 @@
+import { getTranslations } from "next-intl/server";
+
+import styles from "@/components/pages/Privacy/privacy.module.css";
+import { BackButton } from "@/components/ui/BackButton/BackButton";
+import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
+
+import { FaqAccordion } from "./_components/FaqAccordion/FaqAccordion";
+
+interface RouteProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: RouteProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "FAQ" });
+  return {
+    title: `${t("title")} | X-Weevo`,
+    description: t("metaDescription"),
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function FAQPage({ params }: RouteProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "FAQ" });
+
+  return (
+    <>
+      <div className={styles.container}>
+        <BackButton scrollUp={true} />
+        <h1 className={styles.title}>{t("title")}</h1>
+        <div className={styles.content}>
+          <FaqAccordion
+            items={[
+              { title: t("section1Title"), content: t("section1Content") },
+              { title: t("section2Title"), content: t("section2Content") },
+              { title: t("section3Title"), content: t("section3Content") },
+            ]}
+          />
+        </div>
+      </div>
+      <ScrollToTop />
+    </>
+  );
+}

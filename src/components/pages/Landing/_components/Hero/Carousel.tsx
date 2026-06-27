@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import whiteWallTexture from "@/assets/textures/white-wall.avif";
+import whiteWallTexture from "@/assets/textures/white-wall.webp";
 import { Link } from "@/i18n/navigation";
 
 import { useSwipe } from "@/hooks/useSwipe";
@@ -100,15 +101,20 @@ export const HeroCarousel = () => {
                 pointerEvents: isActive ? "auto" : "none",
                 zIndex: isActive ? 5 : 1,
                 display: "block",
-                backgroundImage: `url(${slide.src})`,
-                backgroundSize: "contain",
-                backgroundPosition: "bottom center",
-                backgroundRepeat: "no-repeat",
                 cursor: isActive ? "pointer" : "default",
               }}
               aria-label={slide.alt}
               tabIndex={isActive ? 0 : -1}
-            />
+            >
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                fill
+                priority={isActive}
+                style={{ objectFit: "contain", objectPosition: "bottom center" }}
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </Link>
           );
         })}
       </div>

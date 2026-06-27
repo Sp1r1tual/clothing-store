@@ -17,9 +17,4 @@ export const SLIDE_IMAGES = [
     src: "/images/hero/model-6.avif",
     alt: "Young European male model",
   },
-  {
-    id: "model-european-mature",
-    src: "/images/hero/model-7.avif",
-    alt: "Mature European male model",
-  },
 ];

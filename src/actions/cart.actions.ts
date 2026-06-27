@@ -42,7 +42,6 @@ export async function updateCartItemAction(cartItemId: string, quantity: number)
   }
 
   const result = await updateCartItemQuantity(user.id, cartItemId, quantity);
-  revalidateLocalizedPath("/cart");
   return result;
 }
 
@@ -56,7 +55,6 @@ export async function removeCartItemAction(cartItemId: string) {
   }
 
   await removeCartItem(user.id, cartItemId);
-  revalidateLocalizedPath("/cart");
 }
 
 export async function clearCartAction() {

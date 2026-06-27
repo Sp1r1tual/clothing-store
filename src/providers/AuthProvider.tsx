@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getCartAction } from "@/actions/cart.actions";
@@ -12,6 +12,7 @@ import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCartStore } from "@/store/useCartStore";
+import type { CartItem } from "@/store/useCartStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 
 import { getCurrentUserAction } from "@/common/auth/actions";
@@ -20,6 +21,8 @@ import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 interface AuthProviderProps {
   children: React.ReactNode;
   initialUser: IUser | null;
+  initialCart: CartItem[];
+  initialFavorites: string[];
 }
 
 async function hydrateUserData() {
@@ -35,7 +38,12 @@ async function hydrateUserData() {
   }
 }
 
-export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
+export const AuthProvider = ({
+  children,
+  initialUser,
+  initialCart,
+  initialFavorites,
+}: AuthProviderProps) => {
   const router = useRouter();
   const { login, logout } = useAuthStore();
   const tAuth = useTranslations("AuthModal");
@@ -44,25 +52,20 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
   const routerRef = useRef(router);
   const tAuthRef = useRef(tAuth);
   const tProfileRef = useRef(tProfile);
-  const isInitialized = useRef<boolean | null>(null);
-  if (isInitialized.current == null) {
+
+  const isHydrated = useRef(Boolean(initialUser));
+
+  useState(() => {
     useAuthStore.setState({ user: initialUser, isLoading: false });
-    isInitialized.current = true;
-  }
+    useCartStore.setState({ items: initialCart });
+    useFavoritesStore.setState({ ids: initialFavorites });
+  });
 
   useEffect(() => {
     routerRef.current = router;
     tAuthRef.current = tAuth;
     tProfileRef.current = tProfile;
   }, [router, tAuth, tProfile]);
-
-  const initialUserRef = useRef(initialUser);
-
-  useEffect(() => {
-    if (initialUserRef.current) {
-      void hydrateUserData();
-    }
-  }, []);
 
   useEffect(() => {
     const supabase = getSupabaseBrowser();
@@ -78,10 +81,13 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
 
         if (user) {
           login(user);
-          void hydrateUserData();
+          if (!isHydrated.current) {
+            isHydrated.current = true;
+            void hydrateUserData();
+          }
         } else {
           logout();
-
+          isHydrated.current = false;
           useCartStore.setState({ items: [] });
           useFavoritesStore.setState({ ids: [] });
         }
@@ -97,13 +103,14 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       if (event === "SIGNED_IN") {
-        if (sessionStorage.getItem("pendingLogin")) {
+        const isNewLogin = Boolean(sessionStorage.getItem("pendingLogin"));
+        if (isNewLogin) {
           sessionStorage.removeItem("pendingLogin");
           const name = session?.user?.user_metadata?.full_name || "User";
           toast.success(tAuthRef.current("successMessage", { name }));
+          routerRef.current.refresh();
         }
         void syncUser();
-        routerRef.current.refresh();
       } else if (event === "SIGNED_OUT") {
         void syncUser();
       } else if (event === "USER_UPDATED") {

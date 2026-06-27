@@ -1,3 +1,4 @@
+import { invalidateProductCache, productCache } from "@/libs/cache";
 import { prisma } from "@/libs/prisma";
 import { Prisma } from "@prisma/client";
 
@@ -118,6 +119,9 @@ export async function insertProduct(data: ProductFormData) {
 }
 
 export async function softDeleteProduct(id: string) {
+  const product = await prisma.product.findUnique({ where: { id }, select: { slug: true } });
+  if (product) invalidateProductCache(product.slug);
+
   return prisma.product.update({
     where: { id },
     data: { deletedAt: new Date() },
@@ -156,11 +160,16 @@ export async function updateProductInDb(id: string, data: ProductFormData) {
 
   const currentProduct = await prisma.product.findUnique({
     where: { id },
-    select: { status: true, publishedAt: true },
+    select: { status: true, publishedAt: true, slug: true },
   });
 
   if (!currentProduct) {
     throw new Error("Product not found");
+  }
+
+  invalidateProductCache(currentProduct.slug);
+  if (productData.slug && productData.slug !== currentProduct.slug) {
+    invalidateProductCache(productData.slug);
   }
 
   let publishedAt = currentProduct.publishedAt;
@@ -340,6 +349,15 @@ export async function findPublishedProducts(filters: ProductFilters = {}) {
 }
 
 export async function findProductBySlug(slug: string) {
+  const cacheKey = `product:slug:${slug}`;
+  const cached = productCache.get(cacheKey);
+  if (cached) return cached as Awaited<ReturnType<typeof _findProductBySlug>>;
+  const result = await _findProductBySlug(slug);
+  if (result) productCache.set(cacheKey, result);
+  return result;
+}
+
+async function _findProductBySlug(slug: string) {
   const product = await prisma.product.findUnique({
     where: { slug, deletedAt: null, status: "PUBLISHED" },
     include: {

@@ -6,6 +6,36 @@
     "title": "X-Weevo | Clothing Store",
     "description": "Trendy, premium clothes online store"
   },
+  "Returns": {
+    "title": "Returns & Exchanges",
+    "metaDescription": "Information about X-Weevo return policy and how to return your items.",
+    "section1Title": "Return Policy",
+    "section1Content": "You can return any unworn, unwashed item within 30 days of purchase for a full refund. The item must be in its original condition with all tags attached.",
+    "section2Title": "How to Return",
+    "section2Content": "To initiate a return, please log into your account, go to the 'My Orders' section, and select the item you wish to return. Follow the instructions to receive a return shipping label.",
+    "section3Title": "Refund Process",
+    "section3Content": "Once we receive and inspect your returned item, your refund will be processed and automatically applied to your original method of payment within 5-7 business days."
+  },
+  "Shipping": {
+    "title": "Shipping & Delivery",
+    "metaDescription": "Learn about X-Weevo delivery times, shipping costs, and order tracking.",
+    "section1Title": "Delivery Times",
+    "section1Content": "We offer standard and express shipping options. Standard delivery typically takes 3-5 business days, while express delivery takes 1-2 business days. International shipping may take 7-14 days.",
+    "section2Title": "Shipping Costs",
+    "section2Content": "Standard shipping is free on all orders over $100. For orders under $100, a flat rate of $5 applies. Express shipping is available for $15.",
+    "section3Title": "Order Tracking",
+    "section3Content": "Once your order has been dispatched, you will receive a tracking number via email. You can use this number to track your package on our website or the courier's platform."
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "metaDescription": "Find answers to the most frequently asked questions about sizes, orders, and delivery at X-Weevo.",
+    "section1Title": "How do I determine my size?",
+    "section1Content": "Please refer to our detailed sizing chart available on every product page. If you are between sizes, we recommend sizing up for a more comfortable fit.",
+    "section2Title": "Can I modify my order after placing it?",
+    "section2Content": "Orders can only be modified or canceled within 1 hour of placement. After this window, the order is sent to our warehouse for processing and cannot be changed.",
+    "section3Title": "Do you offer international shipping?",
+    "section3Content": "Yes, we ship worldwide! International shipping rates and times vary depending on the destination. You can see the exact cost during checkout."
+  },
   "HomePage": {
     "title": "Welcome to our store!",
     "description": "Trendy, premium clothes online store"
