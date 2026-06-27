@@ -17,6 +17,7 @@
     "other": "Other",
     "sale": "Sale",
     "searchPlaceholder": "Search",
+    "searchShowAll": "Show all results →",
     "favorites": "Favorites",
     "cart": "Cart",
     "profile": "Profile",
@@ -42,6 +43,22 @@
     "validation": {
       "empty": "Search query cannot be empty",
       "tooLong": "Search query is too long"
+    }
+  },
+  "SearchPage": {
+    "title": "Search",
+    "metaTitle": "Search | X-Weevo",
+    "metaDescription": "Search for products in our clothing store",
+    "resultsFor": "Results for",
+    "found": "{count} products",
+    "enterQuery": "Enter a search query to find products",
+    "emptyQuery": {
+      "title": "What are you looking for?",
+      "description": "Use the search bar above to find your desired products"
+    },
+    "noResults": {
+      "title": "Nothing found",
+      "description": "No products matched your query \"{query}\""
     }
   },
   "Features": {

@@ -17,6 +17,7 @@
     "other": "Інше",
     "sale": "Розпродаж",
     "searchPlaceholder": "Пошук",
+    "searchShowAll": "Показати всі результати →",
     "favorites": "Обране",
     "cart": "Кошик",
     "profile": "Профіль",
@@ -42,6 +43,22 @@
     "validation": {
       "empty": "Пошуковий запит не може бути порожнім",
       "tooLong": "Пошуковий запит занадто довгий"
+    }
+  },
+  "SearchPage": {
+    "title": "Пошук",
+    "metaTitle": "Пошук | X-Weevo",
+    "metaDescription": "Пошук товарів у нашому магазині одягу",
+    "resultsFor": "Результати за запитом",
+    "found": "{count} товарів",
+    "enterQuery": "Введіть запит для пошуку товарів",
+    "emptyQuery": {
+      "title": "Що ви шукаєте?",
+      "description": "Скористайтеся пошуком вище, щоб знайти потрібні товари"
+    },
+    "noResults": {
+      "title": "Нічого не знайдено",
+      "description": "За запитом \"{query}\" товарів не знайдено"
     }
   },
   "Features": {

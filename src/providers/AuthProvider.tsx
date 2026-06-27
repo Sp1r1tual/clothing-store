@@ -81,7 +81,7 @@ export const AuthProvider = ({ children, initialUser }: AuthProviderProps) => {
           void hydrateUserData();
         } else {
           logout();
-          // clear stores on logout
+
           useCartStore.setState({ items: [] });
           useFavoritesStore.setState({ ids: [] });
         }

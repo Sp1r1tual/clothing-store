@@ -10,6 +10,12 @@ const intlMiddleware = createMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Skip middleware for API routes
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   const { locale, path } = parseLocalizedPathname(pathname);
 
   if (!isAuthRequiredPath(path)) {
@@ -32,5 +38,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/(uk|en)/:path*", "/((?!_next|_vercel|.*\\..*).*)"],
+  matcher: ["/", "/(uk|en)/:path*", "/((?!_next|_vercel|api|.*\\..*).*)"],
 };

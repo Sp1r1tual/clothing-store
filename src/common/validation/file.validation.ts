@@ -30,7 +30,6 @@ export async function validateImageFile(file: File, messages?: FileValidationMes
     throw new Error(messages?.imageTypeInvalid || "File extension does not match its type");
   }
 
-  // Magic bytes check
   const arrayBuffer = await file.slice(0, 4).arrayBuffer();
   const bytes = new Uint8Array(arrayBuffer);
   const header = Array.from(bytes)

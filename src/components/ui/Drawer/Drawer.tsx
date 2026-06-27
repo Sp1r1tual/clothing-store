@@ -85,9 +85,9 @@ export const Drawer = ({
             </div>
 
             <nav className={styles.drawerContent}>
+              {children}
               {links.map(renderLink)}
               {customButtons}
-              {children}
             </nav>
 
             {footerLinks && footerLinks.length > 0 && (

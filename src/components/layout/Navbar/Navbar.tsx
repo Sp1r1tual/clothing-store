@@ -136,7 +136,11 @@ export const Navbar = () => {
               isDanger: true,
             },
           ]}
-        />
+        >
+          <div className={styles.drawerSearchWrapper}>
+            <SearchInput />
+          </div>
+        </Drawer>
       </nav>
     </>
   );

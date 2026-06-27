@@ -10,7 +10,7 @@
   z-index: 1002;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: visible;
   font-family: var(--font-geist-sans), Arial, sans-serif;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -90,6 +90,8 @@
   flex-direction: column;
   padding: 16px;
   gap: 4px;
+  overflow-y: auto;
+  overflow-x: visible;
 }
 
 .drawerFooter {

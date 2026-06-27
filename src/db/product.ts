@@ -452,6 +452,44 @@ export async function findAvailableSizes(categoryIds?: string[]) {
   return variants.map((v) => v.size);
 }
 
+export async function searchProducts(
+  query: string,
+  { page = 1, limit = 12 }: { page?: number; limit?: number } = {},
+) {
+  const where: Prisma.ProductWhereInput = {
+    deletedAt: null,
+    status: "PUBLISHED",
+    OR: [
+      { nameUk: { contains: query, mode: "insensitive" } },
+      { nameEn: { contains: query, mode: "insensitive" } },
+    ],
+  };
+
+  const skip = (page - 1) * limit;
+
+  const [products, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      select: productCardSelect,
+      orderBy: { publishedAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return {
+    products: products.map((p) => ({
+      ...p,
+      price: Number(p.price),
+      discountPrice: p.discountPrice ? Number(p.discountPrice) : null,
+    })),
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+    currentPage: page,
+  };
+}
+
 export async function findPriceRange(categoryIds?: string[], onlyOnSale = false) {
   const where: Prisma.ProductWhereInput = {
     deletedAt: null,

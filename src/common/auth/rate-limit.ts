@@ -33,6 +33,6 @@ export function rateLimit(options?: RateLimitOptions) {
 }
 
 export const actionRateLimit = rateLimit({
-  interval: 60 * 1000, // 60 seconds
+  interval: 60 * 1000,
   uniqueTokenPerInterval: 500,
 });

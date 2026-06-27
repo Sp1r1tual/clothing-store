@@ -151,7 +151,6 @@
   border-color: var(--text-primary);
 }
 
-/* Drawer styles */
 .drawerInner {
   display: flex;
   flex-direction: column;
