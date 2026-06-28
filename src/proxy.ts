@@ -1,17 +1,17 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { auth } from "@/auth";
+
 import { routing } from "./i18n/navigation";
 
 import { isAuthRequiredPath, parseLocalizedPathname } from "@/common/auth/routes";
-import { createSupabaseMiddlewareClient } from "@/common/utils/supabase/middleware";
 
 const intlMiddleware = createMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for API routes
   if (pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
@@ -23,12 +23,9 @@ export async function proxy(request: NextRequest) {
   }
 
   const response = intlMiddleware(request);
-  const supabase = createSupabaseMiddlewareClient(request, response);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session?.user) {
     if (request.headers.has("next-action")) {
       return response;
     }

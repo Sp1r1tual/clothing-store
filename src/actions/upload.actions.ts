@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 
 import { assertAdmin } from "@/common/auth/server";
 import { limiter } from "@/common/utils/rate-limit";
-import { getSupabaseServer } from "@/common/utils/supabase/server";
+import { getSupabaseStorageClient } from "@/common/utils/supabase/client";
 import { validateImageFile } from "@/common/validation/file.validation";
 
 export async function uploadProductImage(formData: FormData) {
@@ -29,7 +29,7 @@ export async function uploadProductImage(formData: FormData) {
     imageTypeInvalid: t("imageTypeInvalid"),
   });
 
-  const supabase = await getSupabaseServer();
+  const supabase = getSupabaseStorageClient();
   const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
 

@@ -16,11 +16,3 @@ export function parseLocalizedPathname(pathname: string) {
 export function isAuthRequiredPath(path: string): boolean {
   return AUTH_REQUIRED_ROUTES.some((route) => path === route || path.startsWith(`${route}/`));
 }
-
-export function sanitizeNextPath(next: string | null, fallback = "/profile"): string {
-  if (!next || !next.startsWith("/") || next.startsWith("//") || next.includes("\\")) {
-    return fallback;
-  }
-
-  return next;
-}

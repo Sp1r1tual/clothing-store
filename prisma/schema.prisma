@@ -34,19 +34,20 @@ enum ItemStatus {
   ARCHIVED
 }
 
-// Profile.id is intentionally not @default(uuid()) – it mirrors the Supabase Auth user ID
-model Profile {
-  id                   String                @id
+model User {
+  id                   String                @id @default(cuid())
   name                 String?               @db.VarChar(32)
-  email                String?               @db.VarChar(255)
-  avatarUrl            String?               @map("avatar_url")
+  email                String?               @unique @db.VarChar(255)
+  emailVerified        DateTime?             @map("email_verified")
+  image                String?
   phone                String?               @db.VarChar(20)
   role                 UserRole              @default(CUSTOMER)
-  // NOTE: kept for quick UI checks; source of truth is NewsletterSubscriber table
   isSubscribed         Boolean               @default(false)
-  deletedAt            DateTime?             @map("deleted_at") // soft delete
+  deletedAt            DateTime?             @map("deleted_at")
   createdAt            DateTime              @default(now()) @map("created_at")
   updatedAt            DateTime              @updatedAt @map("updated_at")
+  accounts             Account[]
+  sessions             Session[]
   cart                 Cart?
   favorites            Favorite[]
   reviews              Review[]
@@ -57,7 +58,46 @@ model Profile {
   @@index([createdAt])
   @@index([role])
   @@index([deletedAt])
-  @@map("profiles")
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 model Category {
@@ -94,8 +134,8 @@ model Product {
   careInstructionsEn String?          @db.Text
   measurementsUk     String?          @db.Text
   measurementsEn     String?          @db.Text
-  price              Decimal          @db.Decimal(10, 2)
-  discountPrice      Decimal?         @db.Decimal(10, 2)
+  price              Float
+  discountPrice      Float?
   status             ItemStatus       @default(DRAFT)
   seoTitleUk         String?
   seoTitleEn         String?
@@ -110,13 +150,12 @@ model Product {
   reviews            Review[]
   orderItems         OrderItem[]
   tags               Tag[]
-  // Two separate named relations for related vs cross-sell products
   relatedProducts    Product[]        @relation("RelatedProducts")
   relatedTo          Product[]        @relation("RelatedProducts")
   crossSells         Product[]        @relation("CrossSells")
   crossSellOf        Product[]        @relation("CrossSells")
   isFeatured         Boolean          @default(false)
-  deletedAt          DateTime? // soft delete
+  deletedAt          DateTime?
   publishedAt        DateTime?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -164,22 +203,22 @@ model ProductImage {
 
 model Favorite {
   id        String   @id @default(uuid())
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  @@unique([profileId, productId])
-  @@index([profileId])
+  @@unique([userId, productId])
+  @@index([userId])
   @@index([productId])
   @@map("favorites")
 }
 
 model Cart {
   id        String     @id @default(uuid())
-  profileId String     @unique
-  profile   Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -199,11 +238,6 @@ model CartItem {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 
-  // NOTE: PostgreSQL treats NULL != NULL, so two rows with variantId=NULL won't conflict here.
-  // Apply this raw migration for correct behaviour:
-  //   CREATE UNIQUE INDEX cart_items_no_variant_unique
-  //     ON cart_items (cart_id, product_id)
-  //     WHERE variant_id IS NULL;
   @@unique([cartId, productId, variantId])
   @@index([cartId])
   @@index([productId])
@@ -212,29 +246,27 @@ model CartItem {
 
 model Review {
   id        String   @id @default(uuid())
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  // Enforce 1–5 via raw migration:
-  // ALTER TABLE reviews ADD CONSTRAINT rating_range CHECK (rating >= 1 AND rating <= 5);
   rating    Int
   comment   String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([profileId, productId])
+  @@unique([userId, productId])
   @@index([productId])
-  @@index([profileId])
+  @@index([userId])
   @@map("reviews")
 }
 
 model Order {
   id              String          @id @default(uuid())
-  profileId       String
-  profile         Profile         @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   status          OrderStatus     @default(PENDING)
-  totalAmount     Decimal         @db.Decimal(10, 2)
+  totalAmount     Float
   contactName     String
   contactEmail    String
   contactPhone    String
@@ -244,13 +276,13 @@ model Order {
   note            String?         @db.Text
   promoCodeId     String?
   promoCode       PromoCode?      @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
-  discountAmount  Decimal?        @db.Decimal(10, 2)
-  paidAt          DateTime? // set when payment is confirmed
+  discountAmount  Float?
+  paidAt          DateTime?
   items           OrderItem[]
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
-  @@index([profileId])
+  @@index([userId])
   @@index([status])
   @@index([createdAt])
   @@index([paidAt])
@@ -269,7 +301,7 @@ model OrderItem {
   productNameEn String
   productSize   String?
   productColor  String?
-  price         Decimal         @db.Decimal(10, 2)
+  price         Float
   quantity      Int             @default(1)
 
   @@index([orderId])
@@ -278,20 +310,20 @@ model OrderItem {
 }
 
 model Address {
-  id         String           @id @default(uuid())
-  profileId  String
-  profile    Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id         String          @id @default(uuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   title      String?
-  carrier    ShippingCarrier  // determines whether warehouse or street address is used
+  carrier    ShippingCarrier
   city       String
   street     String?
   postalCode String?
-  warehouse  String           // branch number for Nova Poshta / Ukrposhta etc.
-  isDefault  Boolean          @default(false)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  warehouse  String
+  isDefault  Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 
-  @@index([profileId])
+  @@index([userId])
   @@map("addresses")
 }
 
@@ -308,9 +340,9 @@ model PromoCode {
   id                 String    @id @default(uuid())
   code               String    @unique
   discountPercentage Int?
-  discountAmount     Decimal?  @db.Decimal(10, 2)
-  minOrderAmount     Decimal?  @db.Decimal(10, 2)
-  usageLimit         Int? // total uses across all users
+  discountAmount     Float?
+  minOrderAmount     Float?
+  usageLimit         Int?
   usageLimitPerUser  Int       @default(1)
   usedCount          Int       @default(0)
   isActive           Boolean   @default(true)
@@ -327,8 +359,8 @@ model PromoCode {
 model NewsletterSubscriber {
   id        String   @id @default(uuid())
   email     String   @unique
-  profileId String?  @unique
-  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 

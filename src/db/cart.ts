@@ -4,17 +4,17 @@ import { CartItemWithProduct } from "@/types/cart.types";
 
 export * from "@/types/cart.types";
 
-async function getOrCreateCart(profileId: string) {
+async function getOrCreateCart(userId: string) {
   return prisma.cart.upsert({
-    where: { profileId },
+    where: { userId },
     update: {},
-    create: { profileId },
+    create: { userId },
   });
 }
 
-export async function getCart(profileId: string): Promise<CartItemWithProduct[]> {
+export async function getCart(userId: string): Promise<CartItemWithProduct[]> {
   const cart = await prisma.cart.findUnique({
-    where: { profileId },
+    where: { userId },
     select: {
       items: {
         select: {
@@ -53,23 +53,16 @@ export async function getCart(profileId: string): Promise<CartItemWithProduct[]>
 
   if (!cart) return [];
 
-  return cart.items.map((item) => ({
-    ...item,
-    product: {
-      ...item.product,
-      price: Number(item.product.price),
-      discountPrice: item.product.discountPrice ? Number(item.product.discountPrice) : null,
-    },
-  }));
+  return cart.items;
 }
 
 export async function addToCart(
-  profileId: string,
+  userId: string,
   productId: string,
   variantId?: string | null,
   quantity = 1,
 ) {
-  const cart = await getOrCreateCart(profileId);
+  const cart = await getOrCreateCart(userId);
 
   const existing = await prisma.cartItem.findFirst({
     where: { cartId: cart.id, productId, variantId: variantId ?? null },
@@ -92,17 +85,13 @@ export async function addToCart(
   });
 }
 
-export async function updateCartItemQuantity(
-  profileId: string,
-  cartItemId: string,
-  quantity: number,
-) {
+export async function updateCartItemQuantity(userId: string, cartItemId: string, quantity: number) {
   const item = await prisma.cartItem.findUnique({
     where: { id: cartItemId },
     include: { cart: true },
   });
 
-  if (!item || item.cart.profileId !== profileId) {
+  if (!item || item.cart.userId !== userId) {
     throw new Error("Unauthorized to update this cart item");
   }
 
@@ -115,21 +104,21 @@ export async function updateCartItemQuantity(
   });
 }
 
-export async function removeCartItem(profileId: string, cartItemId: string) {
+export async function removeCartItem(userId: string, cartItemId: string) {
   const item = await prisma.cartItem.findUnique({
     where: { id: cartItemId },
     include: { cart: true },
   });
 
-  if (!item || item.cart.profileId !== profileId) {
+  if (!item || item.cart.userId !== userId) {
     throw new Error("Unauthorized to remove this cart item");
   }
 
   return prisma.cartItem.delete({ where: { id: cartItemId } });
 }
 
-export async function clearCart(profileId: string) {
+export async function clearCart(userId: string) {
   return prisma.cartItem.deleteMany({
-    where: { cart: { profileId } },
+    where: { cart: { userId } },
   });
 }

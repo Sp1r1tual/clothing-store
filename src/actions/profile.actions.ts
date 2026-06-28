@@ -4,12 +4,14 @@ import { deleteDefaultAddress, upsertDefaultAddress } from "@/db/address";
 import { updateProfile } from "@/db/profile";
 import { type ShippingCarrier } from "@prisma/client";
 
+import { actionRateLimit } from "@/common/auth/rate-limit";
 import { assertAuth } from "@/common/auth/server";
 import { type ProfileFormData } from "@/common/validation/profile/schemas/profile.schema";
 import { getProfileSchema } from "@/common/validation/profile/schemas/profile.schema.server";
 
 export async function updateProfileAction(data: ProfileFormData, locale: string) {
   const user = await assertAuth();
+  await actionRateLimit.check(20, `updateProfile:${user.id}`);
   const schema = await getProfileSchema(locale);
   const result = schema.safeParse(data);
 

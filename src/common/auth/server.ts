@@ -1,16 +1,15 @@
 import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import { prisma } from "@/libs/prisma";
 import type { IUser } from "@/types";
 
 import { AuthError } from "@/common/auth/errors";
-import { mapSupabaseUserToIUser } from "@/common/auth/map-user";
-import { getSupabaseServer } from "@/common/utils/supabase/server";
 
-const profileSelect = {
+const userSelect = {
   name: true,
   email: true,
-  avatarUrl: true,
+  image: true,
   phone: true,
   role: true,
   addresses: {
@@ -23,10 +22,10 @@ const profileSelect = {
   },
 } as const;
 
-type ProfileRecord = {
+type UserRecord = {
   name: string | null;
   email: string | null;
-  avatarUrl: string | null;
+  image: string | null;
   phone: string | null;
   role: "CUSTOMER" | "ADMIN";
   addresses: Array<{
@@ -36,86 +35,100 @@ type ProfileRecord = {
   }>;
 };
 
-async function fetchProfile(userId: string): Promise<ProfileRecord | null> {
-  return prisma.profile.findUnique({
+async function fetchUser(userId: string): Promise<UserRecord | null> {
+  return prisma.user.findUnique({
     where: { id: userId },
-    select: profileSelect,
+    select: userSelect,
   });
 }
 
 async function resolveSession() {
-  const supabase = await getSupabaseServer();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const session = await auth();
 
-  if (error || !user) {
+  if (!session?.user?.id) {
     return null;
   }
 
-  const profile = await fetchProfile(user.id);
-  return { user, profile };
+  const user = await fetchUser(session.user.id);
+  return user ? { sessionUser: session.user, user } : null;
 }
 
-async function getAuthUser() {
-  const session = await resolveSession();
-  return session?.user ?? null;
+async function getAuthUserId(): Promise<string | null> {
+  const session = await auth();
+  return session?.user?.id ?? null;
 }
 
 export async function getCurrentUser(): Promise<IUser | null> {
-  const session = await resolveSession();
-  if (!session) {
-    return null;
-  }
+  const resolved = await resolveSession();
+  if (!resolved) return null;
 
-  return mapSupabaseUserToIUser(session.user, session.profile);
+  return mapToIUser(resolved.sessionUser, resolved.user);
 }
 
 export async function requireAuth(locale: string) {
-  const user = await getAuthUser();
-  if (!user) {
+  const userId = await getAuthUserId();
+  if (!userId) {
     redirect(`/${locale}`);
   }
-
-  return user;
+  return { id: userId };
 }
 
 export async function requireAdmin(locale: string): Promise<IUser> {
-  const session = await resolveSession();
-  if (!session) {
+  const resolved = await resolveSession();
+  if (!resolved) {
     redirect(`/${locale}`);
   }
 
-  const { user, profile } = session;
+  const { sessionUser, user } = resolved;
 
-  if (!profile || profile.role !== "ADMIN") {
+  if (user.role !== "ADMIN") {
     redirect(`/${locale}`);
   }
 
-  return mapSupabaseUserToIUser(user, profile);
+  return mapToIUser(sessionUser, user);
 }
 
 export async function assertAuth() {
-  const user = await getAuthUser();
-  if (!user) {
+  const userId = await getAuthUserId();
+  if (!userId) {
     throw new AuthError("Unauthorized", "UNAUTHORIZED");
   }
-
-  return user;
+  return { id: userId };
 }
 
 export async function assertAdmin(): Promise<IUser> {
-  const session = await resolveSession();
-  if (!session) {
+  const resolved = await resolveSession();
+  if (!resolved) {
     throw new AuthError("Unauthorized", "UNAUTHORIZED");
   }
 
-  const { user, profile } = session;
+  const { sessionUser, user } = resolved;
 
-  if (!profile || profile.role !== "ADMIN") {
+  if (user.role !== "ADMIN") {
     throw new AuthError("Forbidden", "FORBIDDEN");
   }
 
-  return mapSupabaseUserToIUser(user, profile);
+  return mapToIUser(sessionUser, user);
+}
+
+function mapToIUser(
+  sessionUser: { id?: string; name?: string | null; email?: string | null; image?: string | null },
+  user: UserRecord,
+): IUser {
+  const defaultAddr = user.addresses?.[0] || null;
+  return {
+    id: sessionUser.id ?? "",
+    name: user.name || sessionUser.name || sessionUser.email?.split("@")[0] || "User",
+    email: user.email || sessionUser.email || "",
+    avatar: user.image || sessionUser.image || undefined,
+    phone: user.phone || undefined,
+    role: user.role ?? "CUSTOMER",
+    address: defaultAddr
+      ? {
+          carrier: defaultAddr.carrier,
+          city: defaultAddr.city,
+          warehouse: defaultAddr.warehouse,
+        }
+      : null,
+  };
 }

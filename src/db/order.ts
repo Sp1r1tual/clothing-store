@@ -50,8 +50,8 @@ const baseOrderSelect = {
 
 const adminOrderSelect = {
   ...baseOrderSelect,
-  profileId: true,
-  profile: {
+  userId: true,
+  user: {
     select: {
       name: true,
       email: true,
@@ -60,71 +60,32 @@ const adminOrderSelect = {
   },
 } as const;
 
-function mapOrder(order: {
-  id: string;
-  status: string;
-  totalAmount: unknown;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  carrier: string;
-  shippingAddress: string;
-  trackingNumber: string | null;
-  note: string | null;
-  discountAmount: unknown;
-  createdAt: Date;
-  updatedAt: Date;
-  items: Array<{
-    id: string;
-    productId: string | null;
-    variantId: string | null;
-    productNameUk: string;
-    productNameEn: string;
-    productSize: string | null;
-    productColor: string | null;
-    price: unknown;
-    quantity: number;
-    product: { slug: string; images: { url: string; altText: string | null }[] } | null;
-  }>;
-}): OrderData {
-  return {
-    ...order,
-    totalAmount: Number(order.totalAmount),
-    discountAmount: order.discountAmount ? Number(order.discountAmount) : null,
-    items: order.items.map((item) => ({
-      ...item,
-      price: Number(item.price),
-    })),
-  };
-}
-
-export async function getOrdersByProfileId(profileId: string): Promise<OrderData[]> {
+export async function getOrdersByUserId(userId: string): Promise<OrderData[]> {
   const orders = await prisma.order.findMany({
-    where: { profileId },
+    where: { userId },
     select: baseOrderSelect,
     orderBy: { createdAt: "desc" },
   });
 
-  return orders.map(mapOrder);
+  return orders;
 }
 
-export async function getOrderById(orderId: string, profileId: string): Promise<OrderData | null> {
+export async function getOrderById(orderId: string, userId: string): Promise<OrderData | null> {
   const order = await prisma.order.findFirst({
-    where: { id: orderId, profileId },
+    where: { id: orderId, userId },
     select: baseOrderSelect,
   });
-
   if (!order) return null;
-  return mapOrder(order);
+  return order;
 }
 
 export async function updateOrderContact(
   orderId: string,
-  profileId: string,
+  userId: string,
   data: UpdateOrderContactData,
 ): Promise<OrderData> {
   const order = await prisma.order.findFirst({
-    where: { id: orderId, profileId },
+    where: { id: orderId, userId },
     select: { status: true },
   });
 
@@ -144,12 +105,12 @@ export async function updateOrderContact(
     select: baseOrderSelect,
   });
 
-  return mapOrder(updated);
+  return updated;
 }
 
-export async function cancelOrder(orderId: string, profileId: string): Promise<OrderData> {
+export async function cancelOrder(orderId: string, userId: string): Promise<OrderData> {
   const order = await prisma.order.findFirst({
-    where: { id: orderId, profileId },
+    where: { id: orderId, userId },
     select: { status: true, items: { select: { variantId: true, quantity: true } } },
   });
 
@@ -177,7 +138,7 @@ export async function cancelOrder(orderId: string, profileId: string): Promise<O
     return cancelled;
   });
 
-  return mapOrder(updated);
+  return updated;
 }
 
 export async function getAllOrdersAdmin(): Promise<AdminOrderData[]> {
@@ -187,9 +148,9 @@ export async function getAllOrdersAdmin(): Promise<AdminOrderData[]> {
   });
 
   return orders.map((o) => ({
-    ...mapOrder(o),
-    profileId: o.profileId,
-    profile: o.profile,
+    ...o,
+    userId: o.userId,
+    user: o.user,
   }));
 }
 
@@ -202,9 +163,9 @@ export async function getOrderByIdAdmin(orderId: string): Promise<AdminOrderData
   if (!order) return null;
 
   return {
-    ...mapOrder(order),
-    profileId: order.profileId,
-    profile: order.profile,
+    ...order,
+    userId: order.userId,
+    user: order.user,
   };
 }
 export async function updateOrderStatusAdmin(
@@ -254,9 +215,9 @@ export async function updateOrderStatusAdmin(
   });
 
   return {
-    ...mapOrder(updated),
-    profileId: updated.profileId,
-    profile: updated.profile,
+    ...updated,
+    userId: updated.userId,
+    user: updated.user,
   };
 }
 
@@ -285,7 +246,7 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
     }
 
     const actualPrice =
-      dbProduct.discountPrice !== null ? Number(dbProduct.discountPrice) : Number(dbProduct.price);
+      dbProduct.discountPrice !== null ? dbProduct.discountPrice : dbProduct.price;
     calculatedTotalAmount += actualPrice * item.quantity;
 
     return {
@@ -322,7 +283,7 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
 
     const created = await tx.order.create({
       data: {
-        profileId: input.profileId,
+        userId: input.userId,
         contactName: input.contactName,
         contactEmail: input.contactEmail,
         contactPhone: input.contactPhone,
@@ -339,5 +300,5 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderData> {
     return created;
   });
 
-  return mapOrder(order);
+  return order;
 }

@@ -5,7 +5,7 @@ import {
   cancelOrder,
   createOrder,
   getOrderById,
-  getOrdersByProfileId,
+  getOrdersByUserId,
   updateOrderContact,
 } from "@/db/order";
 import { prisma } from "@/libs/prisma";
@@ -19,7 +19,7 @@ import { updateOrderContactSchema } from "@/common/validation/order/order.schema
 
 export async function getOrdersAction() {
   const user = await assertAuth();
-  return getOrdersByProfileId(user.id);
+  return getOrdersByUserId(user.id);
 }
 
 export async function getOrderAction(orderId: string) {
@@ -82,7 +82,7 @@ export async function createOrderAction(): Promise<string> {
 
   const [cartItems, profile] = await Promise.all([
     getCart(user.id),
-    prisma.profile.findUnique({
+    prisma.user.findUnique({
       where: { id: user.id },
       select: {
         name: true,
@@ -113,10 +113,10 @@ export async function createOrderAction(): Promise<string> {
   const shippingAddress = `${address.city}, ${address.warehouse}`;
 
   const order = await createOrder({
-    profileId: user.id,
-    contactName: profile.name ?? user.email ?? "Customer",
-    contactEmail: user.email ?? profile.email ?? "",
-    contactPhone: profile.phone,
+    userId: user.id,
+    contactName: profile?.name ?? profile?.email ?? "Customer",
+    contactEmail: profile?.email ?? "",
+    contactPhone: profile?.phone ?? "",
     carrier: address.carrier as ShippingCarrier,
     shippingAddress,
     items: cartItems.map((item) => ({

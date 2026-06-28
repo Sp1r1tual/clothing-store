@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -8,7 +9,7 @@ import { toast } from "react-toastify";
 
 import { getAddressAction } from "@/actions/address.actions";
 import { updateProfileAction } from "@/actions/profile.actions";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -23,7 +24,6 @@ import { PhoneSection } from "../PhoneSection/PhoneSection";
 import { useAuthStore } from "@/store/useAuthStore";
 
 import { CARRIER_LOGOS } from "@/common/constants/images/carrier-logos";
-import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 import {
   CARRIERS,
   type CarrierType,
@@ -35,7 +35,6 @@ import styles from "./ProfileHeader.module.css";
 
 export const ProfileHeader = () => {
   const t = useTranslations("Profile");
-  const router = useRouter();
   const locale = useLocale();
   const user = useAuthStore((s) => s.user);
   const updateUser = useAuthStore((s) => s.updateUser);
@@ -154,21 +153,9 @@ export const ProfileHeader = () => {
 
   const handleLogout = async () => {
     try {
-      const supabase = getSupabaseBrowser();
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        throw error;
-      }
+      await signOut({ redirect: true, redirectTo: "/" });
     } catch (error) {
-      console.error("SignOut error, attempting local sign out:", error);
-      try {
-        const supabase = getSupabaseBrowser();
-        await supabase.auth.signOut({ scope: "local" });
-      } catch (localError) {
-        console.error("Local sign out failed:", localError);
-      }
-    } finally {
-      router.push("/");
+      console.error("SignOut error:", error);
     }
   };
 

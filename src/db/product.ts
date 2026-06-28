@@ -69,11 +69,7 @@ export async function findProducts() {
     orderBy: { createdAt: "desc" },
   });
 
-  return products.map((product) => ({
-    ...product,
-    price: Number(product.price),
-    discountPrice: product.discountPrice ? Number(product.discountPrice) : null,
-  }));
+  return products;
 }
 
 export async function findCategories() {
@@ -86,10 +82,7 @@ export async function findCategories() {
 export async function insertProduct(data: ProductFormData) {
   const { images, variants, discountPrice, ...productData } = data;
 
-  const discount =
-    discountPrice !== null && discountPrice !== undefined && !isNaN(Number(discountPrice))
-      ? Number(discountPrice)
-      : null;
+  const discount = discountPrice !== null && discountPrice !== undefined ? discountPrice : null;
 
   return prisma.product.create({
     data: {
@@ -143,20 +136,13 @@ export async function findProductById(id: string) {
 
   if (!product) return null;
 
-  return {
-    ...product,
-    price: Number(product.price),
-    discountPrice: product.discountPrice ? Number(product.discountPrice) : null,
-  };
+  return product;
 }
 
 export async function updateProductInDb(id: string, data: ProductFormData) {
   const { images, variants, discountPrice, ...productData } = data;
 
-  const discount =
-    discountPrice !== null && discountPrice !== undefined && !isNaN(Number(discountPrice))
-      ? Number(discountPrice)
-      : null;
+  const discount = discountPrice !== null && discountPrice !== undefined ? discountPrice : null;
 
   const currentProduct = await prisma.product.findUnique({
     where: { id },
@@ -381,16 +367,7 @@ async function _findProductBySlug(slug: string) {
 
   if (!product) return null;
 
-  return {
-    ...product,
-    price: Number(product.price),
-    discountPrice: product.discountPrice ? Number(product.discountPrice) : null,
-    relatedProducts: product.relatedProducts.map((p) => ({
-      ...p,
-      price: Number(p.price),
-      discountPrice: p.discountPrice ? Number(p.discountPrice) : null,
-    })),
-  };
+  return product;
 }
 
 export async function findSaleProducts(filters: Omit<ProductFilters, "categoryIds"> = {}) {
@@ -437,11 +414,7 @@ export async function findSaleProducts(filters: Omit<ProductFilters, "categoryId
   ]);
 
   return {
-    products: products.map((p) => ({
-      ...p,
-      price: Number(p.price),
-      discountPrice: p.discountPrice ? Number(p.discountPrice) : null,
-    })),
+    products: products,
     totalCount,
     totalPages: Math.ceil(totalCount / limit),
     currentPage: page,
@@ -496,11 +469,7 @@ export async function searchProducts(
   ]);
 
   return {
-    products: products.map((p) => ({
-      ...p,
-      price: Number(p.price),
-      discountPrice: p.discountPrice ? Number(p.discountPrice) : null,
-    })),
+    products: products,
     totalCount,
     totalPages: Math.ceil(totalCount / limit),
     currentPage: page,
@@ -533,11 +502,11 @@ export async function findPriceRange(categoryIds?: string[], onlyOnSale = false)
   });
 
   const minPrice = Math.min(
-    Number(result._min.price || 0),
-    Number(result._min.discountPrice || result._min.price || 0),
+    result._min.price || 0,
+    result._min.discountPrice || result._min.price || 0,
   );
 
-  const maxPrice = Number(result._max.price || 0);
+  const maxPrice = result._max.price || 0;
 
   return {
     min: Math.floor(minPrice),

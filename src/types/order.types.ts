@@ -1,7 +1,7 @@
 import type { ShippingCarrier } from "@prisma/client";
 
 export type CreateOrderInput = {
-  profileId: string;
+  userId: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -59,8 +59,8 @@ export type UpdateOrderContactData = {
 };
 
 export type AdminOrderData = OrderData & {
-  profileId: string;
-  profile: {
+  userId: string;
+  user: {
     name: string | null;
     email: string | null;
     phone: string | null;

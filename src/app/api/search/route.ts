@@ -2,13 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { searchProducts } from "@/db/product";
 
+import { limiter } from "@/common/utils/rate-limit";
+
 export async function GET(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  try {
+    await limiter.check(60, `search:${ip}`);
+  } catch {
+    return NextResponse.json({ products: [] }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim() ?? "";
   const locale = searchParams.get("locale") ?? "uk";
 
   if (!q || q.length < 2) {
     return NextResponse.json({ products: [] });
+  }
+
+  if (q.length > 100) {
+    return NextResponse.json({ products: [] }, { status: 400 });
   }
 
   try {

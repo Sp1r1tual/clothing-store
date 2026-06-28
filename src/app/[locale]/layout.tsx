@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -101,20 +102,22 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           speed={200}
           shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
         />
-        <NextIntlClientProvider messages={messages}>
-          <SkeletonProvider>
-            <AuthProvider
-              initialUser={initialUser}
-              initialCart={initialCart}
-              initialFavorites={initialFavorites}
-            >
-              {children}
-              <Modal />
-              <GlobalAuthModal />
-            </AuthProvider>
-            <ToastContainer position="top-center" autoClose={3000} />
-          </SkeletonProvider>
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages}>
+            <SkeletonProvider>
+              <AuthProvider
+                initialUser={initialUser}
+                initialCart={initialCart}
+                initialFavorites={initialFavorites}
+              >
+                {children}
+                <Modal />
+                <GlobalAuthModal />
+              </AuthProvider>
+              <ToastContainer position="top-center" autoClose={3000} />
+            </SkeletonProvider>
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

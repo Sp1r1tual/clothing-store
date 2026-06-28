@@ -1,3 +1,4 @@
+import { signIn } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -7,8 +8,6 @@ import { Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
 import { Modal } from "@/components/ui/Modal/Modal";
-
-import { getSupabaseBrowser } from "@/common/utils/supabase/client";
 
 import styles from "./GoogleAuthModal.module.css";
 
@@ -39,17 +38,9 @@ export const GoogleAuthModal = ({ isOpen, onClose, redirectPath }: GoogleAuthMod
       sessionStorage.setItem("pendingLogin", "1");
 
       const next = resolveRedirectPath(redirectPath);
-      const callbackUrl = new URL(`${window.location.origin}/${locale}/auth/callback`);
-      callbackUrl.searchParams.set("next", next);
+      const callbackUrl = `/${locale}${next}`;
 
-      const { error } = await getSupabaseBrowser().auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: callbackUrl.toString(),
-        },
-      });
-
-      if (error) throw error;
+      await signIn("google", { callbackUrl });
     } catch (error) {
       sessionStorage.removeItem("pendingLogin");
       const message = error instanceof Error ? error.message : "Failed to sign in with Google";

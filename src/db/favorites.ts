@@ -4,9 +4,9 @@ import { FavoriteProduct } from "@/types/favorites.types";
 
 export * from "@/types/favorites.types";
 
-export async function getFavorites(profileId: string): Promise<FavoriteProduct[]> {
+export async function getFavorites(userId: string): Promise<FavoriteProduct[]> {
   const favorites = await prisma.favorite.findMany({
-    where: { profileId },
+    where: { userId },
     select: {
       id: true,
       product: {
@@ -38,39 +38,35 @@ export async function getFavorites(profileId: string): Promise<FavoriteProduct[]
   return favorites.map((fav) => ({
     id: fav.product.id,
     favoriteId: fav.id,
-    product: {
-      ...fav.product,
-      price: Number(fav.product.price),
-      discountPrice: fav.product.discountPrice ? Number(fav.product.discountPrice) : null,
-    },
+    product: fav.product,
   }));
 }
 
-export async function getFavoriteIds(profileId: string): Promise<string[]> {
+export async function getFavoriteIds(userId: string): Promise<string[]> {
   const favorites = await prisma.favorite.findMany({
-    where: { profileId },
+    where: { userId },
     select: { productId: true },
   });
   return favorites.map((f) => f.productId);
 }
 
-export async function addFavorite(profileId: string, productId: string) {
+export async function addFavorite(userId: string, productId: string) {
   return prisma.favorite.upsert({
-    where: { profileId_productId: { profileId, productId } },
-    create: { profileId, productId },
+    where: { userId_productId: { userId, productId } },
+    create: { userId, productId },
     update: {},
   });
 }
 
-export async function removeFavorite(profileId: string, productId: string) {
+export async function removeFavorite(userId: string, productId: string) {
   return prisma.favorite.deleteMany({
-    where: { profileId, productId },
+    where: { userId, productId },
   });
 }
 
-export async function isFavorited(profileId: string, productId: string): Promise<boolean> {
+export async function isFavorited(userId: string, productId: string): Promise<boolean> {
   const fav = await prisma.favorite.findUnique({
-    where: { profileId_productId: { profileId, productId } },
+    where: { userId_productId: { userId, productId } },
   });
   return fav !== null;
 }

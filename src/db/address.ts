@@ -4,9 +4,9 @@ import { AddressData } from "@/types/address.types";
 
 export * from "@/types/address.types";
 
-export async function getDefaultAddress(profileId: string): Promise<AddressData | null> {
+export async function getDefaultAddress(userId: string): Promise<AddressData | null> {
   const addr = await prisma.address.findFirst({
-    where: { profileId, isDefault: true },
+    where: { userId, isDefault: true },
     select: {
       carrier: true,
       city: true,
@@ -18,11 +18,11 @@ export async function getDefaultAddress(profileId: string): Promise<AddressData 
 }
 
 export async function upsertDefaultAddress(
-  profileId: string,
+  userId: string,
   data: AddressData,
 ): Promise<AddressData> {
   const existing = await prisma.address.findFirst({
-    where: { profileId, isDefault: true },
+    where: { userId, isDefault: true },
   });
 
   if (existing) {
@@ -34,13 +34,13 @@ export async function upsertDefaultAddress(
   }
 
   return prisma.address.create({
-    data: { ...data, profileId, isDefault: true },
+    data: { ...data, userId, isDefault: true },
     select: { carrier: true, city: true, street: true, warehouse: true },
   }) as Promise<AddressData>;
 }
 
-export async function deleteDefaultAddress(profileId: string): Promise<void> {
+export async function deleteDefaultAddress(userId: string): Promise<void> {
   await prisma.address.deleteMany({
-    where: { profileId, isDefault: true },
+    where: { userId, isDefault: true },
   });
 }
