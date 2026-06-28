@@ -68,7 +68,14 @@
     "email": "Email",
     "workTime": "Mon-Sun: 09:00 - 20:00",
     "copyright": "All rights reserved.",
-    "devLink": "Order website development"
+    "devLink": "Order website development",
+    "developerModal": {
+      "role": "Full-Stack Developer",
+      "description": "Open to new projects and opportunities. Contact me in any convenient way.",
+      "telegram": "Telegram",
+      "email": "Email",
+      "linkedin": "LinkedIn"
+    }
   },
   "Search": {
     "validation": {
@@ -132,7 +139,7 @@
   },
   "AboutBrand": {
     "title": "Who We Are & Our Values",
-    "subtitle": "Our Brand Philosophy",
+    "subtitle": "Our Philosophy",
     "whoWeAreTitle": "Who we are",
     "whoWeAreDesc": "We are a modern clothing brand creating stylish and practical items for your daily wardrobe. Our goal is to combine aesthetics, comfort, and current trends.",
     "differencesTitle": "What makes us different",

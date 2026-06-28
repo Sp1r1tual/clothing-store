@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 
+import { DeveloperModal } from "@/components/ui/DeveloperModal/DeveloperModal";
 import { Logo } from "@/components/ui/Logo/Logo";
 
 import { CONTACTS } from "@/common/constants/contacts";
@@ -86,14 +87,7 @@ export const Footer = () => {
           <p className={styles.copyright}>
             &copy; {currentYear} X-WEEVO. {tFooter("copyright")}
           </p>
-          <a
-            href={CONTACTS.DEVELOPER.LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.developerLink}
-          >
-            {tFooter("devLink")}
-          </a>
+          <DeveloperModal triggerText={tFooter("devLink")} />
         </div>
       </div>
     </footer>

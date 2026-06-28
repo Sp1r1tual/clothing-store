@@ -1,10 +1,11 @@
 import { getTranslations } from "next-intl/server";
 
-import styles from "@/components/pages/Privacy/privacy.module.css";
 import { BackButton } from "@/components/ui/BackButton/BackButton";
 import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 
 import { FaqAccordion } from "./_components/FaqAccordion/FaqAccordion";
+
+import styles from "./faq.module.css";
 
 interface RouteProps {
   params: Promise<{ locale: string }>;
@@ -28,7 +29,10 @@ export default async function FAQPage({ params }: RouteProps) {
     <>
       <div className={styles.container}>
         <BackButton scrollUp={true} />
-        <h1 className={styles.title}>{t("title")}</h1>
+        <header className={styles.header}>
+          <h1 className={styles.title}>{t("title")}</h1>
+          <p className={styles.description}>{t("metaDescription")}</p>
+        </header>
         <div className={styles.content}>
           <FaqAccordion
             items={[

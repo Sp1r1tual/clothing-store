@@ -5,6 +5,10 @@ export const CONTACTS = {
     FORMATTED: "+38 (093) 187-87-84",
   },
   DEVELOPER: {
-    LINK: "https://t.me/Sp1r1tual5",
+    TELEGRAM: "https://t.me/Sp1r1tual5",
+    TELEGRAM_HANDLE: "@Sp1r1tual5",
+    EMAIL: "andrii0383@gmail.com",
+    LINKEDIN: "https://www.linkedin.com/in/andrii-zub/",
+    LINKEDIN_HANDLE: "Andrii Zub",
   },
 };
