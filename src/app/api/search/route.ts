@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { searchProducts } from "@/db/product";
 
+import { getLocalizedField } from "@/common/utils/locale";
 import { limiter } from "@/common/utils/rate-limit";
 
 export async function GET(request: NextRequest) {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     const result = products.map((p) => ({
       id: p.id,
       slug: p.slug,
-      name: locale === "en" ? p.nameEn : p.nameUk,
+      name: getLocalizedField(p, "name", locale),
       price: p.price,
       discountPrice: p.discountPrice,
       image: p.images[0]?.url ?? null,

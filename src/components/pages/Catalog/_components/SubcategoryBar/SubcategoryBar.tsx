@@ -7,6 +7,8 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 
 import { Chip } from "@/components/ui/Chip/Chip";
 
+import { getLocalizedField } from "@/common/utils/locale";
+
 import { Subcategory } from "@/types/ui.types";
 
 import styles from "./SubcategoryBar.module.css";
@@ -47,7 +49,7 @@ export const SubcategoryBar = ({ subcategories, locale }: SubcategoryBarProps) =
     <div className={styles.bar}>
       <div className={styles.scrollArea}>
         {visibleSubcategories.map((sub) => {
-          const name = locale === "en" ? sub.nameEn : sub.nameUk;
+          const name = getLocalizedField(sub, "name", locale);
           const isActive = currentSubcategory === sub.slug;
 
           return (

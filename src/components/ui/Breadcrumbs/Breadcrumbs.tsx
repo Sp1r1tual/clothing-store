@@ -1,6 +1,10 @@
 import { Link } from "@/i18n/navigation";
 import { ChevronRight } from "lucide-react";
 
+import { JsonLd } from "@/components/ui/JsonLd/JsonLd";
+
+import { BASE_URL } from "@/common/constants/env";
+
 import { BreadcrumbItem } from "@/types/ui.types";
 
 import styles from "./Breadcrumbs.module.css";
@@ -11,8 +15,6 @@ interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs = ({ items, className = "" }: BreadcrumbsProps) => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -20,16 +22,13 @@ export const Breadcrumbs = ({ items, className = "" }: BreadcrumbsProps) => {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `${baseUrl}${item.href}` } : {}),
+      ...(item.href ? { item: `${BASE_URL}${item.href}` } : {}),
     })),
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <nav aria-label="Breadcrumb" className={`${styles.breadcrumbs} ${className}`}>
         <ol className={styles.list}>
           {items.map((item, index) => {

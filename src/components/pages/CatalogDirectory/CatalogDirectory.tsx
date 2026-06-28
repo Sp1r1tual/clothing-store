@@ -8,6 +8,8 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
 import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 
+import { getLocalizedField } from "@/common/utils/locale";
+
 import styles from "./CatalogDirectory.module.css";
 
 interface CategoryItem {
@@ -47,7 +49,7 @@ export const CatalogDirectory = ({
 
         <div className={styles.directoryGrid}>
           {rootCategories.map((root) => {
-            const rootName = locale === "en" ? root.nameEn : root.nameUk;
+            const rootName = getLocalizedField(root, "name", locale);
             const children = categories.filter(
               (c) => c.parentId === root.id && c._count?.products !== 0,
             );
@@ -69,7 +71,7 @@ export const CatalogDirectory = ({
                   {children.length > 0 && (
                     <div className={styles.subcategoriesList}>
                       {children.map((sub) => {
-                        const subName = locale === "en" ? sub.nameEn : sub.nameUk;
+                        const subName = getLocalizedField(sub, "name", locale);
                         return (
                           <Link key={sub.id} href={`/${sub.slug}`} className={styles.subLink}>
                             <span className={styles.subTitle}>{subName}</span>

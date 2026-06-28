@@ -14,6 +14,8 @@ import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
 import { useCartStore } from "@/store/useCartStore";
 import type { CartItem as CartItemType } from "@/store/useCartStore";
 
+import { getLocalizedField } from "@/common/utils/locale";
+
 import styles from "./CartItem.module.css";
 
 interface CartItemProps {
@@ -29,7 +31,7 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
   const [isPendingQty, startQtyTransition] = useTransition();
   const [localQty, setLocalQty] = useState(item.quantity);
 
-  const name = locale === "en" ? item.product.nameEn : item.product.nameUk;
+  const name = getLocalizedField(item.product, "name", locale);
   const image = item.product.images[0]?.url || "/placeholder.jpg";
   const altText = item.product.images[0]?.altText || name;
   const unitPrice = item.product.discountPrice ?? item.product.price;
@@ -102,10 +104,9 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
                 {t("size")}: <strong>{item.variant.size}</strong>
               </span>
             )}
-            {(locale === "uk" ? item.variant.colorUk : item.variant.colorEn) && (
+            {getLocalizedField(item.variant, "color", locale) && (
               <span className={styles.metaChip}>
-                {t("color")}:{" "}
-                <strong>{locale === "uk" ? item.variant.colorUk : item.variant.colorEn}</strong>
+                {t("color")}: <strong>{getLocalizedField(item.variant, "color", locale)}</strong>
               </span>
             )}
           </div>

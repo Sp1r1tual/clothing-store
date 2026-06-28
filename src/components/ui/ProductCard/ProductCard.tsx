@@ -15,6 +15,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useModalStore } from "@/store/useModalStore";
 
+import { getLocalizedField } from "@/common/utils/locale";
 import { calculateDiscountPercentage } from "@/common/utils/product";
 
 import styles from "./ProductCard.module.css";
@@ -43,7 +44,7 @@ export const ProductCard = ({
   priority = false,
   hideFavoriteButton = false,
 }: ProductCardProps) => {
-  const name = locale === "en" ? product.nameEn : product.nameUk;
+  const name = getLocalizedField(product, "name", locale);
   const primaryImage = product.images[0]?.url || "/placeholder.jpg";
   const isOutOfStock = product.variants.every((v) => v.stock === 0);
 
@@ -58,10 +59,7 @@ export const ProductCard = ({
   const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice);
   const availableSizes = product.variants.filter((v) => v.stock > 0).map((v) => v.size);
 
-  const categoryName =
-    locale === "en"
-      ? (product.category.nameEn ?? product.category.slug)
-      : (product.category.nameUk ?? product.category.slug);
+  const categoryName = getLocalizedField(product.category, "name", locale, "slug");
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

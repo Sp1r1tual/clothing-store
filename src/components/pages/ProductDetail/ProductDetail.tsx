@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/ui/ProductCard/ProductCard";
 import { ImageGallery } from "./_components/ImageGallery/ImageGallery";
 import { ProductActions } from "./_components/ProductActions/ProductActions";
 
+import { getLocalizedField } from "@/common/utils/locale";
 import { calculateDiscountPercentage } from "@/common/utils/product";
 
 import styles from "./ProductDetail.module.css";
@@ -56,11 +57,11 @@ interface ProductDetailProps {
 export const ProductDetail = async ({ product, locale }: ProductDetailProps) => {
   const t = await getTranslations({ locale, namespace: "ProductDetail" });
 
-  const name = locale === "en" ? product.nameEn : product.nameUk;
-  const description = locale === "en" ? product.descriptionEn : product.descriptionUk;
-  const composition = locale === "en" ? product.compositionEn : product.compositionUk;
-  const care = locale === "en" ? product.careInstructionsEn : product.careInstructionsUk;
-  const measurements = locale === "en" ? product.measurementsEn : product.measurementsUk;
+  const name = getLocalizedField(product, "name", locale);
+  const description = getLocalizedField(product, "description", locale);
+  const composition = getLocalizedField(product, "composition", locale);
+  const care = getLocalizedField(product, "careInstructions", locale);
+  const measurements = getLocalizedField(product, "measurements", locale);
 
   const isOutOfStock = product.variants.every((v) => v.stock === 0);
 
@@ -71,12 +72,12 @@ export const ProductDetail = async ({ product, locale }: ProductDetailProps) => 
   if (product.category) {
     if (product.category.parent) {
       breadcrumbs.push({
-        label: locale === "en" ? product.category.parent.nameEn : product.category.parent.nameUk,
+        label: getLocalizedField(product.category.parent, "name", locale),
         href: `/${product.category.parent.slug}`,
       });
     }
     breadcrumbs.push({
-      label: locale === "en" ? product.category.nameEn : product.category.nameUk,
+      label: getLocalizedField(product.category, "name", locale),
       href: `/${product.category.parent?.slug || product.category.slug}?subcategory=${product.category.slug}`,
     });
   }

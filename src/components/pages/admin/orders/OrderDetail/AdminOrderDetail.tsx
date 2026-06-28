@@ -10,6 +10,9 @@ import type { AdminOrderData } from "@/db/order";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft, Check, Package, Truck, User } from "lucide-react";
 
+import { formatPrice } from "@/common/utils/format";
+import { getLocalizedField } from "@/common/utils/locale";
+
 import styles from "./AdminOrderDetail.module.css";
 
 type Props = {
@@ -147,9 +150,7 @@ export const AdminOrderDetail = ({ order }: Props) => {
 
               <dt className={styles.dt}>{t("detail.total")}</dt>
               <dd className={styles.dd}>
-                <strong>
-                  {order.totalAmount.toLocaleString(locale === "uk" ? "uk-UA" : "en-US")} ₴
-                </strong>
+                <strong>{formatPrice(order.totalAmount, locale)}</strong>
               </dd>
 
               <dt className={styles.dt}>{t("detail.carrier")}</dt>
@@ -198,7 +199,7 @@ export const AdminOrderDetail = ({ order }: Props) => {
             <div className={styles.itemsList}>
               {order.items.map((item) => {
                 const imgUrl = item.product?.images?.[0]?.url;
-                const name = locale === "uk" ? item.productNameUk : item.productNameEn;
+                const name = getLocalizedField(item, "productName", locale);
                 return (
                   <div key={item.id} className={styles.itemRow}>
                     <div className={styles.itemThumb}>
@@ -228,10 +229,7 @@ export const AdminOrderDetail = ({ order }: Props) => {
                     <div className={styles.itemPricing}>
                       <span className={styles.itemQty}>× {item.quantity}</span>
                       <span className={styles.itemPrice}>
-                        {(item.price * item.quantity).toLocaleString(
-                          locale === "uk" ? "uk-UA" : "en-US",
-                        )}{" "}
-                        ₴
+                        {formatPrice(item.price * item.quantity, locale)}
                       </span>
                     </div>
                   </div>
@@ -241,9 +239,7 @@ export const AdminOrderDetail = ({ order }: Props) => {
 
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>{t("detail.total")}</span>
-              <span className={styles.totalValue}>
-                {order.totalAmount.toLocaleString(locale === "uk" ? "uk-UA" : "en-US")} ₴
-              </span>
+              <span className={styles.totalValue}>{formatPrice(order.totalAmount, locale)}</span>
             </div>
           </div>
         </div>

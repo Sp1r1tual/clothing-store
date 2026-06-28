@@ -5,6 +5,7 @@ import { findAvailableSizes, findPriceRange, findPublishedProducts } from "@/db/
 
 import { CatalogPage } from "@/components/pages/Catalog/CatalogPage";
 
+import { getLocalizedField } from "@/common/utils/locale";
 import { getSeoAlternates } from "@/common/utils/seo";
 
 export const revalidate = 300;
@@ -24,8 +25,8 @@ export async function generateMetadata({
 
   if (!category) return {};
 
-  const title = locale === "en" ? category.nameEn : category.nameUk;
-  const description = locale === "en" ? category.seoDescriptionEn : category.seoDescriptionUk;
+  const title = getLocalizedField(category, "name", locale);
+  const description = getLocalizedField(category, "seoDescription", locale);
 
   return {
     title,
@@ -85,8 +86,8 @@ export default async function CategoryRoute({ params, searchParams }: CategoryRo
     limit: 12,
   });
 
-  const title = locale === "en" ? category.nameEn : category.nameUk;
-  const description = locale === "en" ? category.seoDescriptionEn : category.seoDescriptionUk;
+  const title = getLocalizedField(category, "name", locale);
+  const description = getLocalizedField(category, "seoDescription", locale);
 
   const breadcrumbs: { label: string; href?: string }[] = [
     { label: locale === "en" ? "Home" : "Головна", href: "/" },
@@ -94,7 +95,7 @@ export default async function CategoryRoute({ params, searchParams }: CategoryRo
 
   if (category.parent) {
     breadcrumbs.push({
-      label: locale === "en" ? category.parent.nameEn : category.parent.nameUk,
+      label: getLocalizedField(category.parent, "name", locale),
       href: `/${category.parent.slug}`,
     });
   }

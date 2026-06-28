@@ -7,6 +7,8 @@ import type { AdminOrderData } from "@/db/order";
 import { Link } from "@/i18n/navigation";
 import { Eye } from "lucide-react";
 
+import { formatPrice } from "@/common/utils/format";
+
 import styles from "./OrdersTable.module.css";
 
 type Props = {
@@ -101,9 +103,7 @@ export const AdminOrdersTable = ({ orders }: Props) => {
                       </div>
                     </td>
                     <td className={styles.td}>
-                      <span className={styles.total}>
-                        {order.totalAmount.toLocaleString(locale === "uk" ? "uk-UA" : "en-US")} ₴
-                      </span>
+                      <span className={styles.total}>{formatPrice(order.totalAmount, locale)}</span>
                     </td>
                     <td className={styles.td}>
                       <span className={`${styles.statusBadge} ${styles[styleKey]}`}>

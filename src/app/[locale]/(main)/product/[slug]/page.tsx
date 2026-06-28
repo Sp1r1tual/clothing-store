@@ -4,7 +4,10 @@ import { findProductBySlug } from "@/db/product";
 import { prisma } from "@/libs/prisma";
 
 import { ProductDetail } from "@/components/pages/ProductDetail/ProductDetail";
+import { JsonLd } from "@/components/ui/JsonLd/JsonLd";
 
+import { BASE_URL } from "@/common/constants/env";
+import { getLocalizedField } from "@/common/utils/locale";
 import { getSeoAlternates } from "@/common/utils/seo";
 
 export const revalidate = 300;
@@ -33,9 +36,8 @@ export async function generateMetadata({ params }: ProductRouteProps) {
     return {};
   }
 
-  const title =
-    locale === "en" ? product.seoTitleEn || product.nameEn : product.seoTitleUk || product.nameUk;
-  const description = locale === "en" ? product.seoDescriptionEn : product.seoDescriptionUk;
+  const title = getLocalizedField(product, "seoTitle", locale, "name");
+  const description = getLocalizedField(product, "seoDescription", locale);
   const primaryImage = product.images[0]?.url;
 
   return {
@@ -66,18 +68,16 @@ export default async function ProductRoute({ params }: ProductRouteProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const name =
-    locale === "en" ? product.seoTitleEn || product.nameEn : product.seoTitleUk || product.nameUk;
-  const description = locale === "en" ? product.seoDescriptionEn : product.seoDescriptionUk;
+  const title = getLocalizedField(product, "seoTitle", locale, "name");
+  const description = getLocalizedField(product, "seoDescription", locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name,
+    name: title,
     description: description || undefined,
     image: product.images.map((img) => img.url),
-    url: `${baseUrl}/${locale}/product/${product.slug}`,
+    url: `${BASE_URL}/${locale}/product/${product.slug}`,
     offers: {
       "@type": "Offer",
       priceCurrency: "UAH",
@@ -86,16 +86,13 @@ export default async function ProductRoute({ params }: ProductRouteProps) {
         product.variants.length > 0
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
-      url: `${baseUrl}/${locale}/product/${product.slug}`,
+      url: `${BASE_URL}/${locale}/product/${product.slug}`,
     },
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <ProductDetail product={product} locale={locale} />
     </>
   );

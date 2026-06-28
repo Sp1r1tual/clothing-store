@@ -11,6 +11,9 @@ import { Pencil, Trash2 } from "lucide-react";
 
 import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
 
+import { formatPrice } from "@/common/utils/format";
+import { getLocalizedField } from "@/common/utils/locale";
+
 import styles from "./ProductsTable.module.css";
 
 type Product = {
@@ -96,7 +99,7 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                       {imgUrl ? (
                         <Image
                           src={imgUrl}
-                          alt={locale === "uk" ? product.nameUk : product.nameEn}
+                          alt={getLocalizedField(product, "name", locale)}
                           width={64}
                           height={64}
                           className={styles.thumbImg}
@@ -107,25 +110,20 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                     </div>
                     <div>
                       <p className={styles.productName}>
-                        {locale === "uk" ? product.nameUk : product.nameEn}
+                        {getLocalizedField(product, "name", locale)}
                       </p>
                       <p className={styles.productSlug}>{product.slug}</p>
                     </div>
                   </div>
                 </td>
-                <td className={styles.td}>
-                  {locale === "uk" ? product.category.nameUk : product.category.nameEn}
-                </td>
+                <td className={styles.td}>{getLocalizedField(product.category, "name", locale)}</td>
                 <td className={styles.td}>
                   <span className={styles.price}>
                     {(() => {
                       const p =
                         typeof product.price === "number" ? product.price : Number(product.price);
-                      return isNaN(p)
-                        ? "-"
-                        : Math.round(p).toLocaleString(locale === "uk" ? "uk-UA" : "en-US");
-                    })()}{" "}
-                    ₴
+                      return isNaN(p) ? "-" : formatPrice(Math.round(p), locale);
+                    })()}
                   </span>
                   {product.discountPrice != null && (
                     <span className={styles.discountPrice}>
@@ -134,11 +132,8 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                           typeof product.discountPrice === "number"
                             ? product.discountPrice
                             : Number(product.discountPrice);
-                        return isNaN(d)
-                          ? "-"
-                          : Math.round(d).toLocaleString(locale === "uk" ? "uk-UA" : "en-US");
-                      })()}{" "}
-                      ₴
+                        return isNaN(d) ? "-" : formatPrice(Math.round(d), locale);
+                      })()}
                     </span>
                   )}
                 </td>
@@ -203,11 +198,7 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
         }}
         title={t("deleteModalTitle")}
         description={t("deleteModalDescription", {
-          name: productToDelete
-            ? locale === "uk"
-              ? productToDelete.nameUk
-              : productToDelete.nameEn
-            : "",
+          name: productToDelete ? getLocalizedField(productToDelete, "name", locale) : "",
         })}
         confirmText={t("confirmDelete")}
         cancelText={t("cancelDelete")}

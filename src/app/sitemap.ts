@@ -2,7 +2,8 @@ import { MetadataRoute } from "next";
 
 import { prisma } from "@/libs/prisma";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+import { BASE_URL } from "@/common/constants/env";
+
 const LOCALES = ["uk", "en"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

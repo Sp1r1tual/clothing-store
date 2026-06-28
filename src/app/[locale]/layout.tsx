@@ -19,6 +19,7 @@ import { Modal } from "@/components/ui/Modal/Modal";
 import type { CartItem } from "@/store/useCartStore";
 
 import { getCurrentUser } from "@/common/auth/server";
+import { BASE_URL } from "@/common/constants/env";
 import { geistMono, geistSans } from "@/common/fonts/fonts";
 
 import "@/app/globals.css";
@@ -36,10 +37,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Layout" });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   return {
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(BASE_URL),
     title: {
       default: t("title"),
       template: `%s | X-Weevo`,
