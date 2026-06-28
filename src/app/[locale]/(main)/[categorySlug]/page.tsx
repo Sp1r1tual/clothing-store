@@ -7,6 +7,8 @@ import { CatalogPage } from "@/components/pages/Catalog/CatalogPage";
 
 import { getSeoAlternates } from "@/common/utils/seo";
 
+export const revalidate = 300;
+
 interface CategoryRouteProps {
   params: Promise<{ locale: string; categorySlug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

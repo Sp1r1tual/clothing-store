@@ -4,6 +4,8 @@ import { Landing } from "@/components/pages/Landing/Landing";
 
 import { getSeoAlternates } from "@/common/utils/seo";
 
+export const revalidate = 3600;
+
 interface LandingRouteProps {
   params: Promise<{ locale: string }>;
 }

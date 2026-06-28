@@ -2,6 +2,12 @@ import { getTranslations } from "next-intl/server";
 
 import { PolicyLayout } from "@/components/ui/PolicyLayout/PolicyLayout";
 
+export const dynamic = "force-static";
+
+export async function generateStaticParams() {
+  return [{ locale: "uk" }, { locale: "en" }];
+}
+
 interface TermsRouteProps {
   params: Promise<{ locale: string }>;
 }

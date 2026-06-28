@@ -7,6 +7,12 @@ import { FaqAccordion } from "./_components/FaqAccordion/FaqAccordion";
 
 import styles from "./faq.module.css";
 
+export const dynamic = "force-static";
+
+export async function generateStaticParams() {
+  return [{ locale: "uk" }, { locale: "en" }];
+}
+
 interface RouteProps {
   params: Promise<{ locale: string }>;
 }

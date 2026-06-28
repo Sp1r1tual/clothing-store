@@ -1,10 +1,25 @@
 import { notFound } from "next/navigation";
 
 import { findProductBySlug } from "@/db/product";
+import { prisma } from "@/libs/prisma";
 
 import { ProductDetail } from "@/components/pages/ProductDetail/ProductDetail";
 
 import { getSeoAlternates } from "@/common/utils/seo";
+
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({
+    where: { status: "PUBLISHED", deletedAt: null },
+    select: { slug: true },
+  });
+
+  return products.flatMap((p) => [
+    { locale: "uk", slug: p.slug },
+    { locale: "en", slug: p.slug },
+  ]);
+}
 
 interface ProductRouteProps {
   params: Promise<{ locale: string; slug: string }>;

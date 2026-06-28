@@ -4,6 +4,8 @@ import { findAvailableSizes, findPriceRange, findPublishedProducts } from "@/db/
 
 import { CatalogPage } from "@/components/pages/Catalog/CatalogPage";
 
+export const revalidate = 600;
+
 interface NewArrivalsRouteProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

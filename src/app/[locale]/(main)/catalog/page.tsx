@@ -4,6 +4,8 @@ import { findAllCategories } from "@/db/category";
 
 import { CatalogDirectory } from "@/components/pages/CatalogDirectory/CatalogDirectory";
 
+export const revalidate = 3600;
+
 interface CatalogRouteProps {
   params: Promise<{ locale: string }>;
 }
