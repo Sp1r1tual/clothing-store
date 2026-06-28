@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "author": "Andrii Zub",
-  "license": "Business Source License 1.1",
+  "license": "ATMOSPHORIA RESTRICTED SOURCE LICENSE v1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

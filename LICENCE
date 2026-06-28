@@ -1,84 +1,118 @@
-Business Source License 1.1 (BSL 1.1) -- Modified by Atmosphoria Software
+ATMOSPHORIA RESTRICTED SOURCE LICENSE (ARSL) v1.0
 
-Copyright (c) 2026 Atmosphoria Software
+Copyright (c) 2026 Atmosphoria Software. All rights reserved.
 
-1. GRANT OF RIGHTS
+This software is released under a restricted source-available license. It is not open-source.
 
-Subject to the terms and conditions of this License, Atmosphoria Software
-hereby grants you a non-exclusive, worldwide, royalty-free license to:
+1. DEFINITIONS
 
-- View, copy, modify, and distribute the source code of this software for
-  non-commercial purposes only.
-- Use this software for personal, educational, or research purposes at no cost.
+"Software" means the source code, binaries, documentation, and related materials provided by Atmosphoria Software.
 
-2. COMMERCIAL USE RESTRICTION
+"Commercial Use" means any use of the Software that directly or indirectly results in revenue generation, cost reduction in a commercial context, or integration into a paid product, service, or infrastructure.
 
-Commercial use of this software, in whole or in part, is strictly prohibited
-without prior written permission from Atmosphoria Software.
+"Derivative Work" means any modification, adaptation, fork, or software incorporating any portion of the Software.
 
-"Commercial use" includes, but is not limited to:
+2. GRANT OF RIGHTS
 
-- Selling, licensing, or sublicensing this software or any derivative thereof
-- Using this software in a product or service for which you charge a fee
-- Incorporating this software into a commercial product or SaaS offering
-- Running this software to generate revenue, directly or indirectly
-- Distributing this software as part of a commercial bundle or package
-- Using this software to provide paid services to third parties
+Subject to full compliance with this License, Atmosphoria Software grants you a limited, non-exclusive, non-transferable, revocable license to:
 
-To obtain a commercial license, contact: atmosphoria.software@gmail.com
+- Use the Software for personal, educational, or non-commercial research purposes
+- View and study the source code
+- Modify the source code for private, non-commercial purposes
+- Create private forks not distributed to third parties
 
-3. CONTRIBUTIONS
+No other rights are granted.
 
-By submitting a contribution (pull request, patch, issue, or otherwise) to this
-project, you agree that:
+3. COMMERCIAL LICENSE REQUIREMENT
 
-- You grant Atmosphoria Software a perpetual, irrevocable, royalty-free
-  license to use, modify, and distribute your contribution as part of the
-  Software, including in commercial versions.
-- You confirm that you have the legal right to make such a contribution and
-  that it does not infringe on any third-party intellectual property rights.
-- Contributing to this project does not grant you any commercial rights.
+Any Commercial Use of the Software requires a valid, written commercial license from Atmosphoria Software.
 
-4. MODIFICATIONS & FORKS
+Without such license, you may not:
 
-You are free to fork and modify the source code for non-commercial purposes.
-However:
+- Use the Software in production environments operated by businesses or organizations
+- Integrate the Software into commercial products or services
+- Offer the Software as part of a hosted, SaaS, API, or managed service
+- Use the Software internally if it supports revenue-generating operations
+- Redistribute the Software or Derivative Works for commercial advantage
 
-- Forks and modified versions must clearly state that they are not affiliated
-  with Atmosphoria Software or the official X-WEVOO project.
-- Modified versions may not be sold, monetized, or used commercially without
-  written permission from Atmosphoria Software.
-- Modified versions may not use the name "X-WEVOO" or any Atmosphoria
-  branding without written permission.
-- Redistributed source code must retain this license file in its entirety.
+All commercial rights are reserved exclusively by Atmosphoria Software unless explicitly granted.
 
-5. NO WARRANTY
+4. DISTRIBUTION AND FORKING
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may not distribute the Software or any Derivative Works except under the following strict conditions:
 
-6. ENFORCEMENT & CONTACT
+- Distribution is allowed only for non-commercial purposes
+- The full text of this License must be included without modification
+- All copies must clearly state: "Unofficial and not affiliated with Atmosphoria Software"
+- You may not remove, obscure, or modify copyright notices or license terms
+- You may not rebrand the Software or use any Atmosphoria Software trademarks, names, or logos
 
-Atmosphoria Software reserves the right to enforce this License to the fullest
-extent permitted by applicable law. Unauthorized commercial use may result in
-legal action, including claims for damages and injunctive relief.
+5. RESTRICTIONS ON DERIVATIVE WORKS
 
-For commercial licensing, permissions, or inquiries, contact:
+All Derivative Works are automatically subject to this License.
 
-Atmosphoria Software
-atmosphoria.software@gmail.com
+You may not:
 
-7. SEVERABILITY
+- Re-license Derivative Works under different terms
+- Commercialize modified versions
+- Circumvent restrictions by partial reuse, linking, or embedding
+- Claim ownership over Atmosphoria Software original code
 
-If any provision of this License is found to be unenforceable or invalid under
-applicable law, that provision shall be modified to the minimum extent necessary
-to make it enforceable, or severed if modification is not possible. The
-remaining provisions shall continue in full force and effect.
+6. CONTRIBUTIONS
 
-This License is subject to change. The version in effect at the time of your
-use of this software governs your rights and obligations.
+By submitting any contribution (including code, patches, documentation, bug reports, or suggestions), you agree that:
+
+- You grant Atmosphoria Software a perpetual, worldwide, irrevocable, royalty-free, sublicensable license to use, reproduce, modify, distribute, and commercially exploit your contribution in any form
+- Your contribution may be incorporated into proprietary or commercial versions of the Software without compensation
+- You waive any moral rights to the extent permitted by law
+- You confirm you have full legal rights to submit the contribution
+
+7. OWNERSHIP
+
+All rights, title, and interest in the Software remain exclusively with Atmosphoria Software, except for third-party components explicitly stated otherwise.
+
+No ownership rights are transferred to you under this License.
+
+8. TERMINATION
+
+This License is automatically terminated if you:
+
+- Violate any term of this License
+- Engage in unauthorized Commercial Use
+- Attempt to bypass or circumvent restrictions
+
+Upon termination, you must immediately cease all use, delete all copies, and destroy Derivative Works in your possession.
+
+Sections concerning ownership, restrictions, contributions, and liability survive termination.
+
+9. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL ATMOSPHORIA SOFTWARE BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OR INABILITY TO USE THE SOFTWARE.
+
+10. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, ATMOSPHORIA SOFTWARE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS INTERRUPTION.
+
+11. TRADEMARKS
+
+"Atmosphoria Software", "X-WEEVO", and all related branding, logos, and names are trademarks of Atmosphoria Software.
+
+No license is granted to use trademarks under this License. Any use requires prior written permission.
+
+12. GOVERNING TERMS
+
+This License is governed by applicable international intellectual property principles and, where required, the laws of the jurisdiction determined by Atmosphoria Software.
+
+Any disputes shall be resolved in a competent court selected by Atmosphoria Software.
+
+13. SEVERABILITY
+
+If any provision is held invalid or unenforceable, the remaining provisions remain in full force and effect.
+
+14. ENTIRE AGREEMENT
+
+This License constitutes the entire agreement regarding the Software unless superseded by a separate written commercial agreement.
+
+END OF LICENSE
