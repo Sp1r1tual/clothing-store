@@ -48,12 +48,12 @@ A fully functional shopping cart, robust search capabilities, and detailed produ
 
 ### Server, Database & API
 
-| Category       | Technology                                                                |
-| :------------- | :------------------------------------------------------------------------ |
-| **Database**   | [PostgreSQL (Supabase)](https://supabase.com/)                            |
-| **ORM**        | [Prisma 7](https://www.prisma.io/) with `@prisma/adapter-pg`              |
-| **Auth**       | [@supabase/ssr](https://supabase.com/docs/guides/auth/server-side/nextjs) |
-| **Validation** | [Zod 4](https://zod.dev/) – end-to-end type-safe validation               |
+| Category       | Technology                                                                     |
+| :------------- | :----------------------------------------------------------------------------- |
+| **Database**   | [PostgreSQL (Supabase)](https://supabase.com/)                                 |
+| **ORM**        | [Prisma 7](https://www.prisma.io/) with `@prisma/adapter-pg`                   |
+| **Auth**       | [Auth.js v5 (Next-Auth)](https://authjs.dev/) – Google OAuth & secure sessions |
+| **Validation** | [Zod 4](https://zod.dev/) – end-to-end type-safe validation                    |
 
 ### DevOps & Code Quality
 
@@ -62,7 +62,7 @@ A fully functional shopping cart, robust search capabilities, and detailed produ
 | **Git Hooks**   | [Husky](https://typicode.github.io/husky/) – pre-commit automation              |
 | **Lint Staged** | [lint-staged](https://github.com/lint-staged/lint-staged) – incremental linting |
 | **Linting**     | ESLint 9 + Prettier (with `@trivago/prettier-plugin-sort-imports`)              |
-| **Unused Code** | [Knip](https://knip.dev/) – dead export & dependency detection                  |
+| **Unused Code** | [knip](https://knip.dev/) – dead export & dependency detection                  |
 
 ---
 
@@ -77,8 +77,8 @@ A fully functional shopping cart, robust search capabilities, and detailed produ
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/Sp1r1tual/x-weevo
-cd clothing-store
+git clone https://github.com/Sp1r1tual/x-weevo.git
+cd x-weevo
 
 # Install dependencies
 yarn install
