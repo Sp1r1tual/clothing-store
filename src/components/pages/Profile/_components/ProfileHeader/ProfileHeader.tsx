@@ -28,7 +28,7 @@ import {
   CARRIERS,
   type CarrierType,
   ProfileFormData,
-  createProfileSchema,
+  getProfileFormSchema,
 } from "@/common/validation/profile/schemas/profile.schema";
 
 import styles from "./ProfileHeader.module.css";
@@ -46,17 +46,7 @@ export const ProfileHeader = () => {
     warehouse: string;
   } | null>((user?.address as never) || null);
 
-  const schema = useMemo(
-    () =>
-      createProfileSchema({
-        nameMin: t("validation.nameMin"),
-        nameMax: t("validation.nameMax"),
-        nameRegex: t("validation.nameRegex"),
-        phoneMax: t("validation.phoneMax"),
-        phoneRegex: t("validation.phoneRegex"),
-      }),
-    [t],
-  );
+  const schema = useMemo(() => getProfileFormSchema(t), [t]);
 
   const {
     register,
@@ -64,13 +54,13 @@ export const ProfileHeader = () => {
     reset,
     setValue,
     control,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: user?.name || "",
       phone: user?.phone || "",
-      carrier: "NOVA_POSHTA",
+      carrier: undefined,
       city: "",
       warehouse: "",
     },
@@ -101,7 +91,7 @@ export const ProfileHeader = () => {
     reset({
       name: user?.name || "",
       phone: user?.phone || "",
-      carrier: address?.carrier || "NOVA_POSHTA",
+      carrier: address?.carrier || undefined,
       city: address?.city || "",
       warehouse: address?.warehouse || "",
     });
@@ -119,9 +109,9 @@ export const ProfileHeader = () => {
         {
           name: trimmedName,
           phone,
-          carrier: data.carrier || null,
-          city: data.city || null,
-          warehouse: data.warehouse || null,
+          carrier: data.carrier,
+          city: data.city,
+          warehouse: data.warehouse,
         },
         locale,
       );
@@ -224,6 +214,9 @@ export const ProfileHeader = () => {
                     </button>
                   ))}
                 </div>
+                {errors.carrier?.message && (
+                  <span className={styles.errorText}>{errors.carrier.message}</span>
+                )}
               </div>
 
               <div className={styles.formGroup}>
@@ -254,7 +247,7 @@ export const ProfileHeader = () => {
                     reset({
                       name: user.name,
                       phone: user.phone || "",
-                      carrier: address?.carrier || "NOVA_POSHTA",
+                      carrier: address?.carrier || undefined,
                       city: address?.city || "",
                       warehouse: address?.warehouse || "",
                     });
@@ -264,7 +257,7 @@ export const ProfileHeader = () => {
                 >
                   {t("cancel")}
                 </Button>
-                <Button type="submit" disabled={isSubmitting || !isDirty}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? <Loader2 className={styles.spinnerIcon} size={16} /> : t("save")}
                 </Button>
               </div>

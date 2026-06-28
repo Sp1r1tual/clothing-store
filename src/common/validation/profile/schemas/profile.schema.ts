@@ -7,8 +7,12 @@ export interface ProfileSchemaMessages {
   nameMin: string;
   nameMax: string;
   nameRegex: string;
+  phoneRequired: string;
   phoneMax: string;
   phoneRegex: string;
+  carrierRequired: string;
+  cityRequired: string;
+  warehouseRequired: string;
 }
 
 export const createProfileSchema = (msg: ProfileSchemaMessages) =>
@@ -21,14 +25,28 @@ export const createProfileSchema = (msg: ProfileSchemaMessages) =>
 
     phone: z
       .string()
+      .min(1, msg.phoneRequired)
       .max(20, msg.phoneMax)
-      .regex(/^\+?(?:\d[\s\-()]*){9,15}$/, msg.phoneRegex)
-      .optional()
-      .or(z.literal("")),
+      .regex(/^\+?(?:\d[\s\-()]*){9,15}$/, msg.phoneRegex),
 
-    carrier: z.enum(CARRIERS).optional().nullable().or(z.literal("")),
-    city: z.string().max(100).optional().nullable().or(z.literal("")),
-    warehouse: z.string().max(100).optional().nullable().or(z.literal("")),
+    carrier: z.enum(CARRIERS, {
+      message: msg.carrierRequired,
+    }),
+    city: z.string().min(1, msg.cityRequired).max(100),
+    warehouse: z.string().min(1, msg.warehouseRequired).max(100),
   });
 
 export type ProfileFormData = z.infer<ReturnType<typeof createProfileSchema>>;
+
+export const getProfileFormSchema = (t: (key: string) => string) =>
+  createProfileSchema({
+    nameMin: t("validation.nameMin"),
+    nameMax: t("validation.nameMax"),
+    nameRegex: t("validation.nameRegex"),
+    phoneRequired: t("validation.phoneRequired"),
+    phoneMax: t("validation.phoneMax"),
+    phoneRegex: t("validation.phoneRegex"),
+    carrierRequired: t("validation.carrierRequired"),
+    cityRequired: t("validation.cityRequired"),
+    warehouseRequired: t("validation.warehouseRequired"),
+  });

@@ -278,3 +278,9 @@
   border-color: var(--text-primary);
   color: var(--background);
 }
+
+.errorText {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.125rem;
+}

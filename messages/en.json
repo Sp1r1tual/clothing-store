@@ -214,7 +214,10 @@
       "nameRegex": "Name can only contain letters, spaces, hyphens and apostrophes",
       "phoneRequired": "Phone number is required",
       "phoneMax": "Phone number cannot exceed 20 characters",
-      "phoneRegex": "Invalid phone number format"
+      "phoneRegex": "Invalid phone number format",
+      "carrierRequired": "Please select a carrier",
+      "cityRequired": "City is required",
+      "warehouseRequired": "Address or branch is required"
     },
     "address": {
       "sectionTitle": "Delivery Address",
