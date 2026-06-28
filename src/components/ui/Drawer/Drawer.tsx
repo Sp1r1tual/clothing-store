@@ -1,4 +1,5 @@
-"use client";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { Link, usePathname } from "@/i18n/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -38,7 +39,32 @@ export const Drawer = ({
   children,
 }: DrawerProps) => {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const initialX = direction === "right" ? "100%" : "-100%";
+
+  useEffect(() => {
+    let active = true;
+    setTimeout(() => {
+      if (active) {
+        setMounted(true);
+      }
+    }, 0);
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const renderLink = (link: DrawerLinkItem) => {
     const isActive = pathname === link.href;
@@ -60,7 +86,9 @@ export const Drawer = ({
     );
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -96,6 +124,7 @@ export const Drawer = ({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 };

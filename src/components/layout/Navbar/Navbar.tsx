@@ -92,21 +92,28 @@ export const Navbar = () => {
                 )}
               </div>
             </Link>
-            <Link
-              href="/profile"
-              className={`${styles.actionLink} ${user && isActive("/profile") ? styles.actionLinkActive : ""}`}
-              aria-label={t("profile")}
-              onClick={(e) => {
-                if (!user) {
-                  e.preventDefault();
-                  openAuthModal();
-                } else if (isActive("/profile")) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <User size={20} />
-            </Link>
+            {user ? (
+              <Link
+                href="/profile"
+                className={`${styles.actionLink} ${isActive("/profile") ? styles.actionLinkActive : ""}`}
+                aria-label={t("profile")}
+                onClick={(e) => {
+                  if (isActive("/profile")) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <User size={20} />
+              </Link>
+            ) : (
+              <button
+                className={styles.actionLink}
+                aria-label={t("profile")}
+                onClick={openAuthModal}
+              >
+                <User size={20} />
+              </button>
+            )}
 
             <button
               className={styles.hamburger}
