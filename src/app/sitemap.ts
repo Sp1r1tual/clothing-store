@@ -6,8 +6,27 @@ import { BASE_URL } from "@/common/constants/env";
 
 const LOCALES = ["uk", "en"];
 
+function buildAlternates(path: string) {
+  return {
+    languages: Object.fromEntries(
+      LOCALES.map((locale) => [locale, `${BASE_URL}/${locale}${path}`]),
+    ),
+  };
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["/", "/catalog", "/search", "/new-arrivals", "/sale", "/privacy", "/terms"];
+  const staticRoutes = [
+    "/",
+    "/catalog",
+    "/search",
+    "/new-arrivals",
+    "/sale",
+    "/privacy",
+    "/terms",
+    "/faq",
+    "/shipping-delivery",
+    "/returns",
+  ];
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.flatMap((route) =>
     LOCALES.map((locale) => ({
@@ -15,10 +34,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: route === "/" ? "weekly" : "monthly",
       priority: route === "/" ? 1.0 : 0.7,
+      alternates: buildAlternates(route === "/" ? "" : route),
     })),
   );
 
-  // Category pages
   const categories = await prisma.category.findMany({
     select: { slug: true, updatedAt: true },
   });
@@ -30,10 +49,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: cat.updatedAt,
         changeFrequency: "weekly",
         priority: 0.8,
+        alternates: buildAlternates(`/${cat.slug}`),
       })),
   );
 
-  // Product pages
   const products = await prisma.product.findMany({
     where: { status: "PUBLISHED", deletedAt: null },
     select: { slug: true, updatedAt: true },
@@ -46,6 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: product.updatedAt,
         changeFrequency: "weekly",
         priority: 0.9,
+        alternates: buildAlternates(`/product/${product.slug}`),
       })),
   );
 

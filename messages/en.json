@@ -694,5 +694,14 @@
     "home": "Back to Home",
     "catalog": "Go to Catalog",
     "support": "Contact Support"
+  },
+  "ErrorPage": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred on our server. We are already working on fixing it.",
+    "retry": "Try again",
+    "home": "Back to Home",
+    "catalog": "Go to Catalog",
+    "digest": "Error ID",
+    "contact": "If the problem persists, contact us:"
   }
 }

@@ -77,7 +77,7 @@ A fully functional shopping cart, robust search capabilities, and detailed produ
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/your-repo/clothing-store.git
+git clone https://github.com/Sp1r1tual/x-weevo
 cd clothing-store
 
 # Install dependencies
