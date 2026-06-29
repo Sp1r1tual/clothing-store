@@ -74,9 +74,6 @@
   position: relative;
   z-index: 2;
   padding: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .cardTitle {
@@ -112,10 +109,18 @@
 .subcategoriesList {
   position: relative;
   z-index: 2;
-  padding: 32px;
+  padding: 0 32px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.cardFooter {
+  position: relative;
+  z-index: 2;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .subLink {
@@ -182,7 +187,19 @@
   }
 
   .cardHeader,
-  .subcategoriesList {
-    padding: 24px;
+  .subcategoriesList,
+  .cardFooter {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .cardHeader {
+    padding-top: 24px;
+    padding-bottom: 0;
+  }
+
+  .cardFooter {
+    padding-top: 16px;
+    padding-bottom: 24px;
   }
 }

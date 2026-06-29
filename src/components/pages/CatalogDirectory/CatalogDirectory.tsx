@@ -65,9 +65,6 @@ export const CatalogDirectory = ({
 
                   <div className={styles.cardHeader}>
                     <h2 className={styles.cardTitle}>{rootName}</h2>
-                    <Link href={`/${root.slug}`} className={styles.viewAllBtn}>
-                      {t("viewCollection")} →
-                    </Link>
                   </div>
 
                   {children.length > 0 && (
@@ -85,6 +82,12 @@ export const CatalogDirectory = ({
                       })}
                     </div>
                   )}
+
+                  <div className={styles.cardFooter}>
+                    <Link href={`/${root.slug}`} className={styles.viewAllBtn}>
+                      {t("viewCollection")} →
+                    </Link>
+                  </div>
                 </div>
               </ScrollReveal>
             );
