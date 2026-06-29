@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { BackButton } from "@/components/ui/BackButton/BackButton";
 import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
@@ -22,13 +22,6 @@ interface PolicyLayoutProps {
 }
 
 export const PolicyLayout = ({ title, description, sections }: PolicyLayoutProps) => {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
@@ -66,8 +59,6 @@ export const PolicyLayout = ({ title, description, sections }: PolicyLayoutProps
 
   return (
     <>
-      <motion.div className={styles.progressBar} style={{ scaleX }} />
-
       <div className={styles.container}>
         <BackButton scrollUp={true} />
 
@@ -93,7 +84,6 @@ export const PolicyLayout = ({ title, description, sections }: PolicyLayoutProps
         </header>
 
         <div className={styles.mainContent}>
-          {/* Sidebar Navigation */}
           <aside className={styles.sidebar}>
             <nav className={styles.nav}>
               <span className={styles.navTitle}>Зміст</span>
@@ -115,7 +105,6 @@ export const PolicyLayout = ({ title, description, sections }: PolicyLayoutProps
             </nav>
           </aside>
 
-          {/* Section Contents */}
           <main className={styles.sectionsList}>
             {sections.map((section, idx) => (
               <motion.section

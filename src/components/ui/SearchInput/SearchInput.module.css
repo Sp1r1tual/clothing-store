@@ -101,6 +101,11 @@
   cursor: pointer;
 }
 
+.searchButton:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
 .searchIcon {
   color: #aaaaaa;
   transition: color 0.2s ease;

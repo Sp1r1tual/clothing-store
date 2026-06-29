@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useSwipe } from "@/hooks/useSwipe";
 
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 import { SlideDots } from "@/components/ui/SlideDots/SlideDots";
 
 import styles from "./ImageGallery.module.css";
@@ -86,11 +86,11 @@ export const ImageGallery = ({ images }: ImageGalleryProps) => {
         onTouchEnd={handleTouchEnd}
         onClick={handleImageClick}
       >
-        <Image
+        <SkeletonImage
           src={images[activeIndex].url}
           alt={images[activeIndex].altText || "Product image"}
           fill
-          priority
+          preload
           className={styles.mainImage}
           sizes="(max-width: 768px) 100vw, 50vw"
         />
@@ -156,7 +156,7 @@ export const ImageGallery = ({ images }: ImageGalleryProps) => {
               onClick={() => setActiveIndex(index)}
               aria-label={`View image ${index + 1}`}
             >
-              <Image
+              <SkeletonImage
                 src={image.url}
                 alt={image.altText || `Thumbnail ${index + 1}`}
                 fill

@@ -12,6 +12,12 @@
   left: 0;
   z-index: 1000;
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.navbarHidden {
+  transform: translateY(-100%);
 }
 
 .navContainer {

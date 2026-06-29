@@ -1,9 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 
 import { useModalStore } from "@/store/useModalStore";
 
@@ -56,7 +56,7 @@ export const DeliveryPartners = () => {
               openModal(
                 <div className={styles.modalInfoContainer}>
                   <div className={styles.modalLogoWrapper}>
-                    <Image
+                    <SkeletonImage
                       src={partner.logo}
                       alt={partner.name}
                       fill
@@ -72,7 +72,7 @@ export const DeliveryPartners = () => {
           >
             <div className={styles.logoWrapper}>
               <div className={styles.imageContainer}>
-                <Image
+                <SkeletonImage
                   src={partner.logo}
                   alt={partner.name}
                   fill

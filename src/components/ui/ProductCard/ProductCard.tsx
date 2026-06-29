@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { toast } from "react-toastify";
 
 import { toggleFavoriteAction } from "@/actions/favorites.actions";
@@ -10,6 +9,7 @@ import { Heart, Share2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge/Badge";
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
@@ -124,11 +124,11 @@ export const ProductCard = ({
         </div>
 
         <div className={styles.imageWrapper}>
-          <Image
+          <SkeletonImage
             src={primaryImage}
             alt={product.images[0]?.altText || name}
             fill
-            priority={priority}
+            preload={priority}
             className={styles.image}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />

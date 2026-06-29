@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 import styles from "./FaqAccordion.module.css";
@@ -27,7 +28,14 @@ export const FaqAccordion = ({ items }: FaqAccordionProps) => {
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div key={index} className={styles.item}>
+          <motion.div
+            key={index}
+            className={styles.item}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+          >
             <button
               className={styles.header}
               onClick={() => toggleItem(index)}
@@ -48,7 +56,7 @@ export const FaqAccordion = ({ items }: FaqAccordionProps) => {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

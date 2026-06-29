@@ -1,10 +1,12 @@
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 
 import { Link } from "@/i18n/navigation";
 
 import { Button } from "@/components/ui/Button/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
+
+import { CATEGORY_IMAGES } from "@/common/constants/images/category-images";
 
 import { CategoryId } from "@/types/ui.types";
 
@@ -14,22 +16,22 @@ const CATEGORIES = [
   {
     id: "shoes",
     href: "/unisex-shoes",
-    image: "/categories/shoes.webp",
+    image: CATEGORY_IMAGES.UNISEX_SHOES,
   },
   {
     id: "outerwear",
     href: "/unisex-outerwear",
-    image: "/categories/outerwear.webp",
+    image: CATEGORY_IMAGES.UNISEX_OUTERWEAR,
   },
   {
     id: "pants",
     href: "/unisex-pants",
-    image: "/categories/pants-new.webp",
+    image: CATEGORY_IMAGES.UNISEX_PANTS,
   },
   {
     id: "accessories",
     href: "/accessories",
-    image: "/categories/accessories.webp",
+    image: CATEGORY_IMAGES.ACCESSORIES,
   },
 ];
 
@@ -56,7 +58,7 @@ export const PopularCategories = () => {
               className={styles.card}
               id={`category-card-${cat.id}`}
             >
-              <Image
+              <SkeletonImage
                 src={cat.image}
                 alt={t(cat.id as CategoryId)}
                 fill

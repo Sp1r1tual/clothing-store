@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { useState, useTransition } from "react";
 import { toast } from "react-toastify";
 
@@ -10,6 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 
 import { PriceDisplay } from "@/components/ui/PriceDisplay/PriceDisplay";
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 
 import { useCartStore } from "@/store/useCartStore";
 import type { CartItem as CartItemType } from "@/store/useCartStore";
@@ -68,7 +68,7 @@ export const CartItem = ({ item, locale }: CartItemProps) => {
     <div className={styles.item}>
       <Link href={`/product/${item.product.slug}`} className={styles.imageLink}>
         <div className={styles.imageWrapper}>
-          <Image
+          <SkeletonImage
             src={image}
             alt={altText}
             fill

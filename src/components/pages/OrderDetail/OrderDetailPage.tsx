@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -15,6 +14,7 @@ import { CheckCircle, ChevronLeft, Clock, Copy, Package, RefreshCw, Truck, X } f
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
 import { ConfirmChoiceModal } from "@/components/ui/Modal/ConfirmChoiceModal";
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 
 import { formatDate, formatPrice } from "@/common/utils/format";
 
@@ -142,7 +142,7 @@ export const OrderDetailPage = ({ order: initialOrder }: OrderDetailPageProps) =
               <div key={item.id} className={styles.item}>
                 <div className={styles.itemImageWrapper}>
                   {item.product?.images?.[0] ? (
-                    <Image
+                    <SkeletonImage
                       src={item.product.images[0].url}
                       alt={item.product.images[0].altText ?? productName(item)}
                       fill

@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import Image from "next/image";
 import { useTopLoader } from "nextjs-toploader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { Link, useRouter } from "@/i18n/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Search, X } from "lucide-react";
+
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 
 import { SearchFormData, getSearchSchema } from "./schemas/search.schema";
 
@@ -45,6 +46,7 @@ export const SearchInput = () => {
   const { register, handleSubmit, setValue, reset } = useForm<SearchFormData>({
     resolver: zodResolver(getSearchSchema(tSearch)),
     defaultValues: { query: "" },
+    shouldFocusError: false,
   });
 
   const fetchSuggestions = useCallback(
@@ -166,7 +168,12 @@ export const SearchInput = () => {
             <X size={14} />
           </button>
         )}
-        <button type="submit" className={styles.searchButton} aria-label="Submit search">
+        <button
+          type="submit"
+          className={styles.searchButton}
+          aria-label="Submit search"
+          disabled={!query.trim() || isLoading}
+        >
           {isLoading ? (
             <span className={styles.spinner} />
           ) : (
@@ -187,7 +194,7 @@ export const SearchInput = () => {
                 >
                   <div className={styles.suggestionImage}>
                     {product.image ? (
-                      <Image
+                      <SkeletonImage
                         src={product.image}
                         alt={product.name}
                         fill

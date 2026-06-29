@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import whiteWallTexture from "@/assets/textures/white-wall.webp";
@@ -8,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 
 import { useSwipe } from "@/hooks/useSwipe";
 
+import { SkeletonImage } from "@/components/ui/SkeletonImage/SkeletonImage";
 import { SlideDots } from "@/components/ui/SlideDots/SlideDots";
 
 import { SLIDE_IMAGES } from "@/common/constants/hero";
@@ -106,11 +106,11 @@ export const HeroCarousel = () => {
               aria-label={slide.alt}
               tabIndex={isActive ? 0 : -1}
             >
-              <Image
+              <SkeletonImage
                 src={slide.src}
                 alt={slide.alt}
                 fill
-                priority={isActive}
+                preload={isActive}
                 style={{ objectFit: "contain", objectPosition: "bottom center" }}
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

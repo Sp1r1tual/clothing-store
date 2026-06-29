@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Heart, ShoppingBag, User } from "lucide-react";
 
+import { useScrollDirection } from "@/hooks/useScrollDirection";
+
 import { Drawer } from "@/components/ui/Drawer/Drawer";
 import { Logo } from "@/components/ui/Logo/Logo";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
@@ -30,6 +32,8 @@ export const Navbar = () => {
   const cartCount = useCartStore((s) => s.getTotalCount());
   const favCount = useFavoritesStore((s) => s.getCount());
 
+  const isNavbarHidden = useScrollDirection();
+
   const close = () => setIsMenuOpen(false);
 
   const isActive = (href: string) =>
@@ -37,7 +41,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className={styles.navbar}>
+      <nav className={`${styles.navbar} ${isNavbarHidden ? styles.navbarHidden : ""}`}>
         <div className={styles.navContainer}>
           <Logo />
 

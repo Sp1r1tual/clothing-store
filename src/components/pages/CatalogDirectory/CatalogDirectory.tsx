@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs/Breadcrumbs";
 import { ScrollReveal } from "@/components/ui/ScrollReveal/ScrollReveal";
 import { ScrollToTop } from "@/components/ui/ScrollToTop/ScrollToTop";
 
+import { CATALOG_IMAGES, CatalogImageKey } from "@/common/constants/images/catalog-images";
 import { getLocalizedField } from "@/common/utils/locale";
 
 import styles from "./CatalogDirectory.module.css";
@@ -54,7 +55,8 @@ export const CatalogDirectory = ({
               (c) => c.parentId === root.id && c._count?.products !== 0,
             );
 
-            const bgImage = `/categories/${root.slug}.webp`;
+            const slugKey = root.slug.toUpperCase().replace(/-/g, "_") as CatalogImageKey;
+            const bgImage = CATALOG_IMAGES[slugKey] ?? "";
 
             return (
               <ScrollReveal key={root.id} className={styles.categorySection}>
