@@ -1,22 +1,37 @@
 import NextAuth from "next-auth";
+import Apple from "next-auth/providers/apple";
 import Google from "next-auth/providers/google";
 
 import { prisma } from "@/libs/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { UserRole } from "@prisma/client";
 
 export const { handlers, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
 
-  providers: [Google],
+  providers: [Google, Apple],
 
   session: {
-    strategy: "database",
+    strategy: "jwt",
+  },
+
+  pages: {
+    error: "/auth/auth-code-error",
   },
 
   callbacks: {
-    session({ session, user }) {
-      session.user.id = user.id;
-      session.user.role = user.role ?? "CUSTOMER";
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role ?? "CUSTOMER";
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as UserRole;
+      }
       return session;
     },
   },

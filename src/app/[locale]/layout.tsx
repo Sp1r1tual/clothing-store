@@ -52,7 +52,7 @@ export async function generateMetadata({
       description: t("description"),
       images: [
         {
-          url: "/baner/x-weevo-banner.webp",
+          url: "/banner/x-weevo-banner.webp",
           width: 1200,
           height: 630,
           alt: "X-Weevo",
@@ -63,7 +63,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/baner/x-weevo-banner.webp"],
+      images: ["/banner/x-weevo-banner.webp"],
     },
   };
 }

@@ -3,15 +3,16 @@ import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
+// import appleLogo from "@/assets/others/apple-logo.webp";
 import googleLogo from "@/assets/others/google-logo.webp";
 import { Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/Button/Button";
 import { Modal } from "@/components/ui/Modal/Modal";
 
-import styles from "./GoogleAuthModal.module.css";
+import styles from "./AuthModal.module.css";
 
-interface GoogleAuthModalProps {
+interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   redirectPath?: string;
@@ -29,7 +30,7 @@ function resolveRedirectPath(redirectPath?: string) {
   return new URLSearchParams(window.location.search).get("next") || "/profile";
 }
 
-export const GoogleAuthModal = ({ isOpen, onClose, redirectPath }: GoogleAuthModalProps) => {
+export const AuthModal = ({ isOpen, onClose, redirectPath }: AuthModalProps) => {
   const t = useTranslations("AuthModal");
   const locale = useLocale();
 
@@ -48,6 +49,22 @@ export const GoogleAuthModal = ({ isOpen, onClose, redirectPath }: GoogleAuthMod
       console.error(error);
     }
   };
+
+  // const handleAppleSignIn = async () => {
+  //   try {
+  //     sessionStorage.setItem("pendingLogin", "1");
+
+  //     const next = resolveRedirectPath(redirectPath);
+  //     const callbackUrl = `/${locale}${next}`;
+
+  //     await signIn("apple", { callbackUrl });
+  //   } catch (error) {
+  //     sessionStorage.removeItem("pendingLogin");
+  //     const message = error instanceof Error ? error.message : "Failed to sign in with Apple";
+  //     toast.error(message);
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -71,6 +88,18 @@ export const GoogleAuthModal = ({ isOpen, onClose, redirectPath }: GoogleAuthMod
         >
           {t("googleButton")}
         </Button>
+
+        {/* TODO: Увімкнути після налаштування Apple Developer Account
+        <Button
+          variant="secondary"
+          fullWidth
+          icon={<Image src={appleLogo} alt="Apple" width={20} height={20} />}
+          onClick={handleAppleSignIn}
+          aria-label="Sign in with Apple"
+        >
+          {t("appleButton")}
+        </Button>
+        */}
       </div>
     </Modal>
   );

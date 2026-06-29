@@ -187,6 +187,7 @@
     "title": "Sign In to Personal Account",
     "description": "Sign in to track orders, add items to favorites, and receive personalized offers.",
     "googleButton": "Sign In with Google",
+    "appleButton": "Sign In with Apple",
     "successMessage": "Successfully signed in as {name}!",
     "errorMessage": "Authentication error. Please try again."
   },
